@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
 public class DataManager : MonoBehaviour {
 
 	private BuildData buildData;
@@ -20,44 +23,48 @@ public class DataManager : MonoBehaviour {
 		return buildData;
 	}
 
-	public void loadData(string dataType, string dataName) {
-		Debug.Log ("Loading Data: " + dataType + ", " + dataName);
-		this.buildData = new BuildData ();
-		this.buildData.saveData ("test4x4");
-		/*
+	public void loadData(string filename) {
+		//Debug.Log ("Loading Data: " + dataType + ", " + dataName);
+		//buildData = new BuildData ();
+		//saveData ("test4x4.txt");
 
 		// OSXEditor files
 		if (Application.platform == RuntimePlatform.OSXEditor) {
 
 			TextAsset[] test = Resources.FindObjectsOfTypeAll<TextAsset> ();
 			for (int i = 0; i < test.Length; i++) {
-				Debug.Log (test[i].name);
+				Debug.Log (test [i].name);
 			}
 
 			//Debug.Log ("Loading " + puzzle.boardType + "/" + puzzleID);
 
-			string filename = boardtype.ToString () + boardID.ToString();
-			Debug.Log ("Loading " + filename);
+			//Debug.Log ("Loading " + filename);
 
 			BinaryFormatter bf = new BinaryFormatter ();
-			TextAsset boardFile = Resources.Load<TextAsset> (filename);
-			Stream s = new MemoryStream(boardFile.bytes);
-			boardData = (BoardData)bf.Deserialize (s);
+			TextAsset dataFile = Resources.Load<TextAsset> (filename);
+			Stream s = new MemoryStream (dataFile.bytes);
+			buildData = (BuildData)bf.Deserialize (s);
 
-		// IPhonePlayer files
+			// IPhonePlayer files
 		} else if (Application.platform == RuntimePlatform.IPhonePlayer) {
-			string filename = boardtype.ToString () + boardID.ToString();
 			Debug.Log ("Loading " + filename);
 
 			BinaryFormatter bf = new BinaryFormatter ();
 			TextAsset boardFile = Resources.Load<TextAsset> (filename);
-			Stream s = new MemoryStream(boardFile.bytes);
-			boardData = (BoardData)bf.Deserialize (s);
+			Stream s = new MemoryStream (boardFile.bytes);
+			buildData = (BuildData)bf.Deserialize (s);
 		} else {
 			Debug.Log ("Invalid Platform : " + Application.platform);
 		}
+			
+	}
 
-		*/
+	public void saveData(string filename) {
+		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/" + filename);
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create (Application.persistentDataPath + "/" + filename);
+		bf.Serialize(file, buildData);
+		file.Close();
 	}
 
 }

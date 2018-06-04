@@ -61,14 +61,6 @@ public class BuildData {
 
 	}
 
-	public void saveData(string filename) {
-		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/" + filename);
-		BinaryFormatter bf = new BinaryFormatter();
-		FileStream file = File.Create (Application.persistentDataPath + "/" + filename);
-		bf.Serialize(file, this);
-		file.Close();
-	}
-
 	public SortedList<string,int> getTable(IComparer<string> compare) {
 		return new SortedList<string,int>(this.table,new RuneByClass());
 	}
