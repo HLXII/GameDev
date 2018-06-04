@@ -65,6 +65,11 @@ public class BuildData {
 		return new SortedList<string,int>(this.table,new RuneByClass());
 	}
 
+	public SortedList<string,int> getTable(IComparer<string> compare, string[,] filters) {
+		SortedList<string,int> intermediateList = new SortedList<string,int> (table, compare);
+		return null;
+	}
+
 	public string[,] getPage() {
 		return page;
 	}

@@ -7,7 +7,7 @@ public class SquareRune : Rune {
 	// Use this for initialization
 	protected new void Start () {
 		base.Start ();
-		id = "S";
+		id = "S_";
 		rotation = 0;
 		sides = 4;
 	}

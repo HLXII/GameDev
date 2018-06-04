@@ -6,7 +6,7 @@ public class SquareSource : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id = "S_Input_Source_0";
+		id = "Input_Source_0";
 	}
 
 }

@@ -6,7 +6,7 @@ public class SquareEmpty : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id = "S_Special_Empty_0";
+		id = "Special_Empty_0";
 		movable = false;
 	}
 

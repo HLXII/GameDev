@@ -6,7 +6,7 @@ public class SquareSingleWire : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id = "S_Wire_Single_0";
+		id = "Wire_Single_0";
 	}
 
 }

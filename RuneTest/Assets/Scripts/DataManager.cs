@@ -31,10 +31,11 @@ public class DataManager : MonoBehaviour {
 		// OSXEditor files
 		if (Application.platform == RuntimePlatform.OSXEditor) {
 
+			/*
 			TextAsset[] test = Resources.FindObjectsOfTypeAll<TextAsset> ();
 			for (int i = 0; i < test.Length; i++) {
 				Debug.Log (test [i].name);
-			}
+			}*/
 
 			//Debug.Log ("Loading " + puzzle.boardType + "/" + puzzleID);
 
