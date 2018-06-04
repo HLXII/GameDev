@@ -1,0 +1,12 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SquareSingleWire : SquareRune {
+
+	protected new void Start() {
+		base.Start ();
+		id = "S_Wire_Single_0";
+	}
+
+}
