@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
 
-public class SquareCanvas : MonoBehaviour {
+public class SquareCanvas : BuildCanvas {
 
-	private Transform page;
-
-	private Transform table;
+	//private Transform page;
+	//private Transform table;
 
 	// Sprite to be placed behind rune slots that can be used
-	public GameObject runeBack;
+	//public GameObject runeBack;
 
 	// All possible runes to be placed
-	public GameObject runeVoid;
-	public GameObject runeEmpty;
-	public GameObject runeBlock;
+	//public GameObject runeVoid;
+	//public GameObject runeEmpty;
+	//public GameObject runeBlock;
 	public GameObject runeSource;
 	public GameObject runeSink;
 	public GameObject runeSingleWire;
@@ -24,10 +23,19 @@ public class SquareCanvas : MonoBehaviour {
 	public GameObject runeCross;
 
 	// Dictionary to instantiate the correct runes from the pageData
-	private Dictionary<string,GameObject> runes;
+	//private Dictionary<string,GameObject> runes;
+
+	// DataManager
+	//private DataManager dataManager;
 
 	// List to store filtered and available runes
-	//private List<string> runes;
+	//private SortedList<string,int> tableRunes;
+	//private string classFilter;
+	//private string rankFilter;
+	//private int numTablePages;
+	//private int curPage;
+	//private Bounds tableBounds;
+
 
 	// Use this for initialization
 	void Start () {
@@ -50,13 +58,18 @@ public class SquareCanvas : MonoBehaviour {
 			//Debug.Log ("Mouse Press");
 		}*/
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0f) {
-			print (Input.mousePosition);
-			print(Input.GetAxis("Mouse ScrollWheel"));
+			if (tableBounds.Contains(Input.mousePosition)) {
+				if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
+					tableUp ();
+				} else if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
+					tableDown ();
+				}
+			}
 		}
 	}
 
 	// Initializing the rune dictionary
-	private void initRunes() {
+	protected override void initRunes() {
 		this.runes = new Dictionary<string,GameObject> () {
 			{"S_Special_Void_0",runeVoid},
 			{"S_Special_Empty_0",runeEmpty},
@@ -71,28 +84,22 @@ public class SquareCanvas : MonoBehaviour {
 	}
 
 	// Initializing the UI elements
-	private void initBuild() {
+	protected override void initBuild() {
 		
-		Debug.Log ("Initializing Build");
+		//Debug.Log ("Initializing Build");
 
 		// Getting buildData from DataManager
+		dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
 		BuildData buildData = GameObject.Find ("DataManager").GetComponent<DataManager> ().getBuildData ();
 
 		// Getting data from buildData
-
-		Debug.Log ("Getting table");
-		SortedList<string,int> tableData = buildData.getTable (new RuneByClass());
-		Debug.Log ("Got table");
+		tableRunes = buildData.getTable ("","");
 		string[,] pageData = buildData.getPage ();
-		for (int i = 0; i < tableData.Count; i++) {
-			Debug.Log (tableData.Keys[i]);
-		}
 
 		/*
 		// Debug prints for table and page
-		foreach (KeyValuePair<string, int> item in tableData)
-		{
-			Debug.Log(item.Key + ": " + item.Value.ToString());
+		for (int i = 0; i < tableData.Count; i++) {
+			Debug.Log (tableData.Keys[i]);
 		}
 
 		for (int i = 0; i < pageData.GetLength (0); i++) {
@@ -102,10 +109,20 @@ public class SquareCanvas : MonoBehaviour {
 		}*/
 
 		// Creating the Table object to hold all the runes in the table
+		//table = transform.GetChild(2).transform;
 		table = new GameObject("Table").transform;
 		table.SetParent (gameObject.transform);
 
+		// Finding the bounds of the table for determining scroll events on the table
+		tableBounds = new Bounds (new Vector3 (Screen.width * 2.25f / 16f, Screen.height * 3.75f / 9f), new Vector3 (Screen.width * 3.5f / 16f, Screen.height * 6.5f / 9f));
+		//print ("TABLE BOUNDS: " + tableBounds);
 
+		// Calculating the table parameters and updating the table
+		rankFilter = "";
+		classFilter = "";
+		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
+		curPage = 0;
+		updateTable ();
 
 		/*
 		foreach (KeyValuePair<string, int> item in tableData) {
@@ -146,20 +163,20 @@ public class SquareCanvas : MonoBehaviour {
 		float page_screen_w = screen_w * 10 / 16;
 		float page_screen_h = screen_h / 2;
 
-		Debug.Log ("Page Screen: W" + page_screen_w + " H" + page_screen_h);
+		//Debug.Log ("Page Screen: W" + page_screen_w + " H" + page_screen_h);
 
 		// Getting the size of the rune tiles in the page transform by pixels
 		float sprite_w = runeEmpty.GetComponent<SpriteRenderer> ().sprite.rect.width;
 		float sprite_h = runeEmpty.GetComponent<SpriteRenderer> ().sprite.rect.height;
 
-		Debug.Log ("Sprite Size: W" + sprite_w + " H" + sprite_h);
+		//Debug.Log ("Sprite Size: W" + sprite_w + " H" + sprite_h);
 
 		float h_scale = page_screen_h / page_h;
 		float w_scale = page_screen_w / page_w;
 
-		Debug.Log ("HSCALE: " + h_scale + " WSCALE: " + w_scale);
+		//Debug.Log ("HSCALE: " + h_scale + " WSCALE: " + w_scale);
 
-		Debug.Log ("BEFORE: " + this.page.localPosition);
+		//Debug.Log ("BEFORE: " + this.page.localPosition);
 
 		// Bring page position to top left corner, then to where it should be
 		this.page.localPosition -= new Vector3 (screen_w/2, screen_h/2, 0);
@@ -174,12 +191,66 @@ public class SquareCanvas : MonoBehaviour {
 		this.page.localScale = new Vector3 (scale, scale, 1);
 		this.page.localPosition += new Vector3 ((page_screen_w - new_sprite_w) / 2, (page_screen_h - new_sprite_h) / 2, 0);
 
-		Debug.Log ("AFTER: " + this.page.localPosition);
+		//Debug.Log ("AFTER: " + this.page.localPosition);
 
 		// Bring table position to top right corner, then to where it should be
 		this.table.localPosition -= new Vector3 (screen_w/2 , screen_h / 2, 0);
-		this.table.localPosition += new Vector3 (screen_w * 4.5f / 16, screen_h * .5f / 9);
+		this.table.localPosition += new Vector3 (screen_w * 1.5f / 16, screen_h * 6f / 9);
 
 	}
+	/*
+	public void changeTable(string filterName) {
+
+		// Getting filter parameters
+		string[] filter = filterName.Split ('_');
+
+		// If the class Filter was changed
+		if (filter [0] == "Class") {
+			classFilter = filter [1];
+		// If the rank Filter was changed
+		} else {
+			rankFilter = filter [1];
+		}
+
+		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
+		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
+		curPage = 0;
+		updateTable ();
+
+	}
+
+	public void updateTable() {
+		foreach (Transform child in table) {
+			GameObject.Destroy(child.gameObject);
+		}
+		int start_index = curPage * 6;
+		int end_index = Mathf.Min ((curPage + 1) * 6, tableRunes.Count);
+		for (int i = 0;i < end_index-start_index;i++) {
+			//Debug.Log ((i%2)*1.5f);
+			GameObject instance = Instantiate(runes[tableRunes.Keys[i+start_index]], new Vector3 ((i%2)*1.5f, -(i-(i%2)),0F), Quaternion.identity) as GameObject;
+			instance.transform.SetParent (table);
+			instance.transform.localPosition = new Vector3 ((i % 2) * 1.5f, -(i - (i % 2)), 0F);
+		}
+	}
+
+	public void tableUp() {
+		//Debug.Log ("Table Up");
+		if (curPage == 0) {
+			return;
+		} else {
+			curPage--;
+			updateTable ();
+		}
+	}
+
+	public void tableDown() {
+		//Debug.Log ("Table Down");
+		if (curPage == numTablePages - 1) {
+			return;
+		} else {
+			curPage++;
+			updateTable ();
+		}
+	}*/
 
 }

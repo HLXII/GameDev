@@ -11,19 +11,37 @@ public class TableFilterButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		state = (gameObject.name == "btnClassAll" || gameObject.name == "btnRankAll");
-		state = false;
+		this.State = (gameObject.name == "btnClassAll" || gameObject.name == "btnRankAll");
 		gameObject.GetComponent<Button> ().onClick.AddListener (this.onClick);
 	}
-	
+		
+	public bool State
+	{
+		get
+		{
+			return state;
+		}
+		set
+		{
+			if (value) {
+				gameObject.GetComponent<Image> ().color = new Color (0, 0, 0);
+			} else {
+				gameObject.GetComponent<Image> ().color = new Color (255, 255, 255);
+			}
+			state = value;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		
 	}
 
 	public void onClick() {
-		state = !state;
-		Debug.Log (gameObject.name + " " + state);
+		for (int i = 0; i < transform.parent.childCount; i++) {
+			transform.parent.GetChild (i).GetComponent<TableFilterButton> ().State = false;
+		}
+		this.State = true;
 	}
 
 }

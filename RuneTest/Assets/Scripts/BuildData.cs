@@ -8,12 +8,18 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class RuneByClass : IComparer<string> {
+[System.Serializable]
+public class RuneComparer : IComparer<string> {
 
 	int IComparer<string>.Compare(string rune1, string rune2) {
 		string[] r1 = rune1.Split ('_');
 		string[] r2 = rune2.Split ('_');
-		return string.Compare(rune1,rune2);
+
+		if (r1 [0] [0] != r2 [0] [0]) {
+			return r1 [0] [0] - r2 [0] [0];
+		} else {
+			return string.Compare(rune1,rune2);
+		}
 	}
 
 }
@@ -21,9 +27,9 @@ public class RuneByClass : IComparer<string> {
 [System.Serializable]
 public class BuildData {
 
-	// Dictionary of all the runes available in the table
+	// SortedList of all the runes available in the table
 	// Keys are runeStrings, while Values are the number of available runes
-	private Dictionary<string,int> table;
+	private SortedList<string,int> table;
 
 	// 2D Array of runeStrings of the runes in the page
 	private string[,] page;
@@ -35,10 +41,15 @@ public class BuildData {
 		int width = 4;
 		int height = 4;
 
-		table = new Dictionary<string,int> ();
+		table = new SortedList<string,int> (new RuneComparer());
 
-		table.Add ("S_Wire_Single_0", 2);
+		//table.Add ("S_Wire_Single_0", 2);
 		table.Add ("S_Output_Sink_0", 1);
+		table.Add ("S_Input_Source_0", 5);
+		table.Add ("S_Wire_TJunction_0", 1);
+		table.Add("S_Wire_FourWay_0",2);
+		table.Add ("S_Wire_Cross_0", 1);
+		table.Add ("S_Special_Block_0", 1);
 
 		page = new string[width, height];
 		//this.page = new string[,] {{"SX","S_","S_"},{"SX","SX","SX"},{"S_","SX","S_"}};
@@ -61,13 +72,47 @@ public class BuildData {
 
 	}
 
-	public SortedList<string,int> getTable(IComparer<string> compare) {
-		return new SortedList<string,int>(this.table,new RuneByClass());
+	public void swapOnPage(int x1, int y1, int x2, int y2) {
+		string temp = page [x1, y1];
+		page [x1, y1] = page [x2, y2];
+		page [x2, y2] = temp;
 	}
 
-	public SortedList<string,int> getTable(IComparer<string> compare, string[,] filters) {
-		SortedList<string,int> intermediateList = new SortedList<string,int> (table, compare);
-		return null;
+	public void addToTable(string runeString) {
+		//Debug.Log ("Adding " + runeString + " to table");
+
+		if (table.ContainsKey(runeString)) {
+			table[runeString]++;
+		} else {
+			table.Add(runeString,1);
+		}
+	}
+
+	public void removeFromTable(string runeString) {
+		table [runeString]--;
+		if (table [runeString] == 0) {
+			table.Remove (runeString);
+		}
+	}
+
+	public SortedList<string,int> getTable() {
+		return new SortedList<string,int> (table);
+	}
+
+	public SortedList<string,int> getTable(string classFilter, string rankFilter) {
+
+		//Debug.Log ("Getting table with filters " + classFilter + " " + rankFilter);
+
+		SortedList<string,int> intermediateList = new SortedList<string,int>(new RuneComparer());
+		foreach (KeyValuePair<string,int> item in table) {
+			//Debug.Log (item.Key);
+			string[] data = item.Key.Split ('_');
+			if (data[1].Contains(classFilter) && data[3].Contains(rankFilter)) {
+				intermediateList.Add (item.Key, item.Value);
+			}
+		}
+
+		return intermediateList;
 	}
 
 	public string[,] getPage() {

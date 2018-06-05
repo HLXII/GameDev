@@ -47,7 +47,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public static string[] runeStrings = {
 		"S_Special_Void_0",				//Square Void
 		"S_Special_Empty_0",			//Square Empty
-		"S_Speical_Block_0",			//Square Block
+		"S_Special_Block_0",			//Square Block
 		"S_Wire_Single_0",				//Square Single Wire
 		"S_Wire_Turn_0",				//Square Turning Wire
 		"S_Wire_TJunction_0",			//Square T Junction Wire
@@ -71,7 +71,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Vector3 drag_start_position;
 	protected Vector3 mouse_offset;
 
+	protected DataManager dataManager;
+
 	protected void Start() {
+
+		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
+
 		rotation = 0;
 		sides = 4;
 		movable = true;
@@ -81,13 +86,13 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected void Update() {
 		if (drag && Input.GetAxis ("Mouse ScrollWheel") > 0f) {
 			rotation = (rotation + 1) % sides;
-			Debug.Log ("Scroll Up "+rotation);
+			//Debug.Log ("Scroll Up "+rotation);
 			transform.Rotate (Vector3.forward * 90);
 		} else if (drag && Input.GetAxis ("Mouse ScrollWheel") < 0f) {
 			
 			rotation = (rotation - 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 90);
-			Debug.Log ("Scroll Down "+rotation);
+			//Debug.Log ("Scroll Down "+rotation);
 		}
 	}
 
@@ -97,23 +102,18 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public int Rotation
 	{
-		get
-		{
-			return rotation;
-		}
-		set
-		{
-			rotation = value;
-		}
+		get { return rotation; }
+		set { rotation = value; }
 	}
 
+	public string Id { get { return id; } }
+	
+
 	public void drop() {
-		Debug.Log ("Dropped Rune");
+		//Debug.Log ("Dropped Rune");
 
-		BuildData buildData = GameObject.Find ("DataManager").GetComponent<DataManager> ().getBuildData ();
-
-		int page_h = buildData.getPage ().GetLength (1);
-		int page_w = buildData.getPage ().GetLength (0);
+		int page_h = dataManager.getBuildData().getPage ().GetLength (1);
+		int page_w = dataManager.getBuildData().getPage ().GetLength (0);
 
 		// Dropping a page rune
 		if (transform.parent.name == "Page") {
@@ -122,7 +122,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			int grid_x = (int) Mathf.Floor (transform.localPosition.x);
 			int grid_y = (int) Mathf.Floor (transform.localPosition.y);
 
-			Debug.Log ("GRID:" + grid_x + " " + grid_y);
+			//Debug.Log ("GRID:" + grid_x + " " + grid_y);
 
 			// Checking if dropped onto page
 			if (grid_x >= 0 & grid_x < page_w && grid_y >= 0 && grid_y < page_h) {
@@ -130,18 +130,26 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				int swap_idx = grid_x * page_h + grid_y;
 				int cur_idx = transform.GetSiblingIndex ();
 
+				int cur_y = cur_idx % page_h;
+				int cur_x = (cur_idx - cur_y) / page_w;
+
 				// Getting rune to be swapped
 				Rune swap_rune = page.GetChild (swap_idx).GetComponent<Rune> ();
 
 				// Checking if the rune to be swapped is swappable, as well as if it is a different rune
 				if (swap_rune.swappable && swap_idx != cur_idx) {
-					
-					Debug.Log ("SWAP: " + cur_idx + " " + swap_idx);
 
+					//Debug.Log ("POS: " + grid_x + " " + grid_y + " , " + cur_x + " " + cur_y);
+					//Debug.Log ("SWAP: " + cur_idx + " " + swap_idx);
+
+					// Swapping runes in the DataManager
+					dataManager.getBuildData ().swapOnPage (cur_x, cur_y, grid_x, grid_y);
+
+					// Swapping Rune positions
 					transform.position = page.GetChild (swap_idx).transform.position;
-
 					page.GetChild (swap_idx).transform.position = drag_start_position;
 
+					// Swapping transform indices
 					if (swap_idx > cur_idx) {
 						page.GetChild (swap_idx).SetSiblingIndex (cur_idx);
 						page.GetChild (cur_idx + 1).SetSiblingIndex (swap_idx);
@@ -157,9 +165,17 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			// Dropped off of page, send back to table
 			} else {
 
-				//add stuff to table and update page, as well as adding a runeEmpty to the original slot
-				//***
-				transform.position = drag_start_position;
+				//Debug.Log ("Dropped off page, send back to table");
+
+				int cur_idx = transform.GetSiblingIndex();
+
+				// Adding dropped rune to table
+				dataManager.getBuildData ().addToTable (id);
+				// Updating table in case rune appears in filters
+				transform.parent.parent.GetComponent<BuildCanvas> ().changeTable ();
+
+				// Adding rune Empty to original position and deleting dropped rune
+				transform.parent.parent.GetComponent<BuildCanvas> ().removeRune(cur_idx,drag_start_position);
 			}
 
 		// Dropping a table rune
@@ -171,7 +187,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			int grid_x = (int) Mathf.Floor (grid_loc.x);
 			int grid_y = (int) Mathf.Floor (grid_loc.y);
 
-			Debug.Log ("GRID:" + grid_x + " " + grid_y);
+			//Debug.Log ("GRID:" + grid_x + " " + grid_y);
 
 			// If rune was dropped onto page
 			if (grid_x >= 0 & grid_x < page_w && grid_y >= 0 && grid_y < page_h) {
@@ -183,21 +199,36 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 				// Checking if the rune to be swapped is swappable
 				if (swap_rune.swappable) {
-					Debug.Log ("REPLACE: "+swap_idx);
 
-					//Replace and update table and page
-					//***
+					//Debug.Log ("REPLACE: "+swap_idx);
+
+					// Removing dropped rune from table
+					dataManager.getBuildData ().removeFromTable (id);
+
+					// If the rune being replaced is not the empty Rune, add back to table
+					if (swap_rune.Id.Split ('_') [2] != "Empty") {
+						// Adding replaced rune to table
+						dataManager.getBuildData ().addToTable (swap_rune.Id);
+					}
+
+					// Updating table
+					transform.parent.parent.GetComponent<BuildCanvas> ().changeTable ();
+
+					// Replacing rune on page
+					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, id);
 
 				// Not swappable, return to table
 				} else {
 					StartCoroutine (shrinkAnimation ());
 					transform.position = drag_start_position;
+					transform.rotation = Quaternion.identity;
 				}
 
 			// Not dropped onto page, send back to table
 			} else {
 				StartCoroutine (shrinkAnimation ());
 				transform.position = drag_start_position;
+				transform.rotation = Quaternion.identity;
 			}
 		}
 	}

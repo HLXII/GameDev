@@ -25,17 +25,17 @@ public class DataManager : MonoBehaviour {
 
 	public void loadData(string filename) {
 		//Debug.Log ("Loading Data: " + dataType + ", " + dataName);
-		//buildData = new BuildData ();
-		//saveData ("test4x4.txt");
-
+		buildData = new BuildData ();
+		saveData ("test4x4.txt");
+		/*
 		// OSXEditor files
 		if (Application.platform == RuntimePlatform.OSXEditor) {
 
-			/*
-			TextAsset[] test = Resources.FindObjectsOfTypeAll<TextAsset> ();
-			for (int i = 0; i < test.Length; i++) {
-				Debug.Log (test [i].name);
-			}*/
+
+			//TextAsset[] test = Resources.FindObjectsOfTypeAll<TextAsset> ();
+			//for (int i = 0; i < test.Length; i++) {
+			//	Debug.Log (test [i].name);
+			//}
 
 			//Debug.Log ("Loading " + puzzle.boardType + "/" + puzzleID);
 
@@ -56,7 +56,7 @@ public class DataManager : MonoBehaviour {
 			buildData = (BuildData)bf.Deserialize (s);
 		} else {
 			Debug.Log ("Invalid Platform : " + Application.platform);
-		}
+		}*/
 			
 	}
 
