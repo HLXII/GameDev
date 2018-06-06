@@ -80,11 +80,17 @@ public class BuildCanvas : MonoBehaviour {
 	}
 
 	public void replaceRune(int rune_idx, Vector3 pos, GameObject newRune) {
-		GameObject instance = Instantiate(runes[newRune.GetComponent<Rune>().Id], pos, Quaternion.identity) as GameObject;
+
+		GameObject.Destroy(page.GetChild(rune_idx).gameObject);
+
+		newRune.transform.SetParent (page);
+		newRune.transform.position = pos;
+		newRune.transform.SetSiblingIndex (rune_idx);
+		//GameObject instance = Instantiate(runes[newRune.GetComponent<Rune>().Id], pos, Quaternion.identity) as GameObject;
 
 		int rotation = newRune.GetComponent<Rune> ().Rotation;
 		int sides = newRune.GetComponent<Rune> ().Sides;
-
+		/*
 		instance.GetComponent<Rune> ().Rotation = rotation;
 
 		instance.transform.Rotate (Vector3.forward * 360 * rotation / sides);
@@ -92,8 +98,8 @@ public class BuildCanvas : MonoBehaviour {
 		instance.transform.localScale = page.localScale;
 		instance.transform.SetParent (page,true);
 		instance.transform.SetSiblingIndex (rune_idx + 1);
+*/
 
-		GameObject.Destroy(page.GetChild(rune_idx).gameObject);
 	}
 
 	public void changeTable(string filterName) {

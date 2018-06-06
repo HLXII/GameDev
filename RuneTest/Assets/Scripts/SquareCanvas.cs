@@ -193,6 +193,11 @@ public class SquareCanvas : BuildCanvas {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
 		}
+		for (int i = 0; i < page.childCount; i++) {
+			if (!page.GetChild (i).GetComponent<Rune> ().checkNeighbors ()) {
+				return false;
+			}
+		}
 		return true;
 	}
 

@@ -85,17 +85,18 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		swappable = true;
 		connections = (int[])new int[0];
 		outflow = new Energy[connections.Length];
+
 	}
 
 	protected void Update() {
 		if (drag && Input.GetAxis ("Mouse ScrollWheel") > 0f) {
 			// Updating connection ports
-			rotation = (rotation + 1) % sides;
+			rotation = (rotation - 1 + sides) % sides;
 			//Debug.Log ("Scroll Up "+rotation);
 			transform.Rotate (Vector3.forward * 360 / sides);
 		} else if (drag && Input.GetAxis ("Mouse ScrollWheel") < 0f) {
 			// Updating connection ports
-			rotation = (rotation - 1 + sides) % sides;
+			rotation = (rotation + 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 360 / sides);
 			//Debug.Log ("Scroll Down "+rotation);
 		}
@@ -209,12 +210,13 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 						// Adding replaced rune to table
 						dataManager.getBuildData ().addToTable (swap_rune.Id);
 					}
+						
+					// Replacing rune on page
+					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, gameObject);
 
 					// Updating table
 					transform.parent.parent.GetComponent<BuildCanvas> ().changeTable ();
 
-					// Replacing rune on page
-					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, gameObject);
 
 				// Not swappable, return to table
 				} else {
@@ -244,6 +246,24 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			}
 		}
 		return false;
+	}
+
+	public bool checkNeighbors() {
+		//Debug.Log (id);
+		foreach (int connection in connections) {
+			//Debug.Log ("C " + connection + "ACTUAL: " + ((connection + rotation) % sides));
+			if (neighbors [(connection + rotation) % sides] == null) {
+				Debug.Log (id);
+				Debug.Log (rotation);
+				foreach (GameObject n in neighbors) {
+					Debug.Log (n);
+				}
+				//Debug.Log (neighbors[(connection + rotation) % sides]);
+				return false;
+			}
+		}
+		//Debug.Log ("GOOD");
+		return true;
 	}
 
 	private IEnumerator expandAnimation (Vector3 new_scale) {
