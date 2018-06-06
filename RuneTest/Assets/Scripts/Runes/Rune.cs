@@ -12,9 +12,15 @@ public class Energy {
 		this.power = power;
 	}
 
+	public override string ToString() {
+		string o = "";
+		o += power.ToString ();
+		return o;
+	}
+
 }
 
-public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
 
 	/* Dictionary containing all available runes in the table.
 	 * Keys are the rune strings, values are the number of runes of that type
@@ -67,7 +73,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected int rotation;
 	protected int[] connections;
 	protected GameObject[] neighbors;
-	protected Energy[] outflow;
+
+	protected Energy[] energyIn;
+	protected Energy[] energyOut;
 
 	protected bool drag;
 	protected Vector3 drag_start_position;
@@ -83,20 +91,21 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		sides = 4;
 		movable = true;
 		swappable = true;
-		connections = (int[])new int[0];
-		outflow = new Energy[connections.Length];
+		connections = new int[0];
 
+		energyIn = new Energy[connections.Length];
+		energyOut = new Energy[connections.Length];
 	}
 
 	protected void Update() {
 		if (drag && Input.GetAxis ("Mouse ScrollWheel") > 0f) {
 			// Updating connection ports
-			rotation = (rotation - 1 + sides) % sides;
+			rotation = (rotation + 1 + sides) % sides;
 			//Debug.Log ("Scroll Up "+rotation);
 			transform.Rotate (Vector3.forward * 360 / sides);
 		} else if (drag && Input.GetAxis ("Mouse ScrollWheel") < 0f) {
 			// Updating connection ports
-			rotation = (rotation + 1 + sides) % sides;
+			rotation = (rotation - 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 360 / sides);
 			//Debug.Log ("Scroll Down "+rotation);
 		}
@@ -109,6 +118,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public GameObject[] Neighbors { get { return neighbors; } }
 	public string Id { get { return id; } }
 	public int Sides { get { return sides; } }
+	public int[] Connections { get { return connections; } }
+	public Energy[] EnergyIn { get { return energyIn; } }
+	public Energy[] EnergyOut { get { return energyOut; } } 
 
 	public void drop() {
 		//Debug.Log ("Dropped Rune");
@@ -234,10 +246,44 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
-	public virtual void energyFlow() {}
+	public void sendEnergy() {
 
+		// Looping through all energy output
+		for (int i = 0; i < energyOut.Length; i++) {
+			// If there is energy to be outputted
+			if (energyOut [i] != null) {
+				int outPort = (connections [i] + rotation) % sides;
+				int neighborInPort = (outPort + sides / 2) % sides;
+				// If there is a neighbor to output to
+				if (neighbors [outPort] != null) {
+					neighbors [outPort].GetComponent<Rune> ().receiveEnergy (energyOut [i], neighborInPort);
+				// There is no neighbor to output to, cause some kind of malfunction? ***
+				} else {
+
+				}
+			}
+		}
+
+		// Clear energyOut
+		energyOut = new Energy[connections.Length];
+
+	}
+
+	public virtual void manipulateEnergy() {}
+
+	public void receiveEnergy(Energy energyIn, int port) {
+		for (int i = 0; i < connections.Length; i++) {
+			if ((connections [i] + rotation) % sides == port) {
+				this.energyIn [i] = energyIn;
+				break;
+			}
+		}
+	}
+
+	// Finds connected neighbors
 	public virtual void findNeighbors() {}
 
+	// Checks if there is a connection in the direction
 	public bool isConnected (int direction)
 	{
 		foreach (int connection in connections) {
@@ -246,6 +292,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			}
 		}
 		return false;
+	}
+
+	// Resets the energy state
+	public void reset() {
+		energyIn = new Energy[connections.Length];
+		energyOut = new Energy[connections.Length];
 	}
 
 	public bool checkNeighbors() {
@@ -328,6 +380,49 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				gameObject.GetComponent<Rune> ().drop ();
 			}
 		}
+	}
+
+	public override string ToString ()
+	{
+		string o = "";
+		o += id.ToString () + "\nR: " + rotation.ToString();
+		o += "\nConnections: ";
+		foreach (int connection in connections) {
+			o += connection.ToString () + " ";
+		}
+		o += "\nActual: ";
+		foreach (int connection in connections) {
+			o += ((connection+rotation) % sides).ToString () + " ";
+		}
+		o += "\nEnergyIn: ";
+		foreach (Energy e in energyIn) {
+			if (e == null) {
+				o += "null ";
+			} else {
+				o += e.ToString () + " ";
+			}
+		}
+		o += "\nEnergyOut: ";
+		foreach (Energy e in energyOut) {
+			if (e == null) {
+				o += "null ";
+			} else {
+				o += e.ToString () + " ";
+			}
+		}
+		o += "\nNeighbors: ";
+		foreach (GameObject neighbor in neighbors) {
+			if (neighbor == null) {
+				o += "null ";
+			} else {
+				o += neighbor.GetComponent<Rune> ().Id + " ";
+			}
+		}
+		return o;
+	}
+
+	public void OnPointerClick (PointerEventData eventData) {
+		Debug.Log (this);
 	}
 		
 }

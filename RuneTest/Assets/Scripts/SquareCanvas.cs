@@ -205,6 +205,23 @@ public class SquareCanvas : BuildCanvas {
 		Debug.Log (pageCheck ());
 	}
 
+	public void resetSimulation() {
+		Debug.Log ("Resetting Simulation");
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().reset ();
+		}
+	}
+
+	public void simulationStep() {
+		Debug.Log ("Simulation Step");
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().sendEnergy ();
+		}
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().manipulateEnergy ();
+		}
+	}
+
 	/*
 	public void changeTable(string filterName) {
 

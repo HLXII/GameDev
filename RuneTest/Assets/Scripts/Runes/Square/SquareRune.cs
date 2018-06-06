@@ -38,12 +38,12 @@ public class SquareRune : Rune {
 			neighbors [0] = null;
 		}
 
-		// There is a rune below
-		if (rune_y != 0) {
-			// The rune below is connected
-			GameObject belowRune = transform.parent.GetChild (rune_idx - 1).gameObject;
-			if (belowRune.GetComponent<Rune> ().isConnected (3)) {
-				neighbors [1] = belowRune;
+		// There is a rune above
+		if (rune_y != page_h - 1) {
+			// The rune above is connected
+			GameObject upRune = transform.parent.GetChild (rune_idx + 1).gameObject;
+			if (upRune.GetComponent<Rune> ().isConnected (3)) {
+				neighbors [1] = upRune;
 			} else {
 				neighbors [1] = null;
 			}
@@ -64,12 +64,12 @@ public class SquareRune : Rune {
 			neighbors [2] = null;
 		}
 
-		// There is a rune above
-		if (rune_y != page_h - 1) {
-			// The rune above is connected
-			GameObject upRune = transform.parent.GetChild (rune_idx + 1).gameObject;
-			if (upRune.GetComponent<Rune> ().isConnected (1)) {
-				neighbors [3] = upRune;
+		// There is a rune below
+		if (rune_y != 0) {
+			// The rune below is connected
+			GameObject belowRune = transform.parent.GetChild (rune_idx - 1).gameObject;
+			if (belowRune.GetComponent<Rune> ().isConnected (1)) {
+				neighbors [3] = belowRune;
 			} else {
 				neighbors [3] = null;
 			}
