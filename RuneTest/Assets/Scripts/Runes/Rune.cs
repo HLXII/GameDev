@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Linq;
 
 public class Energy {
 
@@ -64,6 +65,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected bool swappable;
 
 	protected int rotation;
+	protected int[] connections;
 	protected GameObject[] neighbors;
 	protected Energy[] outflow;
 
@@ -81,33 +83,31 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		sides = 4;
 		movable = true;
 		swappable = true;
+		connections = (int[])new int[0];
+		outflow = new Energy[connections.Length];
 	}
 
 	protected void Update() {
 		if (drag && Input.GetAxis ("Mouse ScrollWheel") > 0f) {
+			// Updating connection ports
 			rotation = (rotation + 1) % sides;
 			//Debug.Log ("Scroll Up "+rotation);
-			transform.Rotate (Vector3.forward * 90);
+			transform.Rotate (Vector3.forward * 360 / sides);
 		} else if (drag && Input.GetAxis ("Mouse ScrollWheel") < 0f) {
-			
+			// Updating connection ports
 			rotation = (rotation - 1 + sides) % sides;
-			transform.Rotate (Vector3.back * 90);
+			transform.Rotate (Vector3.back * 360 / sides);
 			//Debug.Log ("Scroll Down "+rotation);
 		}
 	}
 
-	void energyFlow() {
-
-	}
-
-	public int Rotation
-	{
+	public int Rotation {
 		get { return rotation; }
 		set { rotation = value; }
 	}
-
+	public GameObject[] Neighbors { get { return neighbors; } }
 	public string Id { get { return id; } }
-	
+	public int Sides { get { return sides; } }
 
 	public void drop() {
 		//Debug.Log ("Dropped Rune");
@@ -177,7 +177,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				// Adding rune Empty to original position and deleting dropped rune
 				transform.parent.parent.GetComponent<BuildCanvas> ().removeRune(cur_idx,drag_start_position);
 			}
-
 		// Dropping a table rune
 		} else {
 			
@@ -215,26 +214,36 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					transform.parent.parent.GetComponent<BuildCanvas> ().changeTable ();
 
 					// Replacing rune on page
-					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, id);
+					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, gameObject);
 
 				// Not swappable, return to table
 				} else {
 					StartCoroutine (shrinkAnimation ());
 					transform.position = drag_start_position;
-					transform.rotation = Quaternion.identity;
+					Rotation = 0;
 				}
 
 			// Not dropped onto page, send back to table
 			} else {
 				StartCoroutine (shrinkAnimation ());
 				transform.position = drag_start_position;
-				transform.rotation = Quaternion.identity;
+				Rotation = 0;
 			}
 		}
 	}
 
-	public virtual void findNeighbors() {
-		Debug.Log ("Finding Neighbors");
+	public virtual void energyFlow() {}
+
+	public virtual void findNeighbors() {}
+
+	public bool isConnected (int direction)
+	{
+		foreach (int connection in connections) {
+			if (direction == (connection + rotation) % sides) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private IEnumerator expandAnimation (Vector3 new_scale) {

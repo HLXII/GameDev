@@ -165,18 +165,10 @@ public class SquareCanvas : BuildCanvas {
 
 		//Debug.Log ("Page Screen: W" + page_screen_w + " H" + page_screen_h);
 
-		// Getting the size of the rune tiles in the page transform by pixels
-		float sprite_w = runeEmpty.GetComponent<SpriteRenderer> ().sprite.rect.width;
-		float sprite_h = runeEmpty.GetComponent<SpriteRenderer> ().sprite.rect.height;
-
-		//Debug.Log ("Sprite Size: W" + sprite_w + " H" + sprite_h);
-
 		float h_scale = page_screen_h / page_h;
 		float w_scale = page_screen_w / page_w;
 
 		//Debug.Log ("HSCALE: " + h_scale + " WSCALE: " + w_scale);
-
-		//Debug.Log ("BEFORE: " + this.page.localPosition);
 
 		// Bring page position to top left corner, then to where it should be
 		this.page.localPosition -= new Vector3 (screen_w/2, screen_h/2, 0);
@@ -191,13 +183,23 @@ public class SquareCanvas : BuildCanvas {
 		this.page.localScale = new Vector3 (scale, scale, 1);
 		this.page.localPosition += new Vector3 ((page_screen_w - new_sprite_w) / 2, (page_screen_h - new_sprite_h) / 2, 0);
 
-		//Debug.Log ("AFTER: " + this.page.localPosition);
-
 		// Bring table position to top right corner, then to where it should be
 		this.table.localPosition -= new Vector3 (screen_w/2 , screen_h / 2, 0);
 		this.table.localPosition += new Vector3 (screen_w * 1.5f / 16, screen_h * 6f / 9);
 
 	}
+
+	public override bool pageCheck() {
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+		}
+		return true;
+	}
+
+	public void btnCheck() {
+		Debug.Log (pageCheck ());
+	}
+
 	/*
 	public void changeTable(string filterName) {
 

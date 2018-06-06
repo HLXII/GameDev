@@ -79,8 +79,16 @@ public class BuildCanvas : MonoBehaviour {
 
 	}
 
-	public void replaceRune(int rune_idx, Vector3 pos, string newRuneString) {
-		GameObject instance = Instantiate(runes[newRuneString], pos, Quaternion.identity) as GameObject;
+	public void replaceRune(int rune_idx, Vector3 pos, GameObject newRune) {
+		GameObject instance = Instantiate(runes[newRune.GetComponent<Rune>().Id], pos, Quaternion.identity) as GameObject;
+
+		int rotation = newRune.GetComponent<Rune> ().Rotation;
+		int sides = newRune.GetComponent<Rune> ().Sides;
+
+		instance.GetComponent<Rune> ().Rotation = rotation;
+
+		instance.transform.Rotate (Vector3.forward * 360 * rotation / sides);
+
 		instance.transform.localScale = page.localScale;
 		instance.transform.SetParent (page,true);
 		instance.transform.SetSiblingIndex (rune_idx + 1);
@@ -152,6 +160,10 @@ public class BuildCanvas : MonoBehaviour {
 			curPage++;
 			updateTable ();
 		}
+	}
+
+	public virtual bool pageCheck() {
+		return true;
 	}
 
 }
