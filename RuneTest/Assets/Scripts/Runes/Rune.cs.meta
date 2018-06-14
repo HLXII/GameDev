@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: f2050fb53729344b7b6c8778977e7c95
-timeCreated: 1527647838
+timeCreated: 1528598542
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - energyAnimator: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

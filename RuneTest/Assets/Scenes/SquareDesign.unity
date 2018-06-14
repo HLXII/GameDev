@@ -1594,7 +1594,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 06eb2019fed8f4d0383970c23926aa2a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a5a652f406da47ed9aea71ee7430603, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2629,7 +2629,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2103706366}
-        m_MethodName: simulationStep
+        m_MethodName: simulateButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3347,7 +3347,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -3397,7 +3397,7 @@ MonoBehaviour:
   dataManager: {fileID: 0}
   runeSource: {fileID: 1616236095315278, guid: 69def4c78be914023895b230e9c3ed45, type: 2}
   runeSink: {fileID: 1295503599513702, guid: 3a8737616f9614c03b8f63198ec49195, type: 2}
-  runeSingleWire: {fileID: 1353425065198780, guid: 7669959c2a9e149c8a1495ae60c0961b,
+  runeSingleWire: {fileID: 1565397284687774, guid: 7669959c2a9e149c8a1495ae60c0961b,
     type: 2}
   runeTJunction: {fileID: 1609297218419510, guid: 19ff866aa42164c72ab154cdb3a4fcf8,
     type: 2}

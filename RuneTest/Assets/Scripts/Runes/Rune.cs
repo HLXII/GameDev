@@ -95,6 +95,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		energyIn = new Energy[connections.Length];
 		energyOut = new Energy[connections.Length];
+
+		//Instantiate (energyAnimator, transform);
+
+		//float sprite_size = gameObject.GetComponent<SpriteRenderer> ().sprite.rect.height;
+
+		//transform.GetChild (0).localScale = new Vector3 (100f / sprite_size, 100f / sprite_size, 1);
 	}
 
 	protected void Update() {
@@ -295,7 +301,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	// Resets the energy state
-	public void reset() {
+	public virtual void reset() {
 		energyIn = new Energy[connections.Length];
 		energyOut = new Energy[connections.Length];
 	}
@@ -421,7 +427,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		return o;
 	}
 
-	public void OnPointerClick (PointerEventData eventData) {
+	public virtual void OnPointerClick (PointerEventData eventData) {
 		Debug.Log (this);
 	}
 		

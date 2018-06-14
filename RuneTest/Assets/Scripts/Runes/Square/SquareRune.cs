@@ -21,7 +21,7 @@ public class SquareRune : Rune {
 		int rune_idx = transform.GetSiblingIndex ();
 
 		int rune_y = rune_idx % page_h;
-		int rune_x = (rune_idx - rune_y) / page_w;
+		int rune_x = (rune_idx - rune_y) / page_h;
 
 		neighbors = new GameObject[4];
 
@@ -77,16 +77,5 @@ public class SquareRune : Rune {
 			neighbors [3] = null;
 		}
 
-		/*
-		string o = "";
-
-		for (int i = 0; i < neighbors.Length; i++) {
-			if (neighbors[i] == null) {
-				o += "null ";
-			} else {
-				o += neighbors [i].name + " ";
-			}
-		}
-		Debug.Log (o);*/
 	}
 }

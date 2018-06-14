@@ -38,37 +38,32 @@ public class BuildData {
 	public BuildData() {
 
 		// Size of board.
-		int width = 4;
-		int height = 4;
+		int width = 10;
+		int height = 2;
 
 		table = new SortedList<string,int> (new RuneComparer());
 
-		//table.Add ("S_Wire_Single_0", 2);
-		table.Add ("S_Output_Sink_0", 1);
-		table.Add ("S_Input_Source_0", 5);
-		table.Add ("S_Wire_TJunction_0", 1);
-		table.Add("S_Wire_FourWay_0",2);
-		table.Add ("S_Wire_Cross_0", 1);
-		table.Add ("S_Special_Block_0", 1);
+		table.Add ("S_Output_Sink_0", 100);
+		table.Add ("S_Input_Source_0", 100);
+		table.Add ("S_Wire_TJunction_0", 100);
+		table.Add("S_Wire_FourWay_0",100);
+		table.Add ("S_Wire_Cross_0", 100);
+		table.Add ("S_Wire_Single_0", 100);
 
 		page = new string[width, height];
 		//this.page = new string[,] {{"SX","S_","S_"},{"SX","SX","SX"},{"S_","SX","S_"}};
-		page = new string[,] {
-			{ "S_Special_Void_0", "S_Special_Void_0", "S_Input_Source_0", "S_Special_Block_0" },
-			{ "S_Special_Empty_0", "S_Special_Empty_0", "S_Wire_Single_0", "S_Special_Empty_0" },
-			{ "S_Special_Void_0", "S_Special_Empty_0", "S_Special_Empty_0", "S_Special_Empty_0" },
-			{ "S_Special_Block_0", "S_Special_Block_0", "S_Special_Empty_0", "S_Special_Block_0" }
-		};
-		/*
+		//page = new string[,] {
+		//	{ "S_Special_Void_0", "S_Special_Void_0", "S_Input_Source_0", "S_Special_Block_0" },
+		//	{ "S_Special_Empty_0", "S_Special_Empty_0", "S_Wire_Single_0", "S_Special_Empty_0" },
+		//	{ "S_Special_Void_0", "S_Special_Empty_0", "S_Special_Empty_0", "S_Special_Empty_0" },
+		//	{ "S_Special_Block_0", "S_Special_Block_0", "S_Special_Empty_0", "S_Special_Block_0" }
+		//};
+
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				if (j != 0 && j != height-1) {
-					this.page [i,j] = "SX";
-				} else {
-					this.page [i,j] = "S_";
-				}
+				this.page [i, j] = "S_Special_Empty_0";
 			}
-		}*/
+		}
 
 	}
 

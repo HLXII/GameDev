@@ -36,10 +36,13 @@ public class SquareCanvas : BuildCanvas {
 	//private int curPage;
 	//private Bounds tableBounds;
 
+	private bool simulating;
 
 	// Use this for initialization
 	void Start () {
-		
+
+		simulating = false;
+
 		initRunes ();
 		initBuild ();
 
@@ -192,6 +195,7 @@ public class SquareCanvas : BuildCanvas {
 	public override bool pageCheck() {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+			//page.GetChild (i).GetChild (0).GetComponent<Animator> ().SetTrigger ("right_to_left");
 		}
 		for (int i = 0; i < page.childCount; i++) {
 			if (!page.GetChild (i).GetComponent<Rune> ().checkNeighbors ()) {
@@ -212,6 +216,16 @@ public class SquareCanvas : BuildCanvas {
 		}
 	}
 
+	public void simulateButton() {
+		if (simulating) {
+			simulating = false;
+			CancelInvoke ();
+		} else {
+			simulating = true;
+			InvokeRepeating ("simulationStep", 0f, .2f);
+		}
+	}
+
 	public void simulationStep() {
 		Debug.Log ("Simulation Step");
 		for (int i = 0; i < page.childCount; i++) {
@@ -220,6 +234,7 @@ public class SquareCanvas : BuildCanvas {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().manipulateEnergy ();
 		}
+		//Debug.Log (page.GetChild (0).GetChild (0).GetComponent<Animator> ().runtimeAnimatorController.animationClips[0].length);
 	}
 
 	/*

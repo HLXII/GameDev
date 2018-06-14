@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4148457815980228}
   - component: {fileID: 212973717601891140}
-  - component: {fileID: 61250769927973608}
-  - component: {fileID: 114998007224921334}
+  - component: {fileID: 114843206228210214}
+  - component: {fileID: 61884040234294762}
   m_Layer: 0
   m_Name: SquareBlock
   m_TagString: Untagged
@@ -42,7 +42,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &61250769927973608
+--- !u!61 &61884040234294762
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -58,16 +58,16 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 1.28}
+    oldSize: {x: 0.16, y: 0.16}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
---- !u!114 &114998007224921334
+--- !u!114 &114843206228210214
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -75,9 +75,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1540341093206776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f48d6ca327064c8bac6127dc536bc61, type: 3}
+  m_Script: {fileID: 11500000, guid: 374e967f6b46742dbadc6b6ffff319d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyAnimator: {fileID: 1411383055469712, guid: 08043e28b73bb474d8e3d67de98a8fc0,
+    type: 2}
 --- !u!212 &212973717601891140
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -108,7 +110,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 220239973
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d7e238e1ea78c4d45aad7539f4e94775, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
