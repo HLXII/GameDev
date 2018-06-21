@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
-public class Gem : MonoBehaviour {
+public class Gem : MonoBehaviour, IPointerClickHandler {
 
 	public static Dictionary<int,Color> colorID = new Dictionary<int, Color> () 
 	{   {0,new Color(1,1,1)},																			
@@ -42,6 +43,10 @@ public class Gem : MonoBehaviour {
 
 	public bool checkGem() {
 		return (rimColor == gemColor);
+	}
+
+	public virtual void OnPointerClick (PointerEventData eventData) {
+		Debug.Log (this);
 	}
 
 	// Button Function for Title Screen
