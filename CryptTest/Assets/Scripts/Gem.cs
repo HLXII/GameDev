@@ -20,6 +20,11 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 	public int gemColor;
 	public int rimColor;
 
+	public void Start() {
+		gameObject.GetComponent<Image> ().alphaHitTestMinimumThreshold = .5f;
+	}
+
+
 	public void setGem(int gemID) {
 		gemColor = gemID;
 		this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemID];
@@ -47,70 +52,6 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 
 	public virtual void OnPointerClick (PointerEventData eventData) {
 		Debug.Log (this);
-	}
-
-	// Button Function for Title Screen
-	public void ClickLoadScene() {
-
-		BoardManager boardManager = GameObject.Find ("BoardManager").GetComponent<BoardManager> ();
-		Debug.Log ("Loading Scene");
-
-		float sceneID = gameObject.transform.position.x + (2 - gameObject.transform.position.y-1) * 2;
-
-		//Debug.Log ("Scene ID: " + sceneID);
-
-		switch ((int)sceneID) {
-
-		// Puzzle Selection
-		case 0:
-			Debug.Log ("Scene ID: Select");
-			SceneManager.LoadScene ("Select");
-			boardManager.LoadBoardData (BoardType.Select, 0);
-			break;
-
-		// Puzzle Editor
-		case 1:
-			Debug.Log ("Scene ID: Editor");
-			boardManager.LoadBoardData (BoardType.Editor, 0);
-			SceneManager.LoadScene ("Editor");
-			break;
-
-		// Created Puzzles
-		case 2:
-			Debug.Log ("Scene ID: Created Puzzles");
-			break;
-
-		// Options
-		case 3:
-			Debug.Log ("Scene ID: Options");
-			break;
-		
-		default:
-			Debug.Log ("How did you get this SceneID?");
-			break;
-		}
-	}
-
-	// Button Function for Selection Screen
-	public void ClickLoadPuzzle() {
-
-		Debug.Log ("Loading Puzzle");
-
-		BoardManager boardManager = GameObject.Find ("BoardManager").GetComponent<BoardManager> ();
-		// Use board type to find current puzzle selection screen
-		BoardData boardData = boardManager.getBoardData();
-		BoardType puzzleType = (BoardType)((int)boardData.boardType + 1);
-
-
-		Vector3 position = this.transform.position;
-		int size = boardData.gemMatrix.GetLength(0);
-
-		int puzzleID = (int) (position.x + (size - position.y - 1) * size);
-
-		Debug.Log ("Puzzle ID: " + puzzleType.ToString() + puzzleID.ToString());
-
-		boardManager.LoadBoardData (puzzleType, puzzleID);
-		SceneManager.LoadScene ("Board");
 	}
 
 	public void ClickLight() {

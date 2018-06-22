@@ -105,7 +105,7 @@ public class BoardManager : MonoBehaviour {
 		Debug.Log (Gem);
 
 		board = new GameObject ("Board").transform;
-
+		/*
 		for (int i = 0; i < boardData.gemMatrix.GetLength(0); i++) {
 			for (int j = 0; j < boardData.gemMatrix.GetLength(0); j++) {
 
@@ -138,7 +138,7 @@ public class BoardManager : MonoBehaviour {
 				instance.transform.SetParent (board);
 			}
 		}
-		
+		*/
 		board.SetParent (gameObject.transform);
 
 		GameObject.Find ("Main Camera").transform.position = new Vector3 ((boardData.gemMatrix.GetLength(0)-1)/2f,(boardData.gemMatrix.GetLength(0)-1)/2f,-10f);
