@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 
 public class SceneGem : Gem {
 
-	public enum Scene {Title, PuzzleSelect, LightBoard};
+	public enum Scene {Title, PuzzleSelect, Options, Delete, 
+		LightSelect, RowsAndColumnsSelect,  InvertDragSelect, Switch3Select, Rotate3Select, SwitchDragSelect,
+		LightBoard, RowsAndColumnsBoard, InvertDragBoard, Switch3Board, Rotate3Board, SwitchDragBoard};
 
 	private Scene sceneId = Scene.Title;
 	public Scene SceneId {get{return sceneId;} set{sceneId = value;}}

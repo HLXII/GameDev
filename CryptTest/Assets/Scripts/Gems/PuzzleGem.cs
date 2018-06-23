@@ -7,15 +7,18 @@ using UnityEngine.EventSystems;
 
 public class PuzzleGem : Gem {
 
-	public enum Puzzle {Lights, RowsAndColumns, InvertDrag, Switch3, Rotate3, SwitchDrag};
+	private int puzzleId = 0;
+	public int PuzzleId {get{return puzzleId;} set{puzzleId = value;}}
 
-	private Puzzle puzzleId = 0;
-	public Puzzle PuzzleId {get{return puzzleId;} set{puzzleId = value;}}
+	private string puzzleType = "";
+	public string PuzzleType { get { return puzzleType; } set { puzzleType = value; } }
 
 	public override void OnPointerClick (PointerEventData eventData) {
-		Debug.Log ("Puzzle ID: " + puzzleId.ToString());
+		Debug.Log ("Puzzle: " + puzzleType + " " + puzzleId.ToString());
 
-		SceneManager.LoadScene (puzzleId.ToString ());
+		GameObject.Find ("DataManager").GetComponent<DataManager> ().loadPuzzle (puzzleType, puzzleId);
+
+		SceneManager.LoadScene (puzzleType+"Board");
 	}
 		
 	/*

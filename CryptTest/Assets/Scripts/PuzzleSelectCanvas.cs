@@ -10,14 +10,14 @@ public class PuzzleSelectCanvas : MonoBehaviour {
 	void Start () {
 
 		RectTransform b = transform.GetChild(0).transform as RectTransform;
-		Debug.Log (b.rect);
+		//Debug.Log (b.rect);
 
 		RectTransform gemTransform = gem.transform as RectTransform;
-		Debug.Log (gemTransform.rect);
+		//Debug.Log (gemTransform.rect);
 
 		float scale = Mathf.Min (b.rect.width / (4 * gemTransform.rect.width), b.rect.width / (3 * gemTransform.rect.width));
 
-		Debug.Log (scale);
+		//Debug.Log (scale);
 
 		Transform board = GameObject.Find ("Board").transform;
 
@@ -25,8 +25,8 @@ public class PuzzleSelectCanvas : MonoBehaviour {
 
 		for (int i = 0; i < 6; i++) {
 			GameObject instance = Instantiate (gem, board);
-			instance.AddComponent<PuzzleGem> ();
-			instance.GetComponent<PuzzleGem> ().PuzzleId = (PuzzleGem.Puzzle)i;
+			instance.AddComponent<SceneGem> ();
+			instance.GetComponent<SceneGem> ().SceneId = (SceneGem.Scene)i + (int) SceneGem.Scene.LightSelect;
 		}
 
 	}

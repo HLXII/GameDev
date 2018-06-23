@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 1c849aedb14da46368c8c70177e58575
+timeCreated: 1529790258
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - gem: {fileID: 1191624831459952, guid: 34229b73342d1427d8e23328b43b565d, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -2,26 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TitleCanvas : MonoBehaviour {
-
-	public GameObject gem;
-
+public class TitleCanvas : BoardCanvas {
+	
 	// Use this for initialization
-	void Start () {
-		
-		RectTransform b = transform.GetChild(0).transform as RectTransform;
-		Debug.Log (b.rect);
+	public override void Start () {
 
-		RectTransform gemTransform = gem.transform as RectTransform;
-		Debug.Log (gemTransform.rect);
+		setupBoard ();
 
 		Transform board = GameObject.Find ("Board").transform;
 
-		float scale = Mathf.Min (b.rect.width / (4 * gemTransform.rect.width), b.rect.width / (3 * gemTransform.rect.width));
-
-		board.localScale = new Vector3 (scale, scale, 1);
-
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < width*height; i++) {
 			GameObject instance = Instantiate (gem, board);
 			instance.AddComponent<SceneGem> ();
 			switch (i) {
@@ -41,7 +31,7 @@ public class TitleCanvas : MonoBehaviour {
 				break;
 			}
 		}
-
+			
 	}
 	
 	// Update is called once per frame
