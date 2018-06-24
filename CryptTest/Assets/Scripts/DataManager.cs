@@ -8,12 +8,15 @@ public class DataManager : MonoBehaviour {
 	void Start () {
 		DontDestroyOnLoad (this);
 
+		if (FindObjectsOfType(GetType()).Length > 1)
+		{
+			Destroy(gameObject);
+		}
+
 		if (!PlayerPrefs.HasKey ("Exists")) {
 			Debug.Log ("Creating new PlayerPrefs");
 			PlayerPrefs.SetInt ("Exists", 0);
-
-
-
+			PlayerPrefs.SetInt ("LightSelect", 0);
 
 			PlayerPrefs.Save ();
 		} else {
@@ -24,10 +27,6 @@ public class DataManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-	}
-
-	public int[,,] loadSelect(string puzzleType) {
-		return null;
 	}
 
 	public void loadPuzzle(string puzzleType, int puzzleId) {

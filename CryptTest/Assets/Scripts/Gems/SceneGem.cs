@@ -15,9 +15,13 @@ public class SceneGem : Gem {
 	public Scene SceneId {get{return sceneId;} set{sceneId = value;}}
 
 	public override void OnPointerClick (PointerEventData eventData) {
-		Debug.Log ("Scene ID: " + sceneId);
+		if (gemColor == 1 && rimColor == 1) {
+		
+		} else {
+			Debug.Log ("Scene ID: " + sceneId);
 
-		SceneManager.LoadScene (SceneId.ToString());
+			SceneManager.LoadScene (SceneId.ToString ());
+		}
 
 	}
 

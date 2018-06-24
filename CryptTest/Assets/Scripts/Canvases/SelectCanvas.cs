@@ -19,6 +19,8 @@ public class SelectCanvas : BoardCanvas {
 			instance.GetComponent<PuzzleGem> ().PuzzleType = puzzleType;
 		}
 
+		setupBack (SceneGem.Scene.PuzzleSelect);
+
 	}
 	
 	// Update is called once per frame

@@ -19,11 +19,30 @@ public class BoardCanvas : MonoBehaviour {
 
 		Transform board = GameObject.Find ("Board").transform;
 
-		float scale = Mathf.Min (b.rect.width / (4 * gemTransform.rect.width), b.rect.width / (width * gemTransform.rect.width));
-
+		float scale = Mathf.Min (b.rect.width / (4 * gemTransform.rect.width), b.rect.width / (width * gemTransform.rect.width), b.rect.height / (height * gemTransform.rect.height));
+		
 		board.localScale = new Vector3 (scale, scale, 1);
 
 		GameObject.Find ("Board").GetComponent<GridLayoutGroup> ().constraintCount = width;
+	}
+
+	protected void setupBack(SceneGem.Scene scene) {
+		Transform back = GameObject.Find("Back").transform;
+		Transform board = GameObject.Find ("Board").transform;
+
+		back.localScale = board.localScale;
+
+		GameObject backGem = Instantiate (gem, back);
+		backGem.AddComponent<SceneGem> ();
+		backGem.GetComponent<SceneGem> ().SceneId = scene;
+	}
+
+	protected void setupLeft(SceneGem.Scene scene) {
+
+	}
+
+	protected void setupRight(SceneGem.Scene scene) {
+
 	}
 
 	// Use this for initialization

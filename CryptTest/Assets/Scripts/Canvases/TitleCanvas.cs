@@ -17,15 +17,19 @@ public class TitleCanvas : BoardCanvas {
 			switch (i) {
 			case 0:
 				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
+				instance.GetComponent<Gem> ().setGem ("red");
 				break;
 			case 1:
 				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
+				instance.GetComponent<Gem> ().setGem ("blue");
 				break;
 			case 2:
-				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
+				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Options;
+				instance.GetComponent<Gem> ().setGem ("green");
 				break;
 			case 3:
-				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
+				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Delete;
+				instance.GetComponent<Gem> ().setGem ("yellow");
 				break;
 			default:
 				break;

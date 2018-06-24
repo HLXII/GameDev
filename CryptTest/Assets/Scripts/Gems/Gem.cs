@@ -7,6 +7,16 @@ using UnityEngine.EventSystems;
 
 public class Gem : MonoBehaviour, IPointerClickHandler {
 
+	public static Dictionary<string, int> colorString = new Dictionary<string, int> ()
+	{   {"white",0},																			
+		{"black",1},
+		{"red",2},
+		{"orange",3},
+		{"yellow",4},
+		{"green",5},
+		{"blue",6},
+		{"purple",7},};
+
 	public static Dictionary<int,Color> colorID = new Dictionary<int, Color> () 
 	{   {0,new Color(1,1,1)},																			
 		{1,new Color(.25f,.25f,.25f)},
@@ -20,14 +30,14 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 	public int gemColor;
 	public int rimColor;
 
-	public void Start() {
+	public virtual void Start() {
 		gameObject.GetComponent<Image> ().alphaHitTestMinimumThreshold = .5f;
 	}
 
 
 	public void setGem(int gemID) {
 		gemColor = gemID;
-		this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemID];
+		this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemColor];
 		//Debug.Log (this.transform.GetChild (0).GetComponent<Image> ().color);
 		//gameObject.GetComponent<Image> ().sprite = gemTypes [gemID];
 			//Debug.Log ("Setting " + this.transform.position + " " + gameObject.GetComponent<Image> ().sprite.name);
@@ -41,9 +51,19 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 
 	}
 
+	public void setGem(string color) {
+		gemColor = colorString [color];
+		this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemColor];
+	}
+
 	public void setRim(int rimID) {
 		rimColor = rimID;
-		this.transform.GetChild (2).GetComponent<Image> ().color = colorID [rimID];
+		this.transform.GetChild (2).GetComponent<Image> ().color = colorID [rimColor];
+	}
+
+	public void setRim(string color) {
+		rimColor = colorString[color];
+		this.transform.GetChild (2).GetComponent<Image> ().color = colorID [rimColor];
 	}
 
 	public bool checkGem() {
