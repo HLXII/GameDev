@@ -9,7 +9,11 @@ using System.IO;
 [System.Serializable]
 public class BoardData {
 
-	public int[,,] board;
+	public int[,,] matrix;
+
+	public BoardData(int[,,] data) {
+		matrix = data;
+	}
 
 }
 
@@ -21,26 +25,43 @@ public class DataManager : MonoBehaviour {
 	void Start () {
 		DontDestroyOnLoad (this);
 
+		int[,,] data = new int[,,] {
+			{{1,1},{1,1},{1,1}},
+			{{1,1},{1,1},{1,1}},
+			{{1,1},{1,1},{1,1}}
+		};
+
+		board = new BoardData (data);
+
+		Save ("Light0.txt");
+
 		if (FindObjectsOfType(GetType()).Length > 1)
 		{
 			Destroy(gameObject);
 		}
 
 		if (!PlayerPrefs.HasKey ("Exists")) {
-			Debug.Log ("Creating new PlayerPrefs");
+			Debug.Log ("Creating New PlayerPrefs");
 			PlayerPrefs.SetInt ("Exists", 0);
 			PlayerPrefs.SetInt ("LightSelect", 0);
 			PlayerPrefs.SetInt ("Light0",0);
 
 			PlayerPrefs.Save ();
 		} else {
-			Debug.Log ("PlayerPrefs exist");
+			Debug.Log ("PlayerPrefs Exist");
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public int[,,] getData() {
+		return board.matrix;
+	}
+
+	public void Save(string filename) {
+		Debug.Log ("Saving Board at " + Application.persistentDataPath + "/" + filename);
+		BinaryFormatter bf = new BinaryFormatter();
+		FileStream file = File.Create (Application.persistentDataPath + "/" + filename);
+		bf.Serialize(file, board);
+		file.Close();
 	}
 
 	public void loadPuzzle(string puzzleType, int puzzleId) {

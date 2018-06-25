@@ -73,7 +73,7 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 	public virtual void OnPointerClick (PointerEventData eventData) {
 		Debug.Log (this);
 	}
-
+	/*
 	public void ClickLight() {
 
 		Transform board = GameObject.Find ("Board").transform;
@@ -86,7 +86,7 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 
 		//Debug.Log("Position: " + this.transform.position + " Index: " + index);
 
-		/*Vector3 up = this.transform.position;
+		Vector3 up = this.transform.position;
 		up.y = (up.y + 1) % size;
 		Vector3 down = this.transform.position;
 		down.y = (down.y - 1) % size;
@@ -96,7 +96,7 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 		right.x = (right.x + 1) % size;
 
 		Debug.Log ("Up: " + up + " Down: " + down + " Left: " + left + " Right: " + right);
-		*/
+
 		
 
 		GameObject gemMid = board.GetChild ((int)(position.x * size + position.y)).gameObject;
@@ -121,6 +121,6 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 
 		GameObject.Find ("BoardManager").GetComponent<BoardManager> ().CheckComplete ();
 
-	}
+	}*/
 
 }
