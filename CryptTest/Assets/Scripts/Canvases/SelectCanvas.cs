@@ -17,6 +17,18 @@ public class SelectCanvas : BoardCanvas {
 			instance.AddComponent<PuzzleGem> ();
 			instance.GetComponent<PuzzleGem> ().PuzzleId = i;
 			instance.GetComponent<PuzzleGem> ().PuzzleType = puzzleType;
+
+			if (PlayerPrefs.HasKey (puzzleType + i.ToString ())) {
+				instance.GetComponent<PuzzleGem> ().setRim ("white");
+			} else {
+				instance.GetComponent<PuzzleGem> ().setRim ("black");
+			}
+
+			if (PlayerPrefs.HasKey (puzzleType + i.ToString () + "Complete")) {
+				instance.GetComponent<PuzzleGem> ().setGem ("white");
+			} else {
+				instance.GetComponent<PuzzleGem> ().setGem ("black");
+			}
 		}
 
 		setupBack (SceneGem.Scene.PuzzleSelect);

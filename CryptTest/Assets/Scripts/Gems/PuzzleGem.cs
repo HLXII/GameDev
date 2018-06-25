@@ -14,11 +14,16 @@ public class PuzzleGem : Gem {
 	public string PuzzleType { get { return puzzleType; } set { puzzleType = value; } }
 
 	public override void OnPointerClick (PointerEventData eventData) {
-		Debug.Log ("Puzzle: " + puzzleType + " " + puzzleId.ToString());
 
-		GameObject.Find ("DataManager").GetComponent<DataManager> ().loadPuzzle (puzzleType, puzzleId);
+		if (!(gemColor == 1 && rimColor == 1)) {
 
-		SceneManager.LoadScene (puzzleType+"Board");
+			Debug.Log ("Puzzle: " + puzzleType + " " + puzzleId.ToString ());
+
+			GameObject.Find ("DataManager").GetComponent<DataManager> ().loadPuzzle (puzzleType, puzzleId);
+
+			SceneManager.LoadScene (puzzleType + "Board");
+
+		}
 	}
 		
 	/*
