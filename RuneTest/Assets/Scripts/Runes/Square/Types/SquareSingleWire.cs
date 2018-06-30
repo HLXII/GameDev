@@ -2,6 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class SquareSingleWireData : RuneData {
+
+	private int efficiency;
+	private int capacity;
+
+	public SquareSingleWireData() {
+		id = "S_SingleWire";
+		efficiency = 1;
+		capacity = 1;
+	}
+
+	public SquareSingleWireData(int efficiency, int capacity) {
+		id = "S_SingleWire";
+		this.efficiency = efficiency;
+		this.capacity = capacity;
+	}
+
+	public override string ToString () {
+		string o = "";
+		o += id + "\n";
+		o += "Efficency: " + efficiency + "\n";
+		o += "Capacity: " + capacity;
+		return o;
+	}
+
+}
+
 public class SquareSingleWire : SquareRune {
 
 	private enum State {empty,left_in,right_in,both_in};
@@ -10,7 +38,6 @@ public class SquareSingleWire : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id += "Wire_Single_0";
 		connections = new int[] { 0, 2 };
 		prev_state = State.empty;
 	}

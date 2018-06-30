@@ -9,7 +9,6 @@ public class SquareRune : Rune {
 	// Use this for initialization
 	protected new void Start () {
 		base.Start ();
-		id = "S_";
 		sides = 4;
 	}
 

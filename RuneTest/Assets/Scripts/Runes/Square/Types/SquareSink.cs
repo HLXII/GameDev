@@ -6,7 +6,6 @@ public class SquareSink : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id += "Output_Sink_0";
 		connections = new int[] { 0 };
 	}
 

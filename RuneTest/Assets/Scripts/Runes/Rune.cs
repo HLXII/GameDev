@@ -20,6 +20,24 @@ public class Energy {
 
 }
 
+[System.Serializable]
+public class RuneData {
+
+	protected string id;
+	protected string className;
+
+	public RuneData() {
+	}
+
+	public string Id {get{return id;} }
+	public string ClassName { get { return className; } }
+
+	public override string ToString() {
+		return id;
+	}
+
+}
+
 public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
 
 	/* Dictionary containing all available runes in the table.
@@ -51,6 +69,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	 *		4 - Rank of rune, whether lower quality or such
 	*/
 
+	/*
 	public static string[] runeStrings = {
 		"S_Special_Void_0",				//Square Void
 		"S_Special_Empty_0",			//Square Empty
@@ -62,9 +81,10 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		"S_Wire_Cross_0",				//Square Wire Crossing
 		"S_Input_Source_0",				//Square Source
 		"S_Output_Sink_0"				//Square Sink
-	};
+	};*/
 
-	protected string id;
+	protected RuneData runeData;
+
 	protected int sides;
 
 	protected bool movable;
@@ -82,15 +102,22 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Vector3 mouse_offset;
 
 	protected DataManager dataManager;
+	protected Transform canvas;
+	protected Transform table;
+	protected Transform page;
 
 	protected void Start() {
 
 		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
+		canvas = GameObject.Find ("Canvas").transform;
+		table = GameObject.Find ("Table").transform.GetChild (0).GetChild (0).transform;
+		page = GameObject.Find ("Page").transform.GetChild (0).GetChild (0).transform;
 
 		rotation = 0;
 		sides = 4;
 		movable = true;
 		swappable = true;
+
 		connections = new int[0];
 
 		energyIn = new Energy[connections.Length];
@@ -117,12 +144,13 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
+	public RuneData RuneData { get { return runeData; } set { runeData = value; } }
 	public int Rotation {
 		get { return rotation; }
 		set { rotation = value; }
 	}
 	public GameObject[] Neighbors { get { return neighbors; } }
-	public string Id { get { return id; } }
+	public string Id { get { return runeData.Id; } }
 	public int Sides { get { return sides; } }
 	public int[] Connections { get { return connections; } }
 	public Energy[] EnergyIn { get { return energyIn; } }
@@ -189,7 +217,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				int cur_idx = transform.GetSiblingIndex();
 
 				// Adding dropped rune to table
-				dataManager.getBuildData ().addToTable (id);
+				dataManager.getBuildData ().addToTable (runeData);
 				// Updating table in case rune appears in filters
 				transform.parent.parent.GetComponent<BuildCanvas> ().changeTable ();
 
@@ -221,13 +249,14 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					//Debug.Log ("REPLACE: "+swap_idx);
 
 					// Removing dropped rune from table
-					dataManager.getBuildData ().removeFromTable (id);
+					dataManager.getBuildData ().removeFromTable (runeData);
 
+					/*
 					// If the rune being replaced is not the empty Rune, add back to table
 					if (swap_rune.Id.Split ('_') [2] != "Empty") {
 						// Adding replaced rune to table
-						dataManager.getBuildData ().addToTable (swap_rune.Id);
-					}
+						dataManager.getBuildData ().addToTable (swap_rune.runeData);
+					}*/
 						
 					// Replacing rune on page
 					transform.parent.parent.GetComponent<BuildCanvas> ().replaceRune (swap_idx, page.GetChild (swap_idx).position, gameObject);
@@ -311,7 +340,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		foreach (int connection in connections) {
 			//Debug.Log ("C " + connection + "ACTUAL: " + ((connection + rotation) % sides));
 			if (neighbors [(connection + rotation) % sides] == null) {
-				Debug.Log (id);
+				Debug.Log (Id);
 				Debug.Log (rotation);
 				foreach (GameObject n in neighbors) {
 					Debug.Log (n);
@@ -350,16 +379,16 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public void OnBeginDrag (PointerEventData eventData)
 	{
 		if (movable) {
+			
 			if (eventData.button == PointerEventData.InputButton.Left) {
 				drag_start_position = transform.position;
-				mouse_offset = transform.position - Camera.main.ScreenToWorldPoint (
-					new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0)
-				);
+				mouse_offset = transform.position - new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0);
 				this.drag = true;
 			}
 			if (transform.parent.name == "Table") {
 				StartCoroutine (expandAnimation (GameObject.Find ("Page").transform.localScale));
 			}
+			transform.SetParent (canvas);
 		}
 	}
 
@@ -367,9 +396,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	{
 		if (movable) {
 			if (eventData.button == PointerEventData.InputButton.Left) {
-				transform.position = Camera.main.ScreenToWorldPoint (
-					new Vector3 (Input.mousePosition.x, Input.mousePosition.y, -1)
-				) + mouse_offset;
+				transform.position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, -1) + mouse_offset;
 			}
 		}
 	}
@@ -391,7 +418,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public override string ToString ()
 	{
 		string o = "";
-		o += id.ToString () + "\nR: " + rotation.ToString();
+		o += runeData.ToString ();
+		o += "\nR: " + rotation.ToString();
 		o += "\nConnections: ";
 		foreach (int connection in connections) {
 			o += connection.ToString () + " ";
@@ -416,12 +444,14 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				o += e.ToString () + " ";
 			}
 		}
-		o += "\nNeighbors: ";
-		foreach (GameObject neighbor in neighbors) {
-			if (neighbor == null) {
-				o += "null ";
-			} else {
-				o += neighbor.GetComponent<Rune> ().Id + " ";
+		if (neighbors != null) {
+			o += "\nNeighbors: ";
+			foreach (GameObject neighbor in neighbors) {
+				if (neighbor == null) {
+					o += "null ";
+				} else {
+					o += neighbor.GetComponent<Rune> ().Id + " ";
+				}
 			}
 		}
 		return o;

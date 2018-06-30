@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SquareCanvas : BuildCanvas {
 
@@ -74,15 +75,8 @@ public class SquareCanvas : BuildCanvas {
 	// Initializing the rune dictionary
 	protected override void initRunes() {
 		this.runes = new Dictionary<string,GameObject> () {
-			{"S_Special_Void_0",runeVoid},
-			{"S_Special_Empty_0",runeEmpty},
-			{"S_Special_Block_0",runeBlock},
-			{"S_Input_Source_0",runeSource},
-			{"S_Output_Sink_0",runeSink},
-			{"S_Wire_Single_0",runeSingleWire},
-			{"S_Wire_TJunction_0",runeTJunction},
-			{"S_Wire_FourWay_0",runeFourWay},
-			{"S_Wire_Cross_0",runeCross}
+			{ "S_SingleWire",runeSingleWire },
+			{ "S_Empty",runeEmpty }
 		};
 	}
 
@@ -97,7 +91,7 @@ public class SquareCanvas : BuildCanvas {
 
 		// Getting data from buildData
 		tableRunes = buildData.getTable ("","");
-		string[,] pageData = buildData.getPage ();
+		RuneData[,] pageData = buildData.getPage ();
 
 		/*
 		// Debug prints for table and page
@@ -113,15 +107,19 @@ public class SquareCanvas : BuildCanvas {
 
 		// Creating the Table object to hold all the runes in the table
 		//table = transform.GetChild(2).transform;
-		table = new GameObject("Table").transform;
-		table.SetParent (gameObject.transform);
+		//table = new GameObject("Table").transform;
+		//table.SetParent (gameObject.transform);
+		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).transform;
+
+		Rect tableRect = ((RectTransform)table.parent.parent.transform).rect;
+		table.gameObject.GetComponent<GridLayoutGroup> ().cellSize = new Vector2 (tableRect.width * 1.5f / 3.5f, tableRect.width * 1.5f / 3.5f);
 
 		// Finding the bounds of the table for determining scroll events on the table
 		tableBounds = new Bounds (new Vector3 (Screen.width * 2.25f / 16f, Screen.height * 3.75f / 9f), new Vector3 (Screen.width * 3.5f / 16f, Screen.height * 6.5f / 9f));
 		//print ("TABLE BOUNDS: " + tableBounds);
 
 		// Calculating the table parameters and updating the table
-		rankFilter = "";
+		//rankFilter = "";
 		classFilter = "";
 		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
 		curPage = 0;
@@ -137,8 +135,9 @@ public class SquareCanvas : BuildCanvas {
 		}*/
 
 		// Creating the Page object to hold all the runes in the page
-		page = new GameObject ("Page").transform;
-		page.SetParent (gameObject.transform);
+		//page = (RectTransform) new GameObject ("Page").transform;
+		//page.SetParent (gameObject.transform);
+		page = (RectTransform) GameObject.Find("Page").transform.GetChild(0).GetChild(0).transform;
 
 		int page_h = pageData.GetLength (1);
 		int page_w = pageData.GetLength (0);
@@ -146,11 +145,13 @@ public class SquareCanvas : BuildCanvas {
 		// Instantiating all the runes in the page from the pageData
 		for (int i = 0; i < page_w; i++) {
 			for (int j = 0; j < page_h; j++) {
-				GameObject instance = Instantiate (runes[pageData[i,j]], new Vector3 (i+.5f, j+.5f, 0F), Quaternion.identity) as GameObject;
+				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i+.5f, j+.5f, 0F), Quaternion.identity) as GameObject;
+				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
 				instance.transform.SetParent (page,true);
 			}
 		}
 
+		/*
 		// Repositioning all objects on the screen correctly
 
 		// Getting Camera
@@ -188,7 +189,7 @@ public class SquareCanvas : BuildCanvas {
 
 		// Bring table position to top right corner, then to where it should be
 		this.table.localPosition -= new Vector3 (screen_w/2 , screen_h / 2, 0);
-		this.table.localPosition += new Vector3 (screen_w * 1.5f / 16, screen_h * 6f / 9);
+		this.table.localPosition += new Vector3 (screen_w * 1.5f / 16, screen_h * 6f / 9);*/
 
 	}
 

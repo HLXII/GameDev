@@ -27,13 +27,39 @@ public class RuneComparer : IComparer<string> {
 [System.Serializable]
 public class BuildData {
 
-	// SortedList of all the runes available in the table
-	// Keys are runeStrings, while Values are the number of available runes
-	private SortedList<string,int> table;
+	// Array of available runes in the table
+	private List<RuneData> table;
 
-	// 2D Array of runeStrings of the runes in the page
-	private string[,] page;
+	// 2D Array of runes in the page
+	private RuneData[,] page;
 
+	public BuildData() {
+		int width = 3;
+		int height = 3;
+
+		table = new List<RuneData> ();
+
+		table.Add (new SquareSingleWireData ());
+		table.Add (new SquareSingleWireData ());
+		table.Add (new SquareSingleWireData ());
+		table.Add (new SquareSingleWireData ());
+		table.Add (new SquareSingleWireData ());
+
+
+		page = new RuneData[width, height];
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (i % 2 == 0) {
+					page [i, j] = new SquareSingleWireData (i, j);
+				} else {
+					page [i, j] = new SquareEmptyData ();
+				}
+			}
+		}
+	}
+
+	/*
 	// Generator used to make puzzle instances by code, rather than by hand
 	public BuildData() {
 
@@ -65,39 +91,37 @@ public class BuildData {
 			}
 		}
 
-	}
+	}*/ 
 
 	public void swapOnPage(int x1, int y1, int x2, int y2) {
-		string temp = page [x1, y1];
+		RuneData temp = page [x1, y1];
 		page [x1, y1] = page [x2, y2];
 		page [x2, y2] = temp;
 	}
 
-	public void addToTable(string runeString) {
+	public void addToTable(RuneData runeData) {
 		//Debug.Log ("Adding " + runeString + " to table");
-
-		if (table.ContainsKey(runeString)) {
-			table[runeString]++;
-		} else {
-			table.Add(runeString,1);
-		}
+		table.Add (runeData);
 	}
 
-	public void removeFromTable(string runeString) {
-		table [runeString]--;
-		if (table [runeString] == 0) {
-			table.Remove (runeString);
-		}
+	public void removeFromTable(RuneData runeData) {
+		table.Remove (runeData);
 	}
 
-	public SortedList<string,int> getTable() {
-		return new SortedList<string,int> (table);
+	public List<RuneData> getTable() {
+		List<RuneData> temp = new List<RuneData> (table);
+		//temp.Sort ();
+		return temp;
 	}
 
-	public SortedList<string,int> getTable(string classFilter, string rankFilter) {
+	public List<RuneData> getTable(string classFilter, string rankFilter) {
+
+		List<RuneData> temp = new List<RuneData> (table);
+		//temp.Sort ();
+		return temp;
 
 		//Debug.Log ("Getting table with filters " + classFilter + " " + rankFilter);
-
+		/*
 		SortedList<string,int> intermediateList = new SortedList<string,int>(new RuneComparer());
 		foreach (KeyValuePair<string,int> item in table) {
 			//Debug.Log (item.Key);
@@ -107,10 +131,10 @@ public class BuildData {
 			}
 		}
 
-		return intermediateList;
+		return intermediateList;*/
 	}
 
-	public string[,] getPage() {
+	public RuneData[,] getPage() {
 		return page;
 	}
 

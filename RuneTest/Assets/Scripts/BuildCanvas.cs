@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BuildCanvas : MonoBehaviour {
 
-	protected Transform page;
-	protected Transform table;
+	protected RectTransform page;
+	protected RectTransform table;
 
 	// Sprite to be placed behind rune slots that can be used
 	public GameObject runeBack;
@@ -22,9 +22,10 @@ public class BuildCanvas : MonoBehaviour {
 	public DataManager dataManager;
 
 	// List to store filtered and available runes
-	protected SortedList<string,int> tableRunes;
+	protected List<RuneData> tableRunes;
 	protected string classFilter;
-	protected string rankFilter;
+	protected string sortFilter;
+
 	protected int numTablePages;
 	protected int curPage;
 	protected Bounds tableBounds;
@@ -52,9 +53,9 @@ public class BuildCanvas : MonoBehaviour {
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0f) {
 			if (tableBounds.Contains(Input.mousePosition)) {
 				if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
-					tableUp ();
+					//tableUp ();
 				} else if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
-					tableDown ();
+					//tableDown ();
 				}
 			}
 		}
@@ -81,8 +82,10 @@ public class BuildCanvas : MonoBehaviour {
 
 	public void replaceRune(int rune_idx, Vector3 pos, GameObject newRune) {
 
+		// Destroying old Rune
 		GameObject.Destroy(page.GetChild(rune_idx).gameObject);
 
+		// Moving new Rune to page
 		newRune.transform.SetParent (page);
 		newRune.transform.position = pos;
 		newRune.transform.SetSiblingIndex (rune_idx);
@@ -90,7 +93,7 @@ public class BuildCanvas : MonoBehaviour {
 	}
 
 	public void changeTable(string filterName) {
-
+		/*
 		//Debug.Log ("Changing Table");
 
 		// Getting filter parameters
@@ -107,52 +110,59 @@ public class BuildCanvas : MonoBehaviour {
 		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
 		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
 		curPage = 0;
-		updateTable ();
+		updateTable ();*/
 
 	}
 
 	public void changeTable() {
-
+		/*
 		//Debug.Log ("Changing Table");
 
 		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
 		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
 		curPage = 0;
-		updateTable ();
+		updateTable ();*/
 	}
 
 	public void updateTable() {
+
 		foreach (Transform child in table) {
 			GameObject.Destroy(child.gameObject);
 		}
-		int start_index = curPage * 6;
-		int end_index = Mathf.Min ((curPage + 1) * 6, tableRunes.Count);
-		for (int i = 0;i < end_index-start_index;i++) {
-			//Debug.Log ((i%2)*1.5f);
-			GameObject instance = Instantiate(runes[tableRunes.Keys[i+start_index]], new Vector3 ((i%2)*1.5f, -(i-(i%2)),0F), Quaternion.identity) as GameObject;
-			instance.transform.SetParent (table);
-			instance.transform.localPosition = new Vector3 ((i % 2) * 1.5f, -(i - (i % 2)), 0F);
+		foreach (RuneData rune in tableRunes) {
+			GameObject instance = Instantiate (runes [rune.Id],new Vector3 (0,0,1), Quaternion.identity,table);
 		}
+
+		/*
+		for (int i = 0;i < end_index-start_index;i++) {
+			GameObject instance = Instantiate (runes [tableRunes], table);
+			//GameObject instance = Instantiate(runes[tableRunes.Keys[i+start_index]], new Vector3 ((i%2)*1.5f, -(i-(i%2)),0F), Quaternion.identity) as GameObject;
+			//instance.transform.SetParent (table);
+			//instance.transform.localPosition = new Vector3 ((i % 2) * 1.5f, -(i - (i % 2)), 0F);
+		}*/
 	}
 
 	public void tableUp() {
+		/*
 		//Debug.Log ("Table Up");
 		if (curPage == 0) {
 			return;
 		} else {
 			curPage--;
 			updateTable ();
-		}
+		}*/
 	}
 
 	public void tableDown() {
+
+		/*
 		//Debug.Log ("Table Down");
 		if (curPage == numTablePages - 1) {
 			return;
 		} else {
 			curPage++;
 			updateTable ();
-		}
+		}*/
 	}
 
 	public virtual bool pageCheck() {

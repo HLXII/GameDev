@@ -9,7 +9,6 @@ public class SquareSource : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
-		id += "Input_Source_0";
 		connections = new int[] { 0 };
 		energyIn = new Energy[1];
 		energyOut = new Energy[1] {new Energy(10)};
