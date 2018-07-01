@@ -19,11 +19,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224182471538635570}
-  - component: {fileID: 61876416623969954}
-  - component: {fileID: 114972769513841050}
   - component: {fileID: 222523446057341080}
   - component: {fileID: 114790957566444518}
   - component: {fileID: 95724125207345290}
+  - component: {fileID: 61876416623969954}
+  - component: {fileID: 114972769513841050}
   m_Layer: 0
   m_Name: SquareSingleWire
   m_TagString: Untagged

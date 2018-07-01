@@ -70,6 +70,18 @@ public class SquareCanvas : BuildCanvas {
 				}
 			}
 		}
+
+		if (Input.GetKeyDown ("left shift")) {
+			for (int i = 0; i < page.childCount; i++) {
+				page.GetChild (i).GetComponent<Rune> ().Active = false;
+			}
+		}
+
+		if (Input.GetKeyUp ("left shift")) {
+			for (int i = 0; i < page.childCount; i++) {
+				page.GetChild (i).GetComponent<Rune> ().Active = true;
+			}
+		}
 	}
 
 	// Initializing the rune dictionary
@@ -142,12 +154,16 @@ public class SquareCanvas : BuildCanvas {
 		int page_h = pageData.GetLength (1);
 		int page_w = pageData.GetLength (0);
 
+		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
+
+		page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
+
 		// Instantiating all the runes in the page from the pageData
 		for (int i = 0; i < page_w; i++) {
 			for (int j = 0; j < page_h; j++) {
-				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i+.5f, j+.5f, 0F), Quaternion.identity) as GameObject;
+				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
 				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
-				instance.transform.SetParent (page,true);
+				instance.transform.localPosition = new Vector3 (i * 100, j * 100, 0F);
 			}
 		}
 

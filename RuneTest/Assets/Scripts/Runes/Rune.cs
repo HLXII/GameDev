@@ -38,7 +38,7 @@ public class RuneData {
 
 }
 
-public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
+public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, ICanvasRaycastFilter {
 
 	/* Dictionary containing all available runes in the table.
 	 * Keys are the rune strings, values are the number of runes of that type
@@ -106,6 +106,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Transform table;
 	protected Transform page;
 
+	private bool active;
+
 	protected void Start() {
 
 		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
@@ -122,6 +124,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		energyIn = new Energy[connections.Length];
 		energyOut = new Energy[connections.Length];
+
+		active = true;
 
 		//Instantiate (energyAnimator, transform);
 
@@ -155,6 +159,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public int[] Connections { get { return connections; } }
 	public Energy[] EnergyIn { get { return energyIn; } }
 	public Energy[] EnergyOut { get { return energyOut; } } 
+	public bool Active { get { return active; } set { active = value; } } 
 
 	public void drop() {
 		//Debug.Log ("Dropped Rune");
@@ -378,13 +383,17 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void OnBeginDrag (PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Left) {
+			return;
+		}
+
 		if (movable) {
 			
-			if (eventData.button == PointerEventData.InputButton.Left) {
-				drag_start_position = transform.position;
-				mouse_offset = transform.position - new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0);
-				this.drag = true;
-			}
+			drag_start_position = transform.position;
+			mouse_offset = transform.position - new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0);
+			mouse_offset = Vector3.zero;
+			this.drag = true;
+
 			if (transform.parent.name == "Table") {
 				StartCoroutine (expandAnimation (GameObject.Find ("Page").transform.localScale));
 			}
@@ -394,25 +403,34 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void OnDrag (PointerEventData eventData)
 	{
+		if (eventData.button != PointerEventData.InputButton.Left) {
+			return;
+		}
+
 		if (movable) {
-			if (eventData.button == PointerEventData.InputButton.Left) {
-				transform.position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, -1) + mouse_offset;
-			}
+			transform.position = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, -1) + mouse_offset;
 		}
 	}
 
 	public void OnEndDrag (PointerEventData eventData)
 	{
-		if (movable) {
-			if (eventData.button == PointerEventData.InputButton.Left) {
-				transform.position = Camera.main.ScreenToWorldPoint (
-					new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0)
-				) + mouse_offset;
-				mouse_offset = Vector3.zero;
-				this.drag = false;
-				gameObject.GetComponent<Rune> ().drop ();
-			}
+		if (eventData.button != PointerEventData.InputButton.Left) {
+			return;
 		}
+
+		if (movable) {
+			transform.position = Camera.main.ScreenToWorldPoint (
+				new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0)
+			) + mouse_offset;
+			mouse_offset = Vector3.zero;
+			this.drag = false;
+			gameObject.GetComponent<Rune> ().drop ();
+		}
+	}
+
+	public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
+	{
+		return active;
 	}
 
 	public override string ToString ()
