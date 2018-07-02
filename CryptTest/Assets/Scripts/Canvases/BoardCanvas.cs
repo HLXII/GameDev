@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class BoardCanvas : MonoBehaviour {
 
+	private float maxScale;
+	public float MaxScale { get { return maxScale; } }
+
 	public GameObject gem;
 
 	protected int width = 2;
@@ -19,7 +22,9 @@ public class BoardCanvas : MonoBehaviour {
 
 		Transform board = GameObject.Find ("Board").transform;
 
-		float scale = Mathf.Min (b.rect.width / (4 * gemTransform.rect.width), b.rect.width / (width * gemTransform.rect.width), b.rect.height / (height * gemTransform.rect.height));
+		maxScale = b.rect.width / (4 * gemTransform.rect.width);
+
+		float scale = Mathf.Min (maxScale, b.rect.width / (width * gemTransform.rect.width), b.rect.height / (height * gemTransform.rect.height));
 		
 		board.localScale = new Vector3 (scale, scale, 1);
 

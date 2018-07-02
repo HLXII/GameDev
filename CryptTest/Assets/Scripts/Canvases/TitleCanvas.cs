@@ -20,7 +20,7 @@ public class TitleCanvas : BoardCanvas {
 				instance.GetComponent<Gem> ().GemColor = Gem.colorString["red"];
 				break;
 			case 1:
-				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
+				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Editor;
 				instance.GetComponent<Gem> ().GemColor = Gem.colorString["blue"];
 				break;
 			case 2:
