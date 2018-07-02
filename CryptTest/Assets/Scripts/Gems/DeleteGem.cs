@@ -9,8 +9,8 @@ public class DeleteGem : Gem {
 	
 	public override void Start() {
 		gameObject.GetComponent<Image> ().alphaHitTestMinimumThreshold = .5f;
-		setGem ("red");
-		setRim ("black");
+		GemColor = Gem.colorString["red"];
+		RimColor = Gem.colorString["black"];
 	}
 
 	public override void OnPointerClick (PointerEventData eventData) {

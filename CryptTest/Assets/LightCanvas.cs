@@ -24,8 +24,8 @@ public class LightCanvas : BoardCanvas {
 
 				GameObject instance = Instantiate (gem, board);
 				instance.AddComponent<LightGem> ();
-				instance.GetComponent<LightGem> ().setGem (data [h, w, 0]);
-				instance.GetComponent<LightGem> ().setRim (data [h, w, 1]);
+				instance.GetComponent<LightGem> ().GemColor =  data [h, w, 0];
+				instance.GetComponent<LightGem> ().RimColor =  data [h, w, 1];
 
 			}
 
@@ -36,5 +36,19 @@ public class LightCanvas : BoardCanvas {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void checkComplete() {
+		Debug.Log (isComplete ());
+	}
+
+	public bool isComplete() {
+		Transform board = transform.GetChild (0);
+		for (int i = 0; i < board.childCount; i++) {
+			if (!board.GetChild (i).GetComponent<LightGem> ().checkGem ()) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

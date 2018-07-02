@@ -19,15 +19,15 @@ public class SelectCanvas : BoardCanvas {
 			instance.GetComponent<PuzzleGem> ().PuzzleType = puzzleType;
 
 			if (PlayerPrefs.HasKey (puzzleType + i.ToString ())) {
-				instance.GetComponent<PuzzleGem> ().setRim ("white");
+				instance.GetComponent<Gem> ().RimColor = Gem.colorString["white"];
 			} else {
-				instance.GetComponent<PuzzleGem> ().setRim ("black");
+				instance.GetComponent<Gem> ().RimColor = Gem.colorString["black"];
 			}
 
 			if (PlayerPrefs.HasKey (puzzleType + i.ToString () + "Complete")) {
-				instance.GetComponent<PuzzleGem> ().setGem ("white");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["white"];
 			} else {
-				instance.GetComponent<PuzzleGem> ().setGem ("black");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["black"];
 			}
 		}
 

@@ -30,24 +30,40 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 	public int gemColor;
 	public int rimColor;
 
+	public int GemColor {
+		get { return gemColor; }
+		set { 
+			gemColor = value;
+			this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemColor];
+		}
+	}
+
+	public int RimColor {
+		get { return rimColor; }
+		set {			
+			rimColor = value;
+			this.transform.GetChild (2).GetComponent<Image> ().color = colorID [rimColor];
+		}
+	}
+
 	public virtual void Start() {
 		gameObject.GetComponent<Image> ().alphaHitTestMinimumThreshold = .5f;
 	}
 
-
+	/*
 	public void setGem(int gemID) {
 		gemColor = gemID;
 		this.transform.GetChild (0).GetComponent<Image> ().color = colorID [gemColor];
 		//Debug.Log (this.transform.GetChild (0).GetComponent<Image> ().color);
 		//gameObject.GetComponent<Image> ().sprite = gemTypes [gemID];
 			//Debug.Log ("Setting " + this.transform.position + " " + gameObject.GetComponent<Image> ().sprite.name);
-		/*
+		
 		if (checkGem ()) {
 			this.transform.GetChild (0).GetComponent<Animator> ().SetTrigger ("Sparkle");
 		} else {
 			this.transform.GetChild (0).GetComponent<Animator> ().SetTrigger ("Idle");
 			Debug.Log ("????");
-		}*/
+		}
 
 	}
 
@@ -64,7 +80,7 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
 	public void setRim(string color) {
 		rimColor = colorString[color];
 		this.transform.GetChild (2).GetComponent<Image> ().color = colorID [rimColor];
-	}
+	}*/
 
 	public bool checkGem() {
 		return (rimColor == gemColor);
