@@ -31,6 +31,8 @@ public class LightCanvas : BoardCanvas {
 
 		}
 
+		setupBack (SceneGem.Scene.LightSelect);
+
 	}
 	
 	// Update is called once per frame

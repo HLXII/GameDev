@@ -35,7 +35,7 @@ public class BoardCanvas : MonoBehaviour {
 		Transform back = GameObject.Find("Back").transform;
 		Transform board = GameObject.Find ("Board").transform;
 
-		back.localScale = board.localScale;
+		back.localScale = new Vector3 (maxScale / 2, maxScale / 2, 1);
 
 		GameObject backGem = Instantiate (gem, back);
 		backGem.AddComponent<SceneGem> ();
@@ -43,11 +43,25 @@ public class BoardCanvas : MonoBehaviour {
 	}
 
 	protected void setupLeft(SceneGem.Scene scene) {
+		Transform left = GameObject.Find("Left").transform;
+		Transform board = GameObject.Find ("Board").transform;
 
+		left.localScale = new Vector3 (maxScale / 2, maxScale / 2, 1);
+
+		GameObject leftGem = Instantiate (gem, left);
+		leftGem.AddComponent<SceneGem> ();
+		leftGem.GetComponent<SceneGem> ().SceneId = scene;
 	}
 
 	protected void setupRight(SceneGem.Scene scene) {
+		Transform right = GameObject.Find("Right").transform;
+		Transform board = GameObject.Find ("Board").transform;
 
+		right.localScale = new Vector3 (maxScale / 2, maxScale / 2, 1);
+
+		GameObject rightGem = Instantiate (gem, right);
+		rightGem.AddComponent<SceneGem> ();
+		rightGem.GetComponent<SceneGem> ().SceneId = scene;
 	}
 
 	// Use this for initialization
