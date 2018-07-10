@@ -52,6 +52,7 @@ public class SquareCanvas : BuildCanvas {
 	// Update is called once per frame
 	void Update () {
 
+		/*
 		if (Input.GetKeyDown ("left shift")) {
 			Debug.Log ("SHIFT DOWN");
 			for (int i = 0; i < page.childCount; i++) {
@@ -63,7 +64,7 @@ public class SquareCanvas : BuildCanvas {
 			for (int i = 0; i < page.childCount; i++) {
 				page.GetChild (i).GetComponent<Rune> ().Active = true;
 			}
-		}
+		}*/
 			
 	}
 

@@ -33,5 +33,26 @@ public class PageScrollRect : ScrollRect {
 		content.localScale = new Vector3 (newScale, newScale, 1);
 	}
 
+	public override void OnBeginDrag(PointerEventData eventData) {
+		if (eventData.button == PointerEventData.InputButton.Right) {
+			eventData.button = PointerEventData.InputButton.Left;
+			base.OnBeginDrag (eventData);
+		}
+	}
+
+	public override void OnDrag(PointerEventData eventData) {
+		if (eventData.button == PointerEventData.InputButton.Right) {
+			eventData.button = PointerEventData.InputButton.Left;
+			base.OnDrag (eventData);
+		}
+	}
+
+	public override void OnEndDrag(PointerEventData eventData) {
+		if (eventData.button == PointerEventData.InputButton.Right) {
+			eventData.button = PointerEventData.InputButton.Left;
+			base.OnEndDrag (eventData);
+		}
+	}
+
 }
 

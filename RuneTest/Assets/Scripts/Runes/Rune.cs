@@ -47,7 +47,7 @@ public class EmptyData : RuneData {
 
 }
 
-public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, ICanvasRaycastFilter {
+public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
 
 	/* Dictionary containing all available runes in the table.
 	 * Keys are the rune strings, values are the number of runes of that type
@@ -451,10 +451,11 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	}
 
+	/*
 	public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
 	{
 		return active;
-	}
+	}*/
 
 	public override string ToString ()
 	{
