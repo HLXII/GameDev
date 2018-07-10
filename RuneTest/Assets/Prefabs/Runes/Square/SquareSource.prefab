@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114327634728413220}
   - component: {fileID: 61459941516989744}
   - component: {fileID: 114191027317243306}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SquareSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

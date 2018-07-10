@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 95724125207345290}
   - component: {fileID: 61876416623969954}
   - component: {fileID: 114972769513841050}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SquareSingleWire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
 --- !u!95 &95724125207345290
 Animator:

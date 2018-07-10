@@ -67,6 +67,16 @@ public class BuildCanvas : MonoBehaviour {
 	// Initializing the UI elements
 	protected virtual void initBuild() {}
 
+	public void addToTable(RuneData rune) {
+		tableRunes.Add (rune);
+		updateTable ();
+	}
+
+	public void removeFromTable(RuneData rune) {
+		tableRunes.Remove (rune);
+		updateTable ();
+	}
+
 	public void removeRune(int rune_idx, Vector3 pos) {
 
 		// Creating an instance of an empty Rune
@@ -131,38 +141,13 @@ public class BuildCanvas : MonoBehaviour {
 		}
 		foreach (RuneData rune in tableRunes) {
 			GameObject instance = Instantiate (runes [rune.Id],new Vector3 (0,0,1), Quaternion.identity,table);
+			instance.GetComponent<Rune> ().RuneData = rune;
+			instance.layer = 8;
 		}
 
-		/*
-		for (int i = 0;i < end_index-start_index;i++) {
-			GameObject instance = Instantiate (runes [tableRunes], table);
-			//GameObject instance = Instantiate(runes[tableRunes.Keys[i+start_index]], new Vector3 ((i%2)*1.5f, -(i-(i%2)),0F), Quaternion.identity) as GameObject;
-			//instance.transform.SetParent (table);
-			//instance.transform.localPosition = new Vector3 ((i % 2) * 1.5f, -(i - (i % 2)), 0F);
-		}*/
-	}
+		RectTransform content = (RectTransform)table.parent.transform;
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.Count + 1) / 2) * 100 * table.localScale.x);
 
-	public void tableUp() {
-		/*
-		//Debug.Log ("Table Up");
-		if (curPage == 0) {
-			return;
-		} else {
-			curPage--;
-			updateTable ();
-		}*/
-	}
-
-	public void tableDown() {
-
-		/*
-		//Debug.Log ("Table Down");
-		if (curPage == numTablePages - 1) {
-			return;
-		} else {
-			curPage++;
-			updateTable ();
-		}*/
 	}
 
 	public virtual bool pageCheck() {

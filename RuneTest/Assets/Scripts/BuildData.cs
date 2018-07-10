@@ -53,7 +53,7 @@ public class BuildData {
 				if (i % 2 == 0) {
 					page [i, j] = new SquareSingleWireData (i, j);
 				} else {
-					page [i, j] = new SquareEmptyData ();
+					page [i, j] = new EmptyData ();
 				}
 			}
 		}

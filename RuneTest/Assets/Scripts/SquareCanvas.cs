@@ -51,27 +51,9 @@ public class SquareCanvas : BuildCanvas {
 	
 	// Update is called once per frame
 	void Update () {
-		/*
-		if (Input.GetMouseButtonDown (0)) {
-			Debug.Log ("Mouse Down" + Input.mousePosition);
-		}
-		if (Input.GetMouseButtonUp (0)) {
-			Debug.Log ("Mouse Up");
-		}
-		if (Input.GetMouseButton (0)) {
-			//Debug.Log ("Mouse Press");
-		}*/
-		if (Input.GetAxis ("Mouse ScrollWheel") != 0f) {
-			if (tableBounds.Contains(Input.mousePosition)) {
-				if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
-					tableUp ();
-				} else if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
-					tableDown ();
-				}
-			}
-		}
 
 		if (Input.GetKeyDown ("left shift")) {
+			Debug.Log ("SHIFT DOWN");
 			for (int i = 0; i < page.childCount; i++) {
 				page.GetChild (i).GetComponent<Rune> ().Active = false;
 			}
@@ -82,13 +64,14 @@ public class SquareCanvas : BuildCanvas {
 				page.GetChild (i).GetComponent<Rune> ().Active = true;
 			}
 		}
+			
 	}
 
 	// Initializing the rune dictionary
 	protected override void initRunes() {
 		this.runes = new Dictionary<string,GameObject> () {
 			{ "S_SingleWire",runeSingleWire },
-			{ "S_Empty",runeEmpty }
+			{ "Empty",runeEmpty }
 		};
 	}
 
@@ -118,17 +101,14 @@ public class SquareCanvas : BuildCanvas {
 		}*/
 
 		// Creating the Table object to hold all the runes in the table
-		//table = transform.GetChild(2).transform;
-		//table = new GameObject("Table").transform;
-		//table.SetParent (gameObject.transform);
-		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).transform;
+		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).GetChild(0);
 
-		Rect tableRect = ((RectTransform)table.parent.parent.transform).rect;
-		table.gameObject.GetComponent<GridLayoutGroup> ().cellSize = new Vector2 (tableRect.width * 1.5f / 3.5f, tableRect.width * 1.5f / 3.5f);
+		// Setting scale of TableContent to fit table window
+		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
+		table.localScale = new Vector3 (tableRect.size.x / 200f, tableRect.size.x / 200f, 1);
 
 		// Finding the bounds of the table for determining scroll events on the table
 		tableBounds = new Bounds (new Vector3 (Screen.width * 2.25f / 16f, Screen.height * 3.75f / 9f), new Vector3 (Screen.width * 3.5f / 16f, Screen.height * 6.5f / 9f));
-		//print ("TABLE BOUNDS: " + tableBounds);
 
 		// Calculating the table parameters and updating the table
 		//rankFilter = "";
@@ -137,25 +117,12 @@ public class SquareCanvas : BuildCanvas {
 		curPage = 0;
 		updateTable ();
 
-		/*
-		foreach (KeyValuePair<string, int> item in tableData) {
-			
-			float x = .5f + k % 2;
-			float y = .5f - (k - (k % 2)) / 2;
-			GameObject instance = Instantiate (runes [item.Key], new Vector3 (x, y, 0F), Quaternion.identity) as GameObject;
-			instance.transform.SetParent (table, true);
-		}*/
-
 		// Creating the Page object to hold all the runes in the page
-		//page = (RectTransform) new GameObject ("Page").transform;
-		//page.SetParent (gameObject.transform);
 		page = (RectTransform) GameObject.Find("Page").transform.GetChild(0).GetChild(0).transform;
 
 		int page_h = pageData.GetLength (1);
 		int page_w = pageData.GetLength (0);
-
 		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
-
 		page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
 
 		// Instantiating all the runes in the page from the pageData
@@ -163,49 +130,10 @@ public class SquareCanvas : BuildCanvas {
 			for (int j = 0; j < page_h; j++) {
 				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
 				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
-				instance.transform.localPosition = new Vector3 (i * 100, j * 100, 0F);
+				instance.layer = 9;
 			}
 		}
 
-		/*
-		// Repositioning all objects on the screen correctly
-
-		// Getting Camera
-		Camera cam = GameObject.Find ("Main Camera").GetComponent<Camera> ();
-
-		//Debug.Log ("Screen: W" + Screen.width + " H" + Screen.height);
-
-		// Screen height and width in units
-		float screen_h = (2 * cam.orthographicSize);
-		float screen_w = (2 * cam.orthographicSize * cam.aspect);
-
-		// Height and width of the page screen that the page can be displayed on in units
-		float page_screen_w = screen_w * 10 / 16;
-		float page_screen_h = screen_h / 2;
-
-		//Debug.Log ("Page Screen: W" + page_screen_w + " H" + page_screen_h);
-
-		float h_scale = page_screen_h / page_h;
-		float w_scale = page_screen_w / page_w;
-
-		//Debug.Log ("HSCALE: " + h_scale + " WSCALE: " + w_scale);
-
-		// Bring page position to top left corner, then to where it should be
-		this.page.localPosition -= new Vector3 (screen_w/2, screen_h/2, 0);
-		this.page.localPosition += new Vector3 (screen_w*5/16, screen_h*3.5f/9, 0);
-
-		float scale = Mathf.Min(2, (h_scale < w_scale) ? h_scale : w_scale);
-
-		// Finding new sprite widths and heights with new scale
-		float new_sprite_w = page_w * scale;
-		float new_sprite_h = page_h * scale;
-
-		this.page.localScale = new Vector3 (scale, scale, 1);
-		this.page.localPosition += new Vector3 ((page_screen_w - new_sprite_w) / 2, (page_screen_h - new_sprite_h) / 2, 0);
-
-		// Bring table position to top right corner, then to where it should be
-		this.table.localPosition -= new Vector3 (screen_w/2 , screen_h / 2, 0);
-		this.table.localPosition += new Vector3 (screen_w * 1.5f / 16, screen_h * 6f / 9);*/
 
 	}
 
