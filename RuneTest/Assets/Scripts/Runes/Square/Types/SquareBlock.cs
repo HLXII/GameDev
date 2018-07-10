@@ -8,6 +8,7 @@ public class SquareBlock : SquareRune {
 		base.Start ();
 		movable = false;
 		swappable = false;
+		runeData = new BlockData ();
 	}
 
 }

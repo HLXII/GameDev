@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class SquareCrossData : WireData {
+
+	public SquareCrossData(int efficiency, int capacity) : base(efficiency,capacity) {
+		id = "Cross";
+	}
+
+}
+
 public class SquareCross : SquareRune {
 
 	protected new void Start() {

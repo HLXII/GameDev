@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class BuildCanvas : MonoBehaviour {
 
+	// References to the page and table transforms
 	protected RectTransform page;
 	protected RectTransform table;
 
-	// Sprite to be placed behind rune slots that can be used
-	public GameObject runeBack;
-
+	// Generic runes required by all rune pages
 	public GameObject runeEmpty;
 	public GameObject runeVoid;
 	public GameObject runeBlock;

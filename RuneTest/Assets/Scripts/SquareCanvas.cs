@@ -6,28 +6,13 @@ using UnityEngine.UI;
 
 public class SquareCanvas : BuildCanvas {
 
-	//private Transform page;
-	//private Transform table;
-
-	// Sprite to be placed behind rune slots that can be used
-	//public GameObject runeBack;
-
 	// All possible runes to be placed
-	//public GameObject runeVoid;
-	//public GameObject runeEmpty;
-	//public GameObject runeBlock;
+	public GameObject runeSingleWire;
+	public GameObject runeCorner;
+	public GameObject runeCross;
 	public GameObject runeSource;
 	public GameObject runeSink;
-	public GameObject runeSingleWire;
-	public GameObject runeTJunction;
-	public GameObject runeFourWay;
-	public GameObject runeCross;
 
-	// Dictionary to instantiate the correct runes from the pageData
-	//private Dictionary<string,GameObject> runes;
-
-	// DataManager
-	//private DataManager dataManager;
 
 	// List to store filtered and available runes
 	//private SortedList<string,int> tableRunes;
@@ -71,8 +56,16 @@ public class SquareCanvas : BuildCanvas {
 	// Initializing the rune dictionary
 	protected override void initRunes() {
 		this.runes = new Dictionary<string,GameObject> () {
-			{ "S_SingleWire",runeSingleWire },
-			{ "Empty",runeEmpty }
+			{ "Empty",runeEmpty },
+			{ "Void",runeVoid },
+			{ "Block",runeBlock },
+
+			{ "SingleWire",runeSingleWire },
+			{ "Corner",runeCorner },
+			{ "Cross",runeCross },
+
+			{ "Source", runeSource },
+			{ "Sink", runeSink }
 		};
 	}
 
@@ -88,6 +81,7 @@ public class SquareCanvas : BuildCanvas {
 		// Getting data from buildData
 		tableRunes = buildData.getTable ("","");
 		RuneData[,] pageData = buildData.getPage ();
+		int[,] pageRotationData = buildData.getPageRotation ();
 
 		/*
 		// Debug prints for table and page
@@ -107,9 +101,6 @@ public class SquareCanvas : BuildCanvas {
 		// Setting scale of TableContent to fit table window
 		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
 		table.localScale = new Vector3 (tableRect.size.x / 200f, tableRect.size.x / 200f, 1);
-
-		// Finding the bounds of the table for determining scroll events on the table
-		tableBounds = new Bounds (new Vector3 (Screen.width * 2.25f / 16f, Screen.height * 3.75f / 9f), new Vector3 (Screen.width * 3.5f / 16f, Screen.height * 6.5f / 9f));
 
 		// Calculating the table parameters and updating the table
 		//rankFilter = "";
@@ -131,11 +122,13 @@ public class SquareCanvas : BuildCanvas {
 			for (int j = 0; j < page_h; j++) {
 				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
 				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
+				instance.GetComponent<Rune> ().Rotation = pageRotationData [i, j];
+				// sides for the Rune object haven't been initialized, thus have to hard code it
+				// Be careful for other build canvases to change this
+				instance.transform.Rotate (Vector3.forward * pageRotationData [i, j] * 90);
 				instance.layer = 9;
 			}
 		}
-
-
 	}
 
 	public override bool pageCheck() {

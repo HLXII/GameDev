@@ -20,17 +20,18 @@ public class Energy {
 
 }
 
+/// <summary>
+/// Rune data to be stored in files and used to initialize the rune GameObjects
+/// </summary>
 [System.Serializable]
 public class RuneData {
 
 	protected string id;
-	protected string className;
 
 	public RuneData() {
 	}
 
 	public string Id {get{return id;} }
-	public string ClassName { get { return className; } }
 
 	public override string ToString() {
 		return id;
@@ -40,62 +41,55 @@ public class RuneData {
 
 [System.Serializable]
 public class EmptyData : RuneData {
-
 	public EmptyData() {
 		id = "Empty";
+	}
+}
+[System.Serializable]
+public class BlockData : RuneData {
+	public BlockData() {
+		id = "Block";
+	}
+}
+[System.Serializable]
+public class VoidData : RuneData {
+	public VoidData() {
+		id = "Void";
+	}
+}
+[System.Serializable]
+public class WireData : RuneData {
+
+	protected int efficiency;
+	protected int capacity;
+
+	public WireData(int efficiency, int capacity) {
+		this.efficiency = efficiency;
+		this.capacity = capacity;
+	}
+
+	public override string ToString () {
+		string o = "";
+		o += id + "\n";
+		o += "Efficency: " + efficiency + "\n";
+		o += "Capacity: " + capacity;
+		return o;
 	}
 
 }
 
+/// <summary>
+/// The Base Rune GameObject
+/// </summary>
 public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
 
-	/* Dictionary containing all available runes in the table.
-	 * Keys are the rune strings, values are the number of runes of that type
-	 * 
-	 * Rune Strings:
-	 * '1'_'2'_'3'	1 - T, S, or H for Triangle, Square or Hexagonal Runes
-	 * 				2 - Type of rune, aka Wire, Input, Output, etc.
-	 * 				
-	 * "S_Void" - Void, will not show up
-	 * "S_Empty" - Open, can place runes in this slot
-	 * "S_Block" - Blocked, shows up but cannot move/place runes
-	 * "S_SWire" - A single wire
-	 * "S_TWire" - A T Junction wire
-	 * "S_FWire" - A Four Way Junction wire
-	 * "S_Cross" - A Cross Intersection wire
-	 * "S_Source" - A Source Rune
-	 * "S_Sink" - A Sink Rune
-	 * 
-	 * 
-	*/
-
-	/* List of runeStrings, which are ids defining all possible runes
-	 * Formatted as follows:
-	 * 	'1'_'2'_'3'_'4'
-	 * 		1 - T, S, or H, depending on whether it is a Triangle, Square or Hexagonal rune
-	 *		2 - Class of rune, whether Special, Input, Wire, etc
-	 *		3 - Type of rune, to further describe it
-	 *		4 - Rank of rune, whether lower quality or such
-	*/
-
-	/*
-	public static string[] runeStrings = {
-		"S_Special_Void_0",				//Square Void
-		"S_Special_Empty_0",			//Square Empty
-		"S_Special_Block_0",			//Square Block
-		"S_Wire_Single_0",				//Square Single Wire
-		"S_Wire_Turn_0",				//Square Turning Wire
-		"S_Wire_TJunction_0",			//Square T Junction Wire
-		"S_Wire_FourWay_0",				//Square Four Way Intersection
-		"S_Wire_Cross_0",				//Square Wire Crossing
-		"S_Input_Source_0",				//Square Source
-		"S_Output_Sink_0"				//Square Sink
-	};*/
-
+	// RuneData to store the specific instance of the rune
 	protected RuneData runeData;
 
+	// Number of sides of the rune (Triangular, Square, Hexagonal
 	protected int sides;
 
+	// If rune is movable/swappable
 	protected bool movable;
 	protected bool swappable;
 
@@ -118,8 +112,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	private GameObject previous_parent;
 	private int previous_index;
 
-	private bool active;
-
 	protected void Start() {
 
 		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
@@ -127,7 +119,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		table = GameObject.Find ("Table").transform.GetChild (0).GetChild (0).GetChild(0).transform;
 		page = GameObject.Find ("Page").transform.GetChild (0).GetChild (0).transform;
 
-		rotation = 0;
 		sides = 4;
 		movable = true;
 		swappable = true;
@@ -139,8 +130,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		previous_parent = null;
 		previous_index = 0;
-		
-		active = true;
 	
 	}
 
@@ -159,17 +148,13 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	public RuneData RuneData { get { return runeData; } set { runeData = value; } }
-	public int Rotation {
-		get { return rotation; }
-		set { rotation = value; }
-	}
+	public int Rotation { get { return rotation; } set {rotation = value; } }
 	public GameObject[] Neighbors { get { return neighbors; } }
 	public string Id { get { return runeData.Id; } }
 	public int Sides { get { return sides; } }
 	public int[] Connections { get { return connections; } }
 	public Energy[] EnergyIn { get { return energyIn; } }
 	public Energy[] EnergyOut { get { return energyOut; } } 
-	public bool Active { get { return active; } set { active = value; } } 
 
 	public void drop() {
 
@@ -256,7 +241,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 					// Not swappable, return to table
 				} else {
-					//StartCoroutine (shrinkAnimation ());
 					Destroy (table.GetChild (previous_index).gameObject);
 
 					transform.SetParent (table);
@@ -450,12 +434,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		previous_index = 0;
 
 	}
-
-	/*
-	public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
-	{
-		return active;
-	}*/
 
 	public override string ToString ()
 	{

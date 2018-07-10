@@ -33,17 +33,20 @@ public class BuildData {
 	// 2D Array of runes in the page
 	private RuneData[,] page;
 
+	private int[,] pageRotations;
+
 	public BuildData() {
 		int width = 3;
 		int height = 3;
 
 		table = new List<RuneData> ();
 
-		table.Add (new SquareSingleWireData ());
-		table.Add (new SquareSingleWireData ());
-		table.Add (new SquareSingleWireData ());
-		table.Add (new SquareSingleWireData ());
-		table.Add (new SquareSingleWireData ());
+		table.Add (new SquareSingleWireData (2,3));
+		table.Add (new SquareSingleWireData (3,4));
+		table.Add (new SquareSingleWireData (5,6));
+		table.Add (new SquareSingleWireData (6,7));
+		table.Add (new SquareSingleWireData (7,8));
+		table.Add (new SquareCrossData (1, 1));
 
 
 		page = new RuneData[width, height];
@@ -57,46 +60,14 @@ public class BuildData {
 				}
 			}
 		}
-	}
 
-	/*
-	// Generator used to make puzzle instances by code, rather than by hand
-	public BuildData() {
-
-		// Size of board.
-		int width = 10;
-		int height = 2;
-
-		table = new SortedList<string,int> (new RuneComparer());
-
-		table.Add ("S_Output_Sink_0", 100);
-		table.Add ("S_Input_Source_0", 100);
-		table.Add ("S_Wire_TJunction_0", 100);
-		table.Add("S_Wire_FourWay_0",100);
-		table.Add ("S_Wire_Cross_0", 100);
-		table.Add ("S_Wire_Single_0", 100);
-
-		page = new string[width, height];
-		//this.page = new string[,] {{"SX","S_","S_"},{"SX","SX","SX"},{"S_","SX","S_"}};
-		//page = new string[,] {
-		//	{ "S_Special_Void_0", "S_Special_Void_0", "S_Input_Source_0", "S_Special_Block_0" },
-		//	{ "S_Special_Empty_0", "S_Special_Empty_0", "S_Wire_Single_0", "S_Special_Empty_0" },
-		//	{ "S_Special_Void_0", "S_Special_Empty_0", "S_Special_Empty_0", "S_Special_Empty_0" },
-		//	{ "S_Special_Block_0", "S_Special_Block_0", "S_Special_Empty_0", "S_Special_Block_0" }
-		//};
+		pageRotations = new int[width, height];
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				this.page [i, j] = "S_Special_Empty_0";
+				pageRotations [i, j] = (i + j) % 4;
 			}
 		}
-
-	}*/ 
-
-	public void swapOnPage(int x1, int y1, int x2, int y2) {
-		RuneData temp = page [x1, y1];
-		page [x1, y1] = page [x2, y2];
-		page [x2, y2] = temp;
 	}
 
 	public void addToTable(RuneData runeData) {
@@ -136,6 +107,10 @@ public class BuildData {
 
 	public RuneData[,] getPage() {
 		return page;
+	}
+
+	public int[,] getPageRotation() {
+		return pageRotations;
 	}
 
 }
