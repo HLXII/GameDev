@@ -9,6 +9,9 @@ public class BuildCanvas : MonoBehaviour {
 	protected RectTransform page;
 	protected RectTransform table;
 
+	// Reference to BuildSignalManager
+	protected BuildSignalManager signalReceiver;
+
 	// Generic runes required by all rune pages
 	public GameObject runeEmpty;
 	public GameObject runeVoid;
@@ -141,6 +144,7 @@ public class BuildCanvas : MonoBehaviour {
 		foreach (RuneData rune in tableRunes) {
 			GameObject instance = Instantiate (runes [rune.Id],new Vector3 (0,0,1), Quaternion.identity,table);
 			instance.GetComponent<Rune> ().RuneData = rune;
+			instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
 			instance.layer = 8;
 		}
 

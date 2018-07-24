@@ -9,6 +9,16 @@ public class DataManager : MonoBehaviour {
 
 	private BuildData buildData;
 
+	/* Game Data
+	 * private Inventory inventory;
+	 * private PlayerData playerData
+	 * 
+	 * Loading Data
+	 * private TableData tableData;
+	 * private PageData pageData;
+	 * 
+	 */
+
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad (this);
@@ -25,7 +35,7 @@ public class DataManager : MonoBehaviour {
 
 	public void loadData(string filename) {
 		//Debug.Log ("Loading Data: " + dataType + ", " + dataName);
-		buildData = new BuildData ();
+		buildData = new BuildData (5,7);
 		saveData ("test4x4.txt");
 		/*
 		// OSXEditor files

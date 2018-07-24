@@ -28,6 +28,7 @@ public class SquareCanvas : BuildCanvas {
 	void Start () {
 
 		simulating = false;
+		signalReceiver = GameObject.Find ("BuildSignals").GetComponent<BuildSignalManager> ();
 
 		initRunes ();
 		initBuild ();
@@ -37,7 +38,6 @@ public class SquareCanvas : BuildCanvas {
 	// Update is called once per frame
 	void Update () {
 
-		/*
 		if (Input.GetKeyDown ("left shift")) {
 			Debug.Log ("SHIFT DOWN");
 			for (int i = 0; i < page.childCount; i++) {
@@ -49,7 +49,7 @@ public class SquareCanvas : BuildCanvas {
 			for (int i = 0; i < page.childCount; i++) {
 				page.GetChild (i).GetComponent<Rune> ().Active = true;
 			}
-		}*/
+		}
 			
 	}
 
@@ -74,26 +74,17 @@ public class SquareCanvas : BuildCanvas {
 		
 		//Debug.Log ("Initializing Build");
 
+		// Getting BuildSignalManager
+		signalReceiver = GameObject.Find("BuildSignals").GetComponent<BuildSignalManager>();
+
 		// Getting buildData from DataManager
 		dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
 		BuildData buildData = GameObject.Find ("DataManager").GetComponent<DataManager> ().getBuildData ();
 
 		// Getting data from buildData
-		tableRunes = buildData.getTable ("","");
+		tableRunes = buildData.getTable ();
 		RuneData[,] pageData = buildData.getPage ();
 		int[,] pageRotationData = buildData.getPageRotation ();
-
-		/*
-		// Debug prints for table and page
-		for (int i = 0; i < tableData.Count; i++) {
-			Debug.Log (tableData.Keys[i]);
-		}
-
-		for (int i = 0; i < pageData.GetLength (0); i++) {
-			for (int j = 0; j < pageData.GetLength (1); j++) {
-				Debug.Log (pageData [i, j]);
-			}
-		}*/
 
 		// Creating the Table object to hold all the runes in the table
 		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).GetChild(0);
@@ -112,16 +103,17 @@ public class SquareCanvas : BuildCanvas {
 		// Creating the Page object to hold all the runes in the page
 		page = (RectTransform) GameObject.Find("Page").transform.GetChild(0).GetChild(0).transform;
 
-		int page_h = pageData.GetLength (1);
-		int page_w = pageData.GetLength (0);
+		int page_h = pageData.GetLength (0);
+		int page_w = pageData.GetLength (1);
 		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
 		page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
 
 		// Instantiating all the runes in the page from the pageData
-		for (int i = 0; i < page_w; i++) {
-			for (int j = 0; j < page_h; j++) {
+		for (int i = 0; i < page_h; i++) {
+			for (int j = 0; j < page_w; j++) {
 				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
 				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
+				instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
 				instance.GetComponent<Rune> ().Rotation = pageRotationData [i, j];
 				// sides for the Rune object haven't been initialized, thus have to hard code it
 				// Be careful for other build canvases to change this
@@ -153,6 +145,7 @@ public class SquareCanvas : BuildCanvas {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().reset ();
 		}
+
 	}
 
 	public void simulateButton() {
@@ -166,7 +159,8 @@ public class SquareCanvas : BuildCanvas {
 	}
 
 	public void simulationStep() {
-		Debug.Log ("Simulation Step");
+
+		//Debug.Log ("Simulation Step");
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().sendEnergy ();
 		}

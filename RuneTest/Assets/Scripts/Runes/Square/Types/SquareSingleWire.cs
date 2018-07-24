@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class SquareSingleWireData : WireData {
 
-	public SquareSingleWireData(int efficiency, int capacity) : base(efficiency,capacity) {
+	public SquareSingleWireData(int loss, int capacity) : base(loss,capacity) {
 		id = "SingleWire";
 	}
 
@@ -19,7 +19,9 @@ public class SquareSingleWire : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
+		numConnections = 2;
 		connections = new int[] { 0, 2 };
+		initEnergy ();
 		prev_state = State.empty;
 	}
 
@@ -31,9 +33,39 @@ public class SquareSingleWire : SquareRune {
 
 	public override void manipulateEnergy ()
 	{
+		if (energyIn [0] != null && energyIn [1] != null) {
+			Debug.Log ("Wire receiving energy from both ports");
+			signalReciever.receiveSignal ("Wire receiving energy from both ports");
+		} else {
+			if (energyIn[0] != null) {
+				if (energyIn [0].Power > ((SquareSingleWireData)runeData).Capacity) {
+					Debug.Log ("Wire over max capacity");
+					signalReciever.receiveSignal ("Wire over max capacity");
+				} else {
+					energyIn [0].Power -= ((SquareSingleWireData)runeData).Loss;
+					if (energyIn [0].Power <= 0) {
+						energyOut [1] = null;
+					} else {
+						energyOut [1] = energyIn [0];
+					}
+				}
+			} else if (energyIn[1] != null) {
+				if (energyIn [1].Power > ((SquareSingleWireData)runeData).Capacity) {
+					Debug.Log ("Wire over max capacity");
+					signalReciever.receiveSignal ("Wire over max capacity");
+				} else {
+					energyIn [1].Power -= ((SquareSingleWireData)runeData).Loss;
+					if (energyIn [1].Power <= 0) {
+						energyOut [0] = null;
+					} else {
+						energyOut [0] = energyIn [1];
+					}
+				}
+			}
+		}
+		/*
 		energyOut [1] = energyIn [0];
 		energyOut [0] = energyIn [1];
-		Debug.Log ("PREV: " + prev_state);
 
 		// Energy coming in from both sides
 		if (energyIn [0] != null && energyIn [1] != null) {
@@ -80,9 +112,9 @@ public class SquareSingleWire : SquareRune {
 				break;
 			}
 			prev_state = State.empty;
-		}
+		}*/
 
-		energyIn = new Energy[energyIn.Length];
+		clearEnergyIn ();
 
 	}
 

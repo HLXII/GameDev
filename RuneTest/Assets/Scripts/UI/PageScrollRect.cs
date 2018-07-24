@@ -13,8 +13,8 @@ public class PageScrollRect : ScrollRect {
 	public new void Start() {
 		base.Start();
 
-		minScale = Screen.width / 1600f;
-		maxScale = minScale * 2;
+		minScale = Screen.width / 3200f;
+		maxScale = minScale * 4;
 	}
 
 	public override void OnScroll(PointerEventData data)
@@ -32,7 +32,7 @@ public class PageScrollRect : ScrollRect {
 
 		content.localScale = new Vector3 (newScale, newScale, 1);
 	}
-
+	/*
 	public override void OnBeginDrag(PointerEventData eventData) {
 		if (eventData.button == PointerEventData.InputButton.Right) {
 			eventData.button = PointerEventData.InputButton.Left;
@@ -52,7 +52,7 @@ public class PageScrollRect : ScrollRect {
 			eventData.button = PointerEventData.InputButton.Left;
 			base.OnEndDrag (eventData);
 		}
-	}
+	}*/
 
 }
 

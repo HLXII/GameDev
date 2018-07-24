@@ -9,22 +9,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 [System.Serializable]
-public class RuneComparer : IComparer<string> {
-
-	int IComparer<string>.Compare(string rune1, string rune2) {
-		string[] r1 = rune1.Split ('_');
-		string[] r2 = rune2.Split ('_');
-
-		if (r1 [0] [0] != r2 [0] [0]) {
-			return r1 [0] [0] - r2 [0] [0];
-		} else {
-			return string.Compare(rune1,rune2);
-		}
-	}
-
-}
-
-[System.Serializable]
 public class BuildData {
 
 	// Array of available runes in the table
@@ -35,9 +19,49 @@ public class BuildData {
 
 	private int[,] pageRotations;
 
+	public BuildData(int width, int height) {
+
+		System.Random random = new System.Random ();
+
+		table = new List<RuneData> ();
+
+		table.Add (new SquareSingleWireData(0,20));
+		table.Add (new SquareSingleWireData (5,30));
+		table.Add (new SquareCrossData (1, 1));
+		table.Add (new SquareSourceData (20));
+		table.Add (new SquareSourceData (10));
+		table.Add (new SquareCornerData (10, 20));
+		table.Add (new SquareSinkData (10, 100, 5));
+		table.Add (new SquareSinkData (20, 100, 10));
+
+		page = new RuneData[height, width];
+		pageRotations = new int[height, width];
+
+		int[,] generation = new int[height, width];
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				generation [i, j] = random.Next () % 3;
+			}
+		}
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (generation [i, j] == 0) {
+					page [i, j] = new VoidData ();
+				} else {
+					page [i, j] = new EmptyData ();
+				}
+				pageRotations [i, j] = 0;
+			}
+		}
+
+	}
+
+
 	public BuildData() {
-		int width = 3;
-		int height = 3;
+		int width = 20;
+		int height = 20;
 
 		table = new List<RuneData> ();
 
@@ -47,24 +71,27 @@ public class BuildData {
 		table.Add (new SquareSingleWireData (6,7));
 		table.Add (new SquareSingleWireData (7,8));
 		table.Add (new SquareCrossData (1, 1));
+		table.Add (new SquareSourceData (1));
 
 
-		page = new RuneData[width, height];
+		page = new RuneData[height, width];
 
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				if (i % 2 == 0) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (i % 3 == 0) {
 					page [i, j] = new SquareSingleWireData (i, j);
-				} else {
+				} else if (i%3 == 1) {
 					page [i, j] = new EmptyData ();
+				} else {
+					page [i,j] = new VoidData();
 				}
 			}
 		}
 
-		pageRotations = new int[width, height];
+		pageRotations = new int[height, width];
 
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				pageRotations [i, j] = (i + j) % 4;
 			}
 		}

@@ -6,7 +6,10 @@ public class MainCanvas : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		GameObject.Find ("DataManager").GetComponent<DataManager> ().loadData ("test4x4");
+
+		TableData test = new TableData ();
 	}
 	
 	// Update is called once per frame

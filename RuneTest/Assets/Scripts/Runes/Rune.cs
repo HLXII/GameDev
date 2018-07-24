@@ -6,11 +6,13 @@ using System.Linq;
 
 public class Energy {
 
-	private float power;
+	private int power;
 
-	public Energy(float power) {
+	public Energy(int power) {
 		this.power = power;
 	}
+
+	public int Power { get { return power; } set { power = value; } }
 
 	public override string ToString() {
 		string o = "";
@@ -60,19 +62,67 @@ public class VoidData : RuneData {
 [System.Serializable]
 public class WireData : RuneData {
 
-	protected int efficiency;
+	protected int loss;
 	protected int capacity;
+	public int Loss { get { return loss; } }
+	public int Capacity { get { return capacity; } }
 
-	public WireData(int efficiency, int capacity) {
-		this.efficiency = efficiency;
+	public WireData(int loss, int capacity) {
+		this.loss = loss;
 		this.capacity = capacity;
 	}
 
 	public override string ToString () {
 		string o = "";
 		o += id + "\n";
-		o += "Efficency: " + efficiency + "\n";
+		o += "Loss: " + loss + "\n";
 		o += "Capacity: " + capacity;
+		return o;
+	}
+
+}
+
+[System.Serializable]
+public class InputData : RuneData {
+
+	protected int inputRate;
+	public int InputRate { get { return inputRate; } }
+
+	public InputData(int inputRate) {
+		this.inputRate = inputRate;
+	}
+
+	public override string ToString () {
+		string o = "";
+		o += id + "\n";
+		o += "Input Rate: " + inputRate;
+		return o;
+	}
+
+}
+
+[System.Serializable]
+public class OutputData : RuneData {
+
+	protected int maxRate;
+	protected int capacity;
+	protected int outputRate;
+	public int MaxRate { get { return maxRate; } }
+	public int Capacity { get { return capacity; } }
+	public int OutputRate{ get { return outputRate; } }
+
+	public OutputData(int maxRate, int capacity, int outputRate) {
+		this.maxRate = maxRate;
+		this.capacity = capacity;
+		this.outputRate = outputRate;
+	}
+
+	public override string ToString () {
+		string o = "";
+		o += id + "\n";
+		o += "Max Rate: " + maxRate + "\n";
+		o += "Capacity: " + capacity + "\n";
+		o += "Output Rate: " + outputRate + "\n";
 		return o;
 	}
 
@@ -81,7 +131,10 @@ public class WireData : RuneData {
 /// <summary>
 /// The Base Rune GameObject
 /// </summary>
-public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
+public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerExitHandler, ICanvasRaycastFilter{
+
+	// Info Panel GameObject
+	public GameObject infoPanel;
 
 	// RuneData to store the specific instance of the rune
 	protected RuneData runeData;
@@ -89,11 +142,15 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	// Number of sides of the rune (Triangular, Square, Hexagonal
 	protected int sides;
 
+	// If rune is active/enabled
+	protected bool active;
+
 	// If rune is movable/swappable
 	protected bool movable;
 	protected bool swappable;
 
 	protected int rotation;
+	protected int numConnections;
 	protected int[] connections;
 	protected GameObject[] neighbors;
 
@@ -109,6 +166,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Transform table;
 	protected Transform page;
 
+	protected BuildSignalManager signalReciever;
+
 	private GameObject previous_parent;
 	private int previous_index;
 
@@ -119,18 +178,35 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		table = GameObject.Find ("Table").transform.GetChild (0).GetChild (0).GetChild(0).transform;
 		page = GameObject.Find ("Page").transform.GetChild (0).GetChild (0).transform;
 
-		sides = 4;
 		movable = true;
 		swappable = true;
 
-		connections = new int[0];
+		active = true;
 
-		energyIn = new Energy[connections.Length];
-		energyOut = new Energy[connections.Length];
+		numConnections = 0;
+		connections = new int[numConnections];
+		initEnergy ();
 
 		previous_parent = null;
 		previous_index = 0;
 	
+	}
+
+	protected void initEnergy() {
+		energyIn = new Energy[numConnections];
+		energyOut = new Energy[numConnections];
+	}
+
+	protected void clearEnergyIn() {
+		for (int i = 0; i < numConnections; i++) {
+			energyIn [i] = null;
+		}
+	}
+
+	protected void clearEnergyOut() {
+		for (int i = 0; i < numConnections; i++) {
+			energyOut [i] = null;
+		}
 	}
 
 	protected void Update() {
@@ -145,25 +221,31 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			transform.Rotate (Vector3.back * 360 / sides);
 			//Debug.Log ("Scroll Down "+rotation);
 		}
+
+		if (transform.childCount > 0) {
+			updateInfoPanel ();
+		}
 	}
 
 	public RuneData RuneData { get { return runeData; } set { runeData = value; } }
-	public int Rotation { get { return rotation; } set {rotation = value; } }
-	public GameObject[] Neighbors { get { return neighbors; } }
 	public string Id { get { return runeData.Id; } }
 	public int Sides { get { return sides; } }
+	public bool Active { get {return active; } set {active = value; } }
+	public int Rotation { get { return rotation; } set {rotation = value; } }
+	public GameObject[] Neighbors { get { return neighbors; } }
 	public int[] Connections { get { return connections; } }
 	public Energy[] EnergyIn { get { return energyIn; } }
 	public Energy[] EnergyOut { get { return energyOut; } } 
+	public BuildSignalManager SignalReceiver { get { return signalReciever; } set { signalReciever = value; } }
 
 	public void drop() {
 
-		Debug.Log ("Dropped Rune from " + previous_parent.name);
+		//Debug.Log ("Dropped Rune from " + previous_parent.name);
 
 		// Dropping a page rune
 		if (previous_parent.name == "PageContent") {
 
-			Debug.Log ("Dropping Page Rune");
+			//Debug.Log ("Dropping Page Rune");
 
 			// Raycasting to find where rune was dropped
 			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
@@ -173,7 +255,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 				GameObject swap_rune = hit.collider.gameObject;
 
-				Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
+				//Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
 
 				// Checking if the rune to be swapped is swappable, as well as if it is a different rune
 				if (swap_rune.GetComponent<Rune> ().swappable && swap_rune.transform.GetSiblingIndex () != previous_index) {
@@ -201,7 +283,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				// Not dropped onto a rune in page, thus sent to table
 			} else {
 
-				Debug.Log ("Dropped off of page");
+				//Debug.Log ("Dropped off of page");
 
 				canvas.GetComponent<BuildCanvas> ().addToTable (runeData);
 
@@ -211,7 +293,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			// Dropping a table rune
 		} else {
 
-			Debug.Log ("Dropping Table Rune");
+			//Debug.Log ("Dropping Table Rune");
 
 			// Raycasting to find where rune was dropped
 			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
@@ -221,7 +303,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				
 				GameObject swap_rune = hit.collider.gameObject;
 
-				Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
+				//Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
 
 				// Checking if the rune to be swapped is swappable, as well as if it is a different rune
 				if (swap_rune.GetComponent<Rune> ().swappable) {
@@ -248,6 +330,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					gameObject.layer = LayerMask.NameToLayer ("Table Runes");
 
 					Rotation = 0;
+					transform.rotation = Quaternion.identity;
 				}
 				// Not dropped onto page, send back to table
 			} else {
@@ -258,6 +341,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				gameObject.layer = LayerMask.NameToLayer ("Table Runes");
 
 				Rotation = 0;
+				transform.rotation = Quaternion.identity;
 			}
 		}
 	}
@@ -281,7 +365,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 
 		// Clear energyOut
-		energyOut = new Energy[connections.Length];
+		clearEnergyOut();
 
 	}
 
@@ -312,8 +396,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	// Resets the energy state
 	public virtual void reset() {
-		energyIn = new Energy[connections.Length];
-		energyOut = new Energy[connections.Length];
+		clearEnergyIn ();
+		clearEnergyOut ();
 	}
 
 	public bool checkNeighbors() {
@@ -334,6 +418,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		return true;
 	}
 
+	public virtual void updateInfoPanel() {}
+
 	private IEnumerator expandAnimation (Vector3 new_scale) {
 		Vector3 original_scale = transform.localScale;
 		float rate = 10.0f;
@@ -345,9 +431,10 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
-	private IEnumerator shrinkAnimation () {
+	private IEnumerator shrinkAnimation (Vector3 scale) {
 		Vector3 original_scale = transform.localScale;
 		Vector3 new_scale = new Vector3 (Screen.width / 1600f,Screen.width / 1600f,1);
+		new_scale = scale;
 		float rate = 10.0f;
 		float t = 0.0f;
 		while (t < 1.0) {
@@ -389,7 +476,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 			// Start size transition animation
 			if (previous_parent.name == "TableContent") {
-				StartCoroutine (shrinkAnimation ());
+				StartCoroutine (shrinkAnimation (page.localScale));
 			}
 
 			// Setting parent and layer data
@@ -404,6 +491,10 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		// Checking if left button click
 		if (eventData.button != PointerEventData.InputButton.Left) {
 			return;
+		}
+
+		if (transform.childCount > 0) {
+			Destroy (transform.GetChild (0).gameObject);
 		}
 
 		if (movable) {
@@ -433,6 +524,10 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		previous_parent = null;
 		previous_index = 0;
 
+	}
+
+	public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera) {
+		return active;
 	}
 
 	public override string ToString ()
@@ -479,6 +574,24 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public virtual void OnPointerClick (PointerEventData eventData) {
 		Debug.Log (this);
+
+		if (eventData.button == PointerEventData.InputButton.Right) {
+			if (transform.childCount == 0 && infoPanel != null) {
+				if (transform.parent.name == "PageContent") {
+					GameObject instance = Instantiate (infoPanel, transform);
+					instance.transform.Rotate (Vector3.forward * 90 * -rotation);
+				} else if (transform.parent.name == "TableContent") {
+					GameObject instance = Instantiate (infoPanel, transform);
+				}
+			}
+		}
+
+	}
+
+	public void OnPointerExit(PointerEventData eventData) {
+		if (transform.childCount > 0) {
+			Destroy (transform.GetChild (0).gameObject);
+		}
 	}
 		
 }

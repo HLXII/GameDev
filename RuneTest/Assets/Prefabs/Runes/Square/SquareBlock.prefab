@@ -53,7 +53,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
 --- !u!114 &114843206228210214
 MonoBehaviour:
@@ -66,6 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374e967f6b46742dbadc6b6ffff319d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoPanel: {fileID: 0}
 --- !u!114 &114951869797460324
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -85,7 +86,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: d7e238e1ea78c4d45aad7539f4e94775, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

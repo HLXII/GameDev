@@ -3,31 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SquareSource : SquareRune {
+[System.Serializable]
+public class SquareSourceData : InputData {
 
-	private bool on;
+	public SquareSourceData(int inputRate) : base(inputRate) {
+		id = "Source";
+	}
+
+}
+
+public class SquareSource : SquareRune {
 
 	protected new void Start() {
 		base.Start ();
+		numConnections = 1;
 		connections = new int[] { 0 };
-		energyIn = new Energy[1];
-		energyOut = new Energy[1] {new Energy(10)};
-
-		on = false;
+		initEnergy ();
 	}
 
 	public override void manipulateEnergy ()
 	{
+		// If no backwards flowing energy
 		if (energyIn [0] == null) {
-			if (on) {
-				//transform.GetChild (0).GetComponent<Animator> ().SetTrigger ("source");
-				energyOut [0] = new Energy (10);
-			}
+			energyOut [0] = new Energy (((InputData)runeData).InputRate);
+			// Backflowing energy
+		} else {
+			signalReciever.receiveSignal ("Source receiving energy");
 		}
 	}
-
-	public override void OnPointerClick (PointerEventData eventData) {
-		//Debug.Log (this);
-		on = !on;
-	}
+		
 }
