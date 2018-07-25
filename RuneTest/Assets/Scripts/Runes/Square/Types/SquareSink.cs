@@ -30,6 +30,7 @@ public class SquareSink : SquareRune {
 	{
 		base.reset ();
 		gameObject.GetComponent<Animator> ().Play ("off");
+		gameObject.GetComponent<Animator> ().SetBool ("on", false);
 		storage = 0;
 	}
 

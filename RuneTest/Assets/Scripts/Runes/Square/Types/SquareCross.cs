@@ -26,6 +26,8 @@ public class SquareCross : SquareRune {
 	{
 		base.reset ();
 		gameObject.GetComponent<Animator> ().Play ("empty");
+		gameObject.GetComponent<Animator> ().SetBool ("output_horizontal", false);
+		gameObject.GetComponent<Animator> ().SetBool ("output_vertical", false);
 	}
 
 	public override void manipulateEnergy ()

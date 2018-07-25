@@ -36,7 +36,6 @@ public class SquareCanvas : BuildCanvas {
 	void Update () {
 
 		if (Input.GetKeyDown ("left shift")) {
-			Debug.Log ("SHIFT DOWN");
 			for (int i = 0; i < page.childCount; i++) {
 				page.GetChild (i).GetComponent<Rune> ().Active = false;
 			}
@@ -137,11 +136,12 @@ public class SquareCanvas : BuildCanvas {
 		Debug.Log (pageCheck ());
 	}
 
-	public void simulate() {
+	public override void simulate() {
+		/*
 		Debug.Log ("Resetting Runes");
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().reset ();
-		}
+		}*/
 
 		Debug.Log ("Finding Neighbors");
 		for (int i = 0; i < page.childCount; i++) {
@@ -157,8 +157,20 @@ public class SquareCanvas : BuildCanvas {
 
 	}
 
-	public void endSimulate() {
+	public override void endSimulate() {
 		CancelInvoke ();
+	}
+
+	public override void cleanSimulation() {
+		Debug.Log ("Resetting Runes");
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().reset ();
+		}
+
+		Debug.Log ("Finding Neighbors");
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+		}
 	}
 
 	public void simulationStep() {

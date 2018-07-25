@@ -26,6 +26,7 @@ public class SquareCorner : SquareRune {
 	{
 		base.reset ();
 		gameObject.GetComponent<Animator> ().Play ("empty");
+		gameObject.GetComponent<Animator> ().SetBool ("outputting", false);
 	}
 		
 	public override void manipulateEnergy ()

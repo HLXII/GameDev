@@ -11,6 +11,8 @@ public class BuildSignalText : MonoBehaviour, BuildSignalManager, IPointerEnterH
 	private Vector2 minAnchor;
 	private Vector2 maxAnchor;
 
+	private bool shrinking = false;
+
 	// Use this for initialization
 	void Start () {
 		initialize ();
@@ -50,6 +52,7 @@ public class BuildSignalText : MonoBehaviour, BuildSignalManager, IPointerEnterH
 	}
 
 	private IEnumerator shrinkAnimation () {
+		shrinking = true;
 		Vector2 original = ((RectTransform)transform).anchorMax;
 		float rate = 5.0f;
 		float t = 0.0f;
@@ -58,9 +61,14 @@ public class BuildSignalText : MonoBehaviour, BuildSignalManager, IPointerEnterH
 			((RectTransform)transform).anchorMax = Vector2.Lerp(original, minAnchor, Mathf.SmoothStep (0.0f, 1.0f, t));
 			yield return null;
 		}
+		shrinking = false;
 	}
 
 	private IEnumerator expandAnimation () {
+		while (shrinking) {
+			yield return new WaitForSeconds(.001f);
+		}
+
 		Vector2 original = ((RectTransform)transform).anchorMax;
 		float rate = 5.0f;
 		float t = 0.0f;

@@ -42,25 +42,7 @@ public class BuildCanvas : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		/*
-		if (Input.GetMouseButtonDown (0)) {
-			Debug.Log ("Mouse Down" + Input.mousePosition);
-		}
-		if (Input.GetMouseButtonUp (0)) {
-			Debug.Log ("Mouse Up");
-		}
-		if (Input.GetMouseButton (0)) {
-			//Debug.Log ("Mouse Press");
-		}*/
-		if (Input.GetAxis ("Mouse ScrollWheel") != 0f) {
-			if (tableBounds.Contains(Input.mousePosition)) {
-				if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
-					//tableUp ();
-				} else if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
-					//tableDown ();
-				}
-			}
-		}
+
 	}
 
 	// Initializing the rune dictionary
@@ -156,5 +138,9 @@ public class BuildCanvas : MonoBehaviour {
 	public virtual bool pageCheck() {
 		return true;
 	}
+
+	public virtual void simulate () {}
+	public virtual void endSimulate () {}
+	public virtual void cleanSimulation () {}
 
 }

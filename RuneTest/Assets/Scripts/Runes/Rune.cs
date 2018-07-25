@@ -210,12 +210,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	protected void Update() {
-		if (drag && Input.GetAxis ("Mouse ScrollWheel") > 0f) {
+		if (drag && (Input.mouseScrollDelta.x + Input.mouseScrollDelta.y) > 0f) {
 			// Updating connection ports
 			rotation = (rotation + 1 + sides) % sides;
 			//Debug.Log ("Scroll Up "+rotation);
 			transform.Rotate (Vector3.forward * 360 / sides);
-		} else if (drag && Input.GetAxis ("Mouse ScrollWheel") < 0f) {
+		} else if (drag && (Input.mouseScrollDelta.x + Input.mouseScrollDelta.y) < 0f) {
 			// Updating connection ports
 			rotation = (rotation - 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 360 / sides);
@@ -573,6 +573,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	public virtual void OnPointerClick (PointerEventData eventData) {
+		
 		Debug.Log (this);
 
 		if (eventData.button == PointerEventData.InputButton.Right) {
@@ -582,6 +583,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					instance.transform.Rotate (Vector3.forward * 90 * -rotation);
 				} else if (transform.parent.name == "TableContent") {
 					GameObject instance = Instantiate (infoPanel, transform);
+					// move the instance so it's visible
 				}
 			}
 		}

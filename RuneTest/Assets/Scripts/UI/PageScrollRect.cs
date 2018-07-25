@@ -19,10 +19,10 @@ public class PageScrollRect : ScrollRect {
 
 	public override void OnScroll(PointerEventData data)
 	{
-		if (!IsActive())
+		if (!IsActive ())
 			return;
 
-		float newScale = content.localScale.x + data.scrollDelta.y * .05f;
+		float newScale = content.localScale.x + (data.scrollDelta.y+data.scrollDelta.x) * .05f;
 		if (newScale < minScale) {
 			newScale = minScale;
 		}
