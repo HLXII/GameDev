@@ -27,7 +27,7 @@ public class BuildData {
 
 		table.Add (new SquareSingleWireData(0,20));
 		table.Add (new SquareSingleWireData (5,30));
-		table.Add (new SquareCrossData (1, 1));
+		table.Add (new SquareCrossData (3, 20));
 		table.Add (new SquareSourceData (20));
 		table.Add (new SquareSourceData (10));
 		table.Add (new SquareCornerData (10, 20));

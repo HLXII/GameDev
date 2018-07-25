@@ -22,14 +22,22 @@ public class SquareSource : SquareRune {
 		initEnergy ();
 	}
 
+	public override void reset ()
+	{
+		base.reset ();
+		gameObject.GetComponent<Animator> ().Play ("off");
+	}
+
 	public override void manipulateEnergy ()
 	{
 		// If no backwards flowing energy
 		if (energyIn [0] == null) {
 			energyOut [0] = new Energy (((InputData)runeData).InputRate);
+			gameObject.GetComponent<Animator> ().SetBool ("on", true);
 			// Backflowing energy
 		} else {
 			signalReciever.receiveSignal ("Source receiving energy");
+			gameObject.GetComponent<Animator> ().SetTrigger ("error");
 		}
 	}
 		

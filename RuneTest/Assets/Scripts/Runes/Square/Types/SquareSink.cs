@@ -29,6 +29,7 @@ public class SquareSink : SquareRune {
 	public override void reset ()
 	{
 		base.reset ();
+		gameObject.GetComponent<Animator> ().Play ("off");
 		storage = 0;
 	}
 
@@ -46,12 +47,16 @@ public class SquareSink : SquareRune {
 				// If stored energy is greater than max capacity
 				if (storage > ((SquareSinkData)runeData).Capacity) {
 					signalReciever.receiveSignal ("Sink over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				}
 				// Input over max rate
 			} else {
 				signalReciever.receiveSignal ("Sink receiving over max rate");
+				gameObject.GetComponent<Animator> ().SetTrigger ("error");
 			}
 		}
+
+		gameObject.GetComponent<Animator> ().SetBool ("on", (storage != 0));
 	}
 
 

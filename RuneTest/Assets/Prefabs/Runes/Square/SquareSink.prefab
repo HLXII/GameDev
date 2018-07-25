@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114119386240442752}
   - component: {fileID: 61641424977219842}
   - component: {fileID: 114683367159695964}
+  - component: {fileID: 95049418487395546}
   m_Layer: 8
   m_Name: SquareSink
   m_TagString: Untagged
@@ -55,6 +56,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
+--- !u!95 &95049418487395546
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295503599513702}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ee41162ac2ce2435c90cff19c2f00765, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114119386240442752
 MonoBehaviour:
   m_ObjectHideFlags: 1

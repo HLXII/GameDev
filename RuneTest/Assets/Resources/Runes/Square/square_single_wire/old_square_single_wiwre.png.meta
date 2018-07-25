@@ -1,15 +1,18 @@
 fileFormatVersion: 2
-guid: 87aeb9a75533c41dfb836f125a0897d0
-timeCreated: 1532528641
+guid: 53009a442be3c4f8a9057d471e35d863
+timeCreated: 1528791939
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: single_wire_empty
-    21300002: single_wire_full
-    21300004: single_wire_error
-    21300006: square_single_wire_empty
-    21300008: square_single_wire_full
-    21300010: square_single_wire_error
+    21300000: square_single_wire_0
+    21300002: square_single_wire_1
+    21300004: square_single_wire_2
+    21300006: square_single_wire_3
+    21300008: square_single_wire_4
+    21300010: square_single_wire_5
+    21300012: square_single_wire_6
+    21300014: square_single_wire_7
+    21300016: square_single_wire_8
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -89,7 +92,91 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: square_single_wire_empty
+      name: square_single_wire_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_4
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: square_single_wire_6
       rect:
         serializedVersion: 2
         x: 0
@@ -103,7 +190,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: square_single_wire_full
+      name: square_single_wire_7
       rect:
         serializedVersion: 2
         x: 16
@@ -117,7 +204,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: square_single_wire_error
+      name: square_single_wire_8
       rect:
         serializedVersion: 2
         x: 32

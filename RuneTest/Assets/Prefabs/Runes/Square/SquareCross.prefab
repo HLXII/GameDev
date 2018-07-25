@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114751224019328228}
   - component: {fileID: 61162232178146382}
   - component: {fileID: 114045088637610284}
+  - component: {fileID: 95384314375980960}
   m_Layer: 8
   m_Name: SquareCross
   m_TagString: Untagged
@@ -55,6 +56,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
+--- !u!95 &95384314375980960
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1940552440802952}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d59402ce07b046f793fdafa80f898fb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114045088637610284
 MonoBehaviour:
   m_ObjectHideFlags: 1

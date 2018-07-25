@@ -22,16 +22,28 @@ public class SquareCross : SquareRune {
 		initEnergy ();
 	}
 
+	public override void reset ()
+	{
+		base.reset ();
+		gameObject.GetComponent<Animator> ().Play ("empty");
+	}
+
 	public override void manipulateEnergy ()
 	{
 		if (energyIn [0] != null && energyIn [2] != null || energyIn [1] != null && energyIn [3] != null) {
 			Debug.Log ("Wire receiving energy from both ports");
 			signalReciever.receiveSignal ("Wire receiving energy from both ports");
+			gameObject.GetComponent<Animator> ().SetTrigger ("error");
 		} else {
-			if (energyIn[0] != null) {
+
+			bool output_horizontal = true;
+			bool output_vertical = true;
+
+			if (energyIn [0] != null) {
 				if (energyIn [0].Power > ((SquareCrossData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [0].Power -= ((SquareCrossData)runeData).Loss;
 					if (energyIn [0].Power <= 0) {
@@ -40,10 +52,11 @@ public class SquareCross : SquareRune {
 						energyOut [2] = energyIn [0];
 					}
 				}
-			} else if (energyIn[2] != null) {
+			} else if (energyIn [2] != null) {
 				if (energyIn [2].Power > ((SquareCrossData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [2].Power -= ((SquareCrossData)runeData).Loss;
 					if (energyIn [2].Power <= 0) {
@@ -52,12 +65,15 @@ public class SquareCross : SquareRune {
 						energyOut [0] = energyIn [2];
 					}
 				}
+			} else {
+				output_horizontal = false;
 			}
 
-			if (energyIn[1] != null) {
+			if (energyIn [1] != null) {
 				if (energyIn [1].Power > ((SquareCrossData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [1].Power -= ((SquareCrossData)runeData).Loss;
 					if (energyIn [1].Power <= 0) {
@@ -66,10 +82,11 @@ public class SquareCross : SquareRune {
 						energyOut [3] = energyIn [1];
 					}
 				}
-			} else if (energyIn[3] != null) {
+			} else if (energyIn [3] != null) {
 				if (energyIn [3].Power > ((SquareCrossData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [3].Power -= ((SquareCrossData)runeData).Loss;
 					if (energyIn [3].Power <= 0) {
@@ -78,7 +95,12 @@ public class SquareCross : SquareRune {
 						energyOut [1] = energyIn [3];
 					}
 				}
+			} else {
+				output_vertical = false;
 			}
+
+			gameObject.GetComponent<Animator> ().SetBool ("output_horizontal", output_horizontal);
+			gameObject.GetComponent<Animator> ().SetBool ("output_vertical", output_vertical);
 		}
 
 		clearEnergyIn ();
