@@ -10,7 +10,7 @@ public class BuildCanvas : MonoBehaviour {
 	protected RectTransform table;
 
 	// Reference to BuildSignalManager
-	protected BuildSignalManager signalReceiver;
+	protected BuildSignalText signalReceiver;
 
 	// Generic runes required by all rune pages
 	public GameObject runeEmpty;

@@ -22,13 +22,10 @@ public class SquareCanvas : BuildCanvas {
 	//private int curPage;
 	//private Bounds tableBounds;
 
-	private bool simulating;
-
 	// Use this for initialization
 	void Start () {
 
-		simulating = false;
-		signalReceiver = GameObject.Find ("BuildSignals").GetComponent<BuildSignalManager> ();
+		signalReceiver = GameObject.Find ("BuildSignals").GetComponent<BuildSignalText> ();
 
 		initRunes ();
 		initBuild ();
@@ -75,7 +72,7 @@ public class SquareCanvas : BuildCanvas {
 		//Debug.Log ("Initializing Build");
 
 		// Getting BuildSignalManager
-		signalReceiver = GameObject.Find("BuildSignals").GetComponent<BuildSignalManager>();
+		signalReceiver = GameObject.Find("BuildSignals").GetComponent<BuildSignalText>();
 
 		// Getting buildData from DataManager
 		dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
@@ -140,22 +137,28 @@ public class SquareCanvas : BuildCanvas {
 		Debug.Log (pageCheck ());
 	}
 
-	public void resetSimulation() {
-		Debug.Log ("Resetting Simulation");
+	public void simulate() {
+		Debug.Log ("Resetting Runes");
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().reset ();
 		}
 
+		Debug.Log ("Finding Neighbors");
+		for (int i = 0; i < page.childCount; i++) {
+			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+		}
+
+		Debug.Log ("Resetting SignalReceiver");
+		signalReceiver.reset ();
+
+		Debug.Log ("Starting Simulation");
+		InvokeRepeating ("simulationStep", 0f, .2f);
+		//CancelInvoke();
+
 	}
 
-	public void simulateButton() {
-		if (simulating) {
-			simulating = false;
-			CancelInvoke ();
-		} else {
-			simulating = true;
-			InvokeRepeating ("simulationStep", 0f, .2f);
-		}
+	public void endSimulate() {
+		CancelInvoke ();
 	}
 
 	public void simulationStep() {

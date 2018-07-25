@@ -24,6 +24,11 @@ public class BuildSignalText : MonoBehaviour, BuildSignalManager, IPointerEnterH
 		
 	}
 
+	public void reset() {
+		numLines = 0;
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = "";
+	}
+
 	public void OnPointerEnter(PointerEventData eventData) {
 		Debug.Log("ENTER");
 		StartCoroutine (expandAnimation());

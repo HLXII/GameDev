@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class SquareSinkData : OutputData {
@@ -24,6 +26,11 @@ public class SquareSink : SquareRune {
 		storage = 0;
 	}
 
+	public override void reset ()
+	{
+		base.reset ();
+		storage = 0;
+	}
 
 	public override void manipulateEnergy ()
 	{
@@ -52,5 +59,15 @@ public class SquareSink : SquareRune {
 		string o = base.ToString ();
 		o += "\nStorage: " + storage.ToString ();
 		return o;
+	}
+
+	public override void updateInfoPanel ()
+	{
+		string o = "";
+		o += runeData.ToString();
+		o += "Storage: " + storage.ToString ();
+
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = o;
+
 	}
 }

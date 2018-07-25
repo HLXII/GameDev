@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [System.Serializable]
@@ -32,4 +33,11 @@ public class SquareSource : SquareRune {
 		}
 	}
 		
+	public override void updateInfoPanel ()
+	{
+		string o = "";
+		o += runeData.ToString();
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = o;
+
+	}
 }

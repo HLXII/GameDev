@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class SquareSingleWireData : WireData {
@@ -13,21 +15,15 @@ public class SquareSingleWireData : WireData {
 
 public class SquareSingleWire : SquareRune {
 
-	private enum State {empty,left_in,right_in,both_in};
-
-	private State prev_state;
-
 	protected new void Start() {
 		base.Start ();
 		numConnections = 2;
 		connections = new int[] { 0, 2 };
 		initEnergy ();
-		prev_state = State.empty;
 	}
 
 	public override void reset() {
 		base.reset ();
-		prev_state = State.empty;
 		gameObject.GetComponent<Animator> ().Play ("empty");
 	}
 
@@ -36,11 +32,13 @@ public class SquareSingleWire : SquareRune {
 		if (energyIn [0] != null && energyIn [1] != null) {
 			Debug.Log ("Wire receiving energy from both ports");
 			signalReciever.receiveSignal ("Wire receiving energy from both ports");
+			gameObject.GetComponent<Animator> ().SetTrigger ("error");
 		} else {
-			if (energyIn[0] != null) {
+			if (energyIn [0] != null) {
 				if (energyIn [0].Power > ((SquareSingleWireData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [0].Power -= ((SquareSingleWireData)runeData).Loss;
 					if (energyIn [0].Power <= 0) {
@@ -48,11 +46,13 @@ public class SquareSingleWire : SquareRune {
 					} else {
 						energyOut [1] = energyIn [0];
 					}
+					gameObject.GetComponent<Animator> ().SetBool ("outputting", true);
 				}
-			} else if (energyIn[1] != null) {
+			} else if (energyIn [1] != null) {
 				if (energyIn [1].Power > ((SquareSingleWireData)runeData).Capacity) {
 					Debug.Log ("Wire over max capacity");
 					signalReciever.receiveSignal ("Wire over max capacity");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				} else {
 					energyIn [1].Power -= ((SquareSingleWireData)runeData).Loss;
 					if (energyIn [1].Power <= 0) {
@@ -60,9 +60,13 @@ public class SquareSingleWire : SquareRune {
 					} else {
 						energyOut [0] = energyIn [1];
 					}
+					gameObject.GetComponent<Animator> ().SetBool ("outputting", true);
 				}
+			} else {
+				gameObject.GetComponent<Animator> ().SetBool ("outputting", false);
 			}
 		}
+
 		/*
 		energyOut [1] = energyIn [0];
 		energyOut [0] = energyIn [1];
@@ -118,4 +122,18 @@ public class SquareSingleWire : SquareRune {
 
 	}
 
+	public override void updateInfoPanel ()
+	{
+		string o = "";
+		o += runeData.ToString();
+		o += "\nOutput: ";
+		if (energyOut [0] != null) {
+			o += energyOut [0].ToString ();
+		} else if (energyOut [1] != null) {
+			o += energyOut [1].ToString ();
+		}
+
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = o;
+
+	}
 }
