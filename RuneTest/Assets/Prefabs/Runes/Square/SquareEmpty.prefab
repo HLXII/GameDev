@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 224202513272564978}
   - component: {fileID: 222623719818811278}
-  - component: {fileID: 114009446010245144}
   - component: {fileID: 61175973242898642}
   - component: {fileID: 114075372420067276}
+  - component: {fileID: 114019508214114716}
   m_Layer: 8
   m_Name: SquareEmpty
   m_TagString: Untagged
@@ -55,7 +55,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
---- !u!114 &114009446010245144
+--- !u!114 &114019508214114716
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

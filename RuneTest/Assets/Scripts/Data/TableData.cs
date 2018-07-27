@@ -8,6 +8,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+// IComparer for sorting runes
 public class GenericRuneComparer : IComparer<RuneData> {
 
 	int IComparer<RuneData>.Compare(RuneData rune1, RuneData rune2) {
@@ -30,12 +31,14 @@ public class GenericRuneComparer : IComparer<RuneData> {
 
 }
 
+// Class for storing runes in the table during builds
 [System.Serializable]
 public class TableData {
 
 	// Array of available runes in the table
 	private List<RuneData> table;
 
+	// Constructing from file (Usually for initializing puzzles)
 	public TableData(string filename) {
 		BinaryFormatter bf = new BinaryFormatter ();
 		TextAsset dataFile = Resources.Load<TextAsset> (filename);
@@ -44,7 +47,24 @@ public class TableData {
 		table = tableData.getTable ();
 	}
 
+	// Initializing from list of runes (Idk if will be used if we can directly edit the inventory runes)
+	public TableData(List<RuneData> runes) {
+		table = runes;
+	}
+
+	// Initializing for testing
 	public TableData() {
+
+		table = new List<RuneData> ();
+
+		table.Add (new SquareSingleWireData(0,20));
+		table.Add (new SquareSingleWireData (5,30));
+		table.Add (new SquareCrossData (3, 20));
+		table.Add (new SquareSourceData (20));
+		table.Add (new SquareSourceData (10));
+		table.Add (new SquareCornerData (10, 20));
+		table.Add (new SquareSinkData (10, 100, 5));
+		table.Add (new SquareSinkData (20, 100, 10));
 
 	}
 

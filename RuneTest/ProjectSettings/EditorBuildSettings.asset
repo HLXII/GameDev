@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SquareDesign.unity
     guid: 4f828dfebe6d2414490ccb5de36b70dd
+  - enabled: 1
+    path: Assets/Scenes/Overworld.unity
+    guid: 83402d005b9a64067af3af36fcb39d6b

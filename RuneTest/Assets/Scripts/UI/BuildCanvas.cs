@@ -135,10 +135,6 @@ public class BuildCanvas : MonoBehaviour {
 
 	}
 
-	public virtual bool pageCheck() {
-		return true;
-	}
-
 	public virtual void simulate () {}
 	public virtual void endSimulate () {}
 	public virtual void cleanSimulation () {}

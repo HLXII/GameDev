@@ -14,8 +14,8 @@ public class SquareRune : Rune {
 
 	public override void findNeighbors() {
 
-		int page_h = dataManager.getBuildData().getPage ().GetLength (0);
-		int page_w = dataManager.getBuildData().getPage ().GetLength (1);
+		int page_h = dataManager.PageData.Page.GetLength (0);
+		int page_w = dataManager.PageData.Page.GetLength (1);
 
 		//Debug.Log ("H: " + page_h + " W: " + page_w);
 

@@ -75,12 +75,11 @@ public class SquareCanvas : BuildCanvas {
 
 		// Getting buildData from DataManager
 		dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
-		BuildData buildData = GameObject.Find ("DataManager").GetComponent<DataManager> ().getBuildData ();
 
 		// Getting data from buildData
-		tableRunes = buildData.getTable ();
-		RuneData[,] pageData = buildData.getPage ();
-		int[,] pageRotationData = buildData.getPageRotation ();
+		tableRunes = dataManager.TableData.getTable();
+		RuneData[,] pageData = dataManager.PageData.Page;
+		int[,] pageRotationData = dataManager.PageData.PageRotations;
 
 		// Creating the Table object to hold all the runes in the table
 		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).GetChild(0);
@@ -119,22 +118,18 @@ public class SquareCanvas : BuildCanvas {
 		}
 	}
 
-	public override bool pageCheck() {
-		for (int i = 0; i < page.childCount; i++) {
-			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
-			//page.GetChild (i).GetChild (0).GetComponent<Animator> ().SetTrigger ("right_to_left");
-		}
-		for (int i = 0; i < page.childCount; i++) {
-			if (!page.GetChild (i).GetComponent<Rune> ().checkNeighbors ()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public void btnCheck() {
-		Debug.Log (pageCheck ());
-	}
+//	public override bool pageCheck() {
+//		for (int i = 0; i < page.childCount; i++) {
+//			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+//			//page.GetChild (i).GetChild (0).GetComponent<Animator> ().SetTrigger ("right_to_left");
+//		}
+//		for (int i = 0; i < page.childCount; i++) {
+//			if (!page.GetChild (i).GetComponent<Rune> ().checkNeighbors ()) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
 
 	public override void simulate() {
 		/*

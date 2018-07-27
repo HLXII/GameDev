@@ -213,13 +213,11 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (drag && (Input.mouseScrollDelta.x + Input.mouseScrollDelta.y) > 0f) {
 			// Updating connection ports
 			rotation = (rotation + 1 + sides) % sides;
-			//Debug.Log ("Scroll Up "+rotation);
 			transform.Rotate (Vector3.forward * 360 / sides);
 		} else if (drag && (Input.mouseScrollDelta.x + Input.mouseScrollDelta.y) < 0f) {
 			// Updating connection ports
 			rotation = (rotation - 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 360 / sides);
-			//Debug.Log ("Scroll Down "+rotation);
 		}
 
 		if (transform.childCount > 0) {
@@ -359,7 +357,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					neighbors [outPort].GetComponent<Rune> ().receiveEnergy (energyOut [i], neighborInPort);
 				// There is no neighbor to output to, cause some kind of malfunction? ***
 				} else {
-
+					signalReciever.receiveSignal ("Energy leak");
+					gameObject.GetComponent<Animator> ().SetTrigger ("error");
 				}
 			}
 		}
@@ -446,7 +445,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void OnBeginDrag (PointerEventData eventData)
 	{
-
 		// Checking if left button click
 		if (eventData.button != PointerEventData.InputButton.Left) {
 			return;

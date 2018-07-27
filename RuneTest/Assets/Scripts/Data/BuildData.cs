@@ -8,6 +8,8 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+
+// Old Class for storing build data
 [System.Serializable]
 public class BuildData {
 
