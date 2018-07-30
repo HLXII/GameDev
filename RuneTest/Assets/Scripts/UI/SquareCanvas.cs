@@ -77,31 +77,33 @@ public class SquareCanvas : BuildCanvas {
 		dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
 
 		// Getting data from buildData
-		tableRunes = dataManager.TableData.getTable();
+		tableRunes = dataManager.TableData;
 		RuneData[,] pageData = dataManager.PageData.Page;
 		int[,] pageRotationData = dataManager.PageData.PageRotations;
 
 		// Creating the Table object to hold all the runes in the table
-		table = (RectTransform) GameObject.Find("Table").transform.GetChild(0).GetChild(0).GetChild(0);
+		table = (RectTransform) GameObject.Find("TableContent").transform;
+		tableBack = (RectTransform)GameObject.Find ("TableBack").transform;
 
 		// Setting scale of TableContent to fit table window
 		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
 		table.localScale = new Vector3 (tableRect.size.x / 200f, tableRect.size.x / 200f, 1);
+		tableBack.localScale = table.localScale;
 
 		// Calculating the table parameters and updating the table
 		//rankFilter = "";
 		classFilter = "";
-		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
-		curPage = 0;
 		updateTable ();
 
 		// Creating the Page object to hold all the runes in the page
-		page = (RectTransform) GameObject.Find("Page").transform.GetChild(0).GetChild(0).transform;
+		page = (RectTransform) GameObject.Find("PageContent").transform;
+		pageBack = (RectTransform)GameObject.Find ("PageBack").transform;
 
 		int page_h = pageData.GetLength (0);
 		int page_w = pageData.GetLength (1);
 		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
 		page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
+		pageBack.localScale = page.localScale;
 
 		// Instantiating all the runes in the page from the pageData
 		for (int i = 0; i < page_h; i++) {
@@ -114,6 +116,8 @@ public class SquareCanvas : BuildCanvas {
 				// Be careful for other build canvases to change this
 				instance.transform.Rotate (Vector3.forward * pageRotationData [i, j] * 90);
 				instance.layer = 9;
+
+				Instantiate (runeBack, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
 			}
 		}
 	}

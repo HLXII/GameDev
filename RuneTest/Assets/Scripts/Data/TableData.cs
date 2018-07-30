@@ -72,6 +72,10 @@ public class TableData {
 		return table;
 	}
 
+	public List<RuneData> getTable(string classFilter) {
+		return table;
+	}
+
 	public void addToTable(RuneData runeData) {
 		table.Add (runeData);
 	}

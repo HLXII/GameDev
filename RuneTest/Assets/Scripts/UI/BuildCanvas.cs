@@ -8,9 +8,15 @@ public class BuildCanvas : MonoBehaviour {
 	// References to the page and table transforms
 	protected RectTransform page;
 	protected RectTransform table;
+	// References to the backs of the table and page
+	protected RectTransform pageBack;
+	protected RectTransform tableBack;
 
 	// Reference to BuildSignalManager
 	protected BuildSignalText signalReceiver;
+
+	// Rune Back
+	public GameObject runeBack;
 
 	// Generic runes required by all rune pages
 	public GameObject runeEmpty;
@@ -23,14 +29,9 @@ public class BuildCanvas : MonoBehaviour {
 	// DataManager
 	public DataManager dataManager;
 
-	// List to store filtered and available runes
-	protected List<RuneData> tableRunes;
+	// Table Rune variables
+	protected TableData tableRunes;
 	protected string classFilter;
-	protected string sortFilter;
-
-	protected int numTablePages;
-	protected int curPage;
-	protected Bounds tableBounds;
 
 	// Use this for initialization
 	void Start () {
@@ -52,12 +53,12 @@ public class BuildCanvas : MonoBehaviour {
 	protected virtual void initBuild() {}
 
 	public void addToTable(RuneData rune) {
-		tableRunes.Add (rune);
+		tableRunes.addToTable (rune);
 		updateTable ();
 	}
 
 	public void removeFromTable(RuneData rune) {
-		tableRunes.Remove (rune);
+		tableRunes.removeFromTable (rune);
 		updateTable ();
 	}
 
@@ -120,18 +121,31 @@ public class BuildCanvas : MonoBehaviour {
 
 	public void updateTable() {
 
+		// Removing old runes
 		foreach (Transform child in table) {
 			GameObject.Destroy(child.gameObject);
 		}
-		foreach (RuneData rune in tableRunes) {
+		// Removing rune backs
+		foreach (Transform child in tableBack) {
+			GameObject.Destroy (child.gameObject);
+		}
+
+		// Getting runes based on filter
+		List<RuneData> filteredRunes = tableRunes.getTable (classFilter);
+
+		// Instantiating all filtered runes
+		foreach (RuneData rune in filteredRunes) {
 			GameObject instance = Instantiate (runes [rune.Id],new Vector3 (0,0,1), Quaternion.identity,table);
 			instance.GetComponent<Rune> ().RuneData = rune;
 			instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
 			instance.layer = 8;
+			Instantiate (runeBack, new Vector3 (0, 0, 1), Quaternion.identity, tableBack);
 		}
 
+		// Updating size of TableContent and TableBack
 		RectTransform content = (RectTransform)table.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.Count + 1) / 2) * 100 * table.localScale.x);
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 1) / 2) * 100 * table.localScale.x);
+
 
 	}
 

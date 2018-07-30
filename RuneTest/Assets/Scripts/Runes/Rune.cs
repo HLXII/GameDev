@@ -175,8 +175,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
 		canvas = GameObject.Find ("Canvas").transform;
-		table = GameObject.Find ("Table").transform.GetChild (0).GetChild (0).GetChild(0).transform;
-		page = GameObject.Find ("Page").transform.GetChild (0).GetChild (0).transform;
+		table = GameObject.Find ("TableContent").transform;
+		page = GameObject.Find ("PageContent").transform;
 
 		movable = true;
 		swappable = true;
