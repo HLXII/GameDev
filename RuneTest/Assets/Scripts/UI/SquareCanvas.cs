@@ -101,9 +101,14 @@ public class SquareCanvas : BuildCanvas {
 
 		int page_h = pageData.GetLength (0);
 		int page_w = pageData.GetLength (1);
+		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w * 100, page_h * 100);
 		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
-		page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
-		pageBack.localScale = page.localScale;
+		pageBack.sizeDelta = page.sizeDelta;
+		//page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
+		//pageBack.localScale = page.localScale;
+
+		pageBack.GetComponent<GridLayoutGroup> ().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+		pageBack.GetComponent<GridLayoutGroup> ().constraintCount = page_w;
 
 		// Instantiating all the runes in the page from the pageData
 		for (int i = 0; i < page_h; i++) {
@@ -117,7 +122,11 @@ public class SquareCanvas : BuildCanvas {
 				instance.transform.Rotate (Vector3.forward * pageRotationData [i, j] * 90);
 				instance.layer = 9;
 
-				Instantiate (runeBack, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
+				if (pageData[i,j].Id == "Void") {
+					Instantiate (runeVoid, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
+				} else {
+					Instantiate (runeBack, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
+				}
 			}
 		}
 	}
@@ -183,60 +192,5 @@ public class SquareCanvas : BuildCanvas {
 		}
 		//Debug.Log (page.GetChild (0).GetChild (0).GetComponent<Animator> ().runtimeAnimatorController.animationClips[0].length);
 	}
-
-	/*
-	public void changeTable(string filterName) {
-
-		// Getting filter parameters
-		string[] filter = filterName.Split ('_');
-
-		// If the class Filter was changed
-		if (filter [0] == "Class") {
-			classFilter = filter [1];
-		// If the rank Filter was changed
-		} else {
-			rankFilter = filter [1];
-		}
-
-		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
-		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
-		curPage = 0;
-		updateTable ();
-
-	}
-
-	public void updateTable() {
-		foreach (Transform child in table) {
-			GameObject.Destroy(child.gameObject);
-		}
-		int start_index = curPage * 6;
-		int end_index = Mathf.Min ((curPage + 1) * 6, tableRunes.Count);
-		for (int i = 0;i < end_index-start_index;i++) {
-			//Debug.Log ((i%2)*1.5f);
-			GameObject instance = Instantiate(runes[tableRunes.Keys[i+start_index]], new Vector3 ((i%2)*1.5f, -(i-(i%2)),0F), Quaternion.identity) as GameObject;
-			instance.transform.SetParent (table);
-			instance.transform.localPosition = new Vector3 ((i % 2) * 1.5f, -(i - (i % 2)), 0F);
-		}
-	}
-
-	public void tableUp() {
-		//Debug.Log ("Table Up");
-		if (curPage == 0) {
-			return;
-		} else {
-			curPage--;
-			updateTable ();
-		}
-	}
-
-	public void tableDown() {
-		//Debug.Log ("Table Down");
-		if (curPage == numTablePages - 1) {
-			return;
-		} else {
-			curPage++;
-			updateTable ();
-		}
-	}*/
 
 }

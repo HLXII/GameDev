@@ -11,7 +11,7 @@ public class TableFilterButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.State = (gameObject.name == "btnClassAll" || gameObject.name == "btnRankAll");
+		this.State = gameObject.name == "btnAll";
 		gameObject.GetComponent<Button> ().onClick.AddListener (this.onClick);
 	}
 		

@@ -474,7 +474,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 			// Start size transition animation
 			if (previous_parent.name == "TableContent") {
-				StartCoroutine (shrinkAnimation (page.localScale));
+				StartCoroutine (shrinkAnimation (page.parent.localScale));
 			}
 
 			// Setting parent and layer data

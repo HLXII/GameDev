@@ -15,15 +15,14 @@ public class GenericRuneComparer : IComparer<RuneData> {
 		if (rune1.GetType() == rune2.GetType()) {
 			switch (rune1.GetType().Name) {
 			case "WireData":
-				break;
+				return ((WireData)rune1).Capacity - ((WireData)rune2).Capacity;
 			case "InputData":
-				break;
+				return ((InputData)rune1).InputRate - ((InputData)rune2).InputRate;
 			case "OutputData":
-				break;
+				return ((OutputData)rune1).MaxRate - ((OutputData)rune2).MaxRate;
 			default:
-				break;
+				return string.Compare (rune1.Id, rune2.Id);
 			}
-			return -1;
 		} else {
 			return string.Compare (rune1.Id, rune2.Id);
 		}
@@ -73,7 +72,37 @@ public class TableData {
 	}
 
 	public List<RuneData> getTable(string classFilter) {
-		return table;
+		List<RuneData> filteredTable;
+
+		switch (classFilter) {
+		case "Wire":
+			filteredTable = table.FindAll (FindWire);
+			break;
+		case "Input":
+			filteredTable = table.FindAll (FindInput);
+			break;
+		case "Output":
+			filteredTable = table.FindAll (FindOutput);
+			break;
+		default:
+			filteredTable = table;
+			break;
+		}
+		filteredTable.Sort (new GenericRuneComparer());
+		return filteredTable;
+	}
+
+	private static bool FindWire(RuneData rune)
+	{
+		return (rune is WireData);
+	}
+	private static bool FindInput(RuneData rune)
+	{
+		return (rune is InputData);
+	}
+	private static bool FindOutput(RuneData rune)
+	{
+		return (rune is OutputData);
 	}
 
 	public void addToTable(RuneData runeData) {

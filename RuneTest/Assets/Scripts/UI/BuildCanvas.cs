@@ -88,35 +88,11 @@ public class BuildCanvas : MonoBehaviour {
 	}
 
 	public void changeTable(string filterName) {
-		/*
-		//Debug.Log ("Changing Table");
 
-		// Getting filter parameters
-		string[] filter = filterName.Split ('_');
+		classFilter = filterName;
 
-		// If the class Filter was changed
-		if (filter [0] == "Class") {
-			classFilter = filter [1];
-			// If the rank Filter was changed
-		} else {
-			rankFilter = filter [1];
-		}
+		updateTable ();
 
-		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
-		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
-		curPage = 0;
-		updateTable ();*/
-
-	}
-
-	public void changeTable() {
-		/*
-		//Debug.Log ("Changing Table");
-
-		tableRunes = dataManager.getBuildData().getTable (classFilter,rankFilter);
-		numTablePages = (int)Mathf.Ceil (tableRunes.Count / 6f);
-		curPage = 0;
-		updateTable ();*/
 	}
 
 	public void updateTable() {
