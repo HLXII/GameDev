@@ -17,19 +17,19 @@ public class TitleCanvas : BoardCanvas {
 			switch (i) {
 			case 0:
 				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
-				instance.GetComponent<Gem> ().setGem ("red");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["red"];
 				break;
 			case 1:
-				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.PuzzleSelect;
-				instance.GetComponent<Gem> ().setGem ("blue");
+				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Editor;
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["blue"];
 				break;
 			case 2:
 				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Options;
-				instance.GetComponent<Gem> ().setGem ("green");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["green"];
 				break;
 			case 3:
 				instance.GetComponent<SceneGem> ().SceneId = SceneGem.Scene.Delete;
-				instance.GetComponent<Gem> ().setGem ("yellow");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString["yellow"];
 				break;
 			default:
 				break;

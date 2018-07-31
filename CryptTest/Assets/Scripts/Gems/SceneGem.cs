@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class SceneGem : Gem {
 
-	public enum Scene {Title, PuzzleSelect, Options, Delete, 
+	public enum Scene {Title, PuzzleSelect, Editor, Options, Delete, 
 		LightSelect, RowsAndColumnsSelect,  InvertDragSelect, Switch3Select, Rotate3Select, SwitchDragSelect,
 		LightBoard, RowsAndColumnsBoard, InvertDragBoard, Switch3Board, Rotate3Board, SwitchDragBoard};
 

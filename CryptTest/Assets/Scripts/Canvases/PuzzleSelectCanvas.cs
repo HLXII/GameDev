@@ -20,15 +20,15 @@ public class PuzzleSelectCanvas : BoardCanvas {
 			instance.AddComponent<SceneGem> ();
 			instance.GetComponent<SceneGem> ().SceneId = scene;
 			if (PlayerPrefs.HasKey(scene.ToString())) {
-				instance.GetComponent<Gem> ().setRim ("white");
+				instance.GetComponent<Gem> ().RimColor = Gem.colorString["white"];
 				if (PlayerPrefs.HasKey (scene.ToString () + "Complete")) {
-					instance.GetComponent<Gem> ().setGem ("white");
+					instance.GetComponent<Gem> ().GemColor =  Gem.colorString["white"];
 				} else {
-					instance.GetComponent<Gem> ().setGem ("black");
+					instance.GetComponent<Gem> ().GemColor = Gem.colorString ["black"];
 				}
 			} else {
-				instance.GetComponent<Gem> ().setGem ("black");
-				instance.GetComponent<Gem> ().setRim ("black");
+				instance.GetComponent<Gem> ().GemColor = Gem.colorString ["black"];
+				instance.GetComponent<Gem> ().RimColor = Gem.colorString ["black"];
 			}
 
 		}
