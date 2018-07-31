@@ -12,6 +12,9 @@ public class BuildCanvas : MonoBehaviour {
 	protected RectTransform pageBack;
 	protected RectTransform tableBack;
 
+	// Reference to the Rune Select
+	public GameObject runeSelect;
+
 	// Reference to BuildSignalManager
 	protected BuildSignalText signalReceiver;
 

@@ -288,7 +288,7 @@ RectTransform:
   m_Father: {fileID: 1020860746}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.25, y: 0}
+  m_AnchorMin: {x: 0.275, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1454,6 +1454,7 @@ GameObject:
   - component: {fileID: 1020860746}
   - component: {fileID: 1020860748}
   - component: {fileID: 1020860747}
+  - component: {fileID: 1020860749}
   m_Layer: 5
   m_Name: RuneSelect
   m_TagString: Untagged
@@ -1514,6 +1515,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1020860745}
+--- !u!114 &1020860749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1020860745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b833bdd77084eeca79289409c95ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1029543656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2366,7 +2378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867065895}
   - component: {fileID: 1867065897}
-  - component: {fileID: 1867065898}
+  - component: {fileID: 1867065896}
   m_Layer: 5
   m_Name: PageContent
   m_TagString: Untagged
@@ -2392,13 +2404,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1867065897
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1867065894}
---- !u!114 &1867065898
+--- !u!114 &1867065896
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -2406,7 +2412,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1867065894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2095666955, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fca64258d67e4cf891e3dd81218d1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -2421,6 +2427,12 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!222 &1867065897
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1867065894}
 --- !u!1 &1887756316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2977,6 +2989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c7666f8d05f3494ebc6a3c004adc13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runeSelect: {fileID: 1020860745}
   runeBack: {fileID: 1557490250078800, guid: 92b07406a2cf040dea8df606b26a0634, type: 2}
   runeEmpty: {fileID: 1540341093206776, guid: 209cf4c1e80394cc780bd184be5bb708, type: 2}
   runeVoid: {fileID: 1782679325685680, guid: a58af2998330742ff9ad4c9dbe92955e, type: 2}

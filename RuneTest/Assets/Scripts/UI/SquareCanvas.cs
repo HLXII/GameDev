@@ -35,16 +35,13 @@ public class SquareCanvas : BuildCanvas {
 	// Update is called once per frame
 	void Update () {
 
+		// May be able to move this into the SquarePage script, depending on if key preferences are made later on
 		if (Input.GetKeyDown ("left shift")) {
-			for (int i = 0; i < page.childCount; i++) {
-				page.GetChild (i).GetComponent<Rune> ().Active = false;
-			}
+			page.GetComponent<SquarePage>().Active = false;
 		}
 
 		if (Input.GetKeyUp ("left shift")) {
-			for (int i = 0; i < page.childCount; i++) {
-				page.GetChild (i).GetComponent<Rune> ().Active = true;
-			}
+			page.GetComponent<SquarePage>().Active = true;
 		}
 			
 	}

@@ -4,130 +4,6 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using System.Linq;
 
-public class Energy {
-
-	private int power;
-
-	public Energy(int power) {
-		this.power = power;
-	}
-
-	public int Power { get { return power; } set { power = value; } }
-
-	public override string ToString() {
-		string o = "";
-		o += power.ToString ();
-		return o;
-	}
-
-}
-
-/// <summary>
-/// Rune data to be stored in files and used to initialize the rune GameObjects
-/// </summary>
-[System.Serializable]
-public class RuneData {
-
-	protected string id;
-
-	public RuneData() {
-	}
-
-	public string Id {get{return id;} }
-
-	public override string ToString() {
-		return id;
-	}
-
-}
-
-[System.Serializable]
-public class EmptyData : RuneData {
-	public EmptyData() {
-		id = "Empty";
-	}
-}
-[System.Serializable]
-public class BlockData : RuneData {
-	public BlockData() {
-		id = "Block";
-	}
-}
-[System.Serializable]
-public class VoidData : RuneData {
-	public VoidData() {
-		id = "Void";
-	}
-}
-[System.Serializable]
-public class WireData : RuneData {
-
-	protected int loss;
-	protected int capacity;
-	public int Loss { get { return loss; } }
-	public int Capacity { get { return capacity; } }
-
-	public WireData(int loss, int capacity) {
-		this.loss = loss;
-		this.capacity = capacity;
-	}
-
-	public override string ToString () {
-		string o = "";
-		o += id + "\n";
-		o += "Loss: " + loss + "\n";
-		o += "Capacity: " + capacity;
-		return o;
-	}
-
-}
-
-[System.Serializable]
-public class InputData : RuneData {
-
-	protected int inputRate;
-	public int InputRate { get { return inputRate; } }
-
-	public InputData(int inputRate) {
-		this.inputRate = inputRate;
-	}
-
-	public override string ToString () {
-		string o = "";
-		o += id + "\n";
-		o += "Input Rate: " + inputRate;
-		return o;
-	}
-
-}
-
-[System.Serializable]
-public class OutputData : RuneData {
-
-	protected int maxRate;
-	protected int capacity;
-	protected int outputRate;
-	public int MaxRate { get { return maxRate; } }
-	public int Capacity { get { return capacity; } }
-	public int OutputRate{ get { return outputRate; } }
-
-	public OutputData(int maxRate, int capacity, int outputRate) {
-		this.maxRate = maxRate;
-		this.capacity = capacity;
-		this.outputRate = outputRate;
-	}
-
-	public override string ToString () {
-		string o = "";
-		o += id + "\n";
-		o += "Max Rate: " + maxRate + "\n";
-		o += "Capacity: " + capacity + "\n";
-		o += "Output Rate: " + outputRate + "\n";
-		return o;
-	}
-
-}
-
 /// <summary>
 /// The Base Rune GameObject
 /// </summary>
@@ -161,11 +37,11 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Vector3 drag_start_position;
 	protected Vector3 mouse_offset;
 
+	// References to external objects
 	protected DataManager dataManager;
 	protected Transform canvas;
 	protected Transform table;
 	protected Transform page;
-
 	protected BuildSignalManager signalReciever;
 
 	private GameObject previous_parent;
@@ -218,10 +94,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			// Updating connection ports
 			rotation = (rotation - 1 + sides) % sides;
 			transform.Rotate (Vector3.back * 360 / sides);
-		}
-
-		if (transform.childCount > 0) {
-			updateInfoPanel ();
 		}
 	}
 
@@ -417,7 +289,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		return true;
 	}
 
-	public virtual void updateInfoPanel() {}
+	public virtual string getInfo()  {
+		return runeData.Id;
+	}
 
 	private IEnumerator expandAnimation (Vector3 new_scale) {
 		Vector3 original_scale = transform.localScale;
@@ -571,9 +445,16 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	public virtual void OnPointerClick (PointerEventData eventData) {
-		
-		Debug.Log (this);
 
+		if (eventData.button != PointerEventData.InputButton.Right) {
+			return;
+		}
+
+		canvas.GetComponent<BuildCanvas> ().runeSelect.GetComponent<RuneSelect> ().Rune = gameObject;
+
+		// Change somethign about the image to indicate seelection ***
+
+		/*
 		if (eventData.button == PointerEventData.InputButton.Right) {
 			if (transform.childCount == 0 && infoPanel != null) {
 				if (transform.parent.name == "PageContent") {
@@ -584,7 +465,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					// move the instance so it's visible
 				}
 			}
-		}
+		}*/
 
 	}
 

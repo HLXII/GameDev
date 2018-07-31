@@ -67,13 +67,12 @@ public class SquareSink : SquareRune {
 		return o;
 	}
 
-	public override void updateInfoPanel ()
+	public override string getInfo ()
 	{
 		string o = "";
 		o += runeData.ToString();
 		o += "Storage: " + storage.ToString ();
 
-		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = o;
-
+		return o;
 	}
 }
