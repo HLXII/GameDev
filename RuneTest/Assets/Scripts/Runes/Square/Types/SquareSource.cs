@@ -1,34 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
+[System.Serializable]
+public class SquareSourceData : InputData {
+
+	public SquareSourceData(int inputRate) : base(inputRate) {
+		id = "Source";
+	}
+
+}
 
 public class SquareSource : SquareRune {
 
-	private bool on;
-
 	protected new void Start() {
 		base.Start ();
-		id += "Input_Source_0";
+		numConnections = 1;
 		connections = new int[] { 0 };
-		energyIn = new Energy[1];
-		energyOut = new Energy[1] {new Energy(10)};
+		initEnergy ();
+	}
 
-		on = false;
+	public override void reset ()
+	{
+		base.reset ();
+		gameObject.GetComponent<Animator> ().Play ("off");
+		gameObject.GetComponent<Animator> ().SetBool ("on", false);
 	}
 
 	public override void manipulateEnergy ()
 	{
+		// If no backwards flowing energy
 		if (energyIn [0] == null) {
-			if (on) {
-				//transform.GetChild (0).GetComponent<Animator> ().SetTrigger ("source");
-				energyOut [0] = new Energy (10);
-			}
+			energyOut [0] = new Energy (((InputData)runeData).InputRate);
+			gameObject.GetComponent<Animator> ().SetBool ("on", true);
+			// Backflowing energy
+		} else {
+			signalReciever.receiveSignal ("Source receiving energy");
+			gameObject.GetComponent<Animator> ().SetTrigger ("error");
 		}
 	}
+		
+	public override void updateInfoPanel ()
+	{
+		string o = "";
+		o += runeData.ToString();
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = o;
 
-	public override void OnPointerClick (PointerEventData eventData) {
-		//Debug.Log (this);
-		on = !on;
 	}
 }

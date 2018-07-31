@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4577870001188494}
   - component: {fileID: 212771659533324500}
   - component: {fileID: 95910469912681822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SquareEnergyAnimator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
