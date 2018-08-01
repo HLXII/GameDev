@@ -6,7 +6,15 @@ using UnityEngine.UI;
 public class RuneSelect : MonoBehaviour {
 
 	private GameObject rune;
-	public GameObject Rune { get { return rune; } set { rune = value; } }
+	public GameObject Rune { get { return rune; }
+		set {
+			if (rune != null) {
+				rune.GetComponent<Rune> ().Selected = false;
+			}
+			rune = value; 
+			rune.GetComponent<Rune> ().Selected = true;
+		} 
+	}
 
 	private GameObject runeImage;
 	private GameObject runeText;
@@ -20,7 +28,7 @@ public class RuneSelect : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Escape)) {
-			// deselect rune, have to run runes deselection script
+			rune.GetComponent<Rune> ().Selected = false;
 			rune = null;
 			runeImage.GetComponent<Image> ().sprite = null;
 			runeText.GetComponent<Text> ().text = "";

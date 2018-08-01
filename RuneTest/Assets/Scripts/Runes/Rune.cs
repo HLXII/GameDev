@@ -9,9 +9,6 @@ using System.Linq;
 /// </summary>
 public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerExitHandler, ICanvasRaycastFilter{
 
-	// Info Panel GameObject
-	public GameObject infoPanel;
-
 	// RuneData to store the specific instance of the rune
 	protected RuneData runeData;
 
@@ -20,6 +17,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	// If rune is active/enabled
 	protected bool active;
+	// If rune is selected
+	protected bool selected;
 
 	// If rune is movable/swappable
 	protected bool movable;
@@ -58,6 +57,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		swappable = true;
 
 		active = true;
+		selected = false;
 
 		numConnections = 0;
 		connections = new int[numConnections];
@@ -100,7 +100,22 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public RuneData RuneData { get { return runeData; } set { runeData = value; } }
 	public string Id { get { return runeData.Id; } }
 	public int Sides { get { return sides; } }
+
 	public bool Active { get {return active; } set {active = value; } }
+	public bool Selected { get { return selected; } 
+		set { selected = value;
+			if (value) {
+				Instantiate (canvas.GetComponent<BuildCanvas> ().runeSelectOutline, transform);
+			} else {
+				if (transform.childCount > 0) {
+					for (int i = transform.childCount-1; i >= 0; i--) {
+						Destroy (transform.GetChild (i).gameObject);
+					}
+				}
+			} 
+		} 
+	}
+
 	public int Rotation { get { return rotation; } set {rotation = value; } }
 	public GameObject[] Neighbors { get { return neighbors; } }
 	public int[] Connections { get { return connections; } }
@@ -365,10 +380,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			return;
 		}
 
-		if (transform.childCount > 0) {
-			Destroy (transform.GetChild (0).gameObject);
-		}
-
 		if (movable) {
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			transform.position = new Vector3(mousePos.x, mousePos.y, 0) + mouse_offset;
@@ -449,7 +460,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (eventData.button != PointerEventData.InputButton.Right) {
 			return;
 		}
-
+			
 		canvas.GetComponent<BuildCanvas> ().runeSelect.GetComponent<RuneSelect> ().Rune = gameObject;
 
 		// Change somethign about the image to indicate seelection ***
@@ -469,10 +480,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	}
 
+
 	public void OnPointerExit(PointerEventData eventData) {
+		/*
 		if (transform.childCount > 0) {
 			Destroy (transform.GetChild (0).gameObject);
-		}
+		}*/ 
 	}
 		
 }

@@ -20,6 +20,8 @@ public class BuildCanvas : MonoBehaviour {
 
 	// Rune Back
 	public GameObject runeBack;
+	// Rune Select Outline
+	public GameObject runeSelectOutline;
 
 	// Generic runes required by all rune pages
 	public GameObject runeEmpty;

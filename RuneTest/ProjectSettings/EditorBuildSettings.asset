@@ -14,3 +14,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Overworld.unity
     guid: 83402d005b9a64067af3af36fcb39d6b
+  - enabled: 1
+    path: Assets/Scenes/Inventory.unity
+    guid: e22f77aa5411743eb8d1433429571f7a

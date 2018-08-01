@@ -84,7 +84,7 @@ public class SquareCanvas : BuildCanvas {
 
 		// Setting scale of TableContent to fit table window
 		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
-		table.localScale = new Vector3 (tableRect.size.x / 200f, tableRect.size.x / 200f, 1);
+		table.localScale = new Vector3 (tableRect.size.x / 400f, tableRect.size.x / 400f, 1);
 		tableBack.localScale = table.localScale;
 
 		// Calculating the table parameters and updating the table

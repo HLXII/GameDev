@@ -7,4 +7,10 @@ public class Inventory {
 
 	private List<RuneData> runes;
 
+	//private List<ItemData> items;
+
+	public Inventory() {
+
+	}
+
 }
