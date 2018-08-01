@@ -84,8 +84,8 @@ public class SquareCanvas : BuildCanvas {
 
 		// Setting scale of TableContent to fit table window
 		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
-		table.localScale = new Vector3 (tableRect.size.x / 400f, tableRect.size.x / 400f, 1);
-		tableBack.localScale = table.localScale;
+		//table.localScale = new Vector3 (tableRect.size.x / 400f, tableRect.size.x / 400f, 1);
+		//tableBack.localScale = table.localScale;
 
 		// Calculating the table parameters and updating the table
 		//rankFilter = "";
@@ -98,8 +98,8 @@ public class SquareCanvas : BuildCanvas {
 
 		int page_h = pageData.GetLength (0);
 		int page_w = pageData.GetLength (1);
-		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w * 100, page_h * 100);
-		page.sizeDelta = new Vector2 (page_w * 100, page_h * 100);
+		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w * 40, page_h * 40);
+		page.sizeDelta = new Vector2 (page_w * 40, page_h * 40);
 		pageBack.sizeDelta = page.sizeDelta;
 		//page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
 		//pageBack.localScale = page.localScale;
@@ -176,6 +176,7 @@ public class SquareCanvas : BuildCanvas {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
 		}
+			
 	}
 
 	public void simulationStep() {
@@ -187,7 +188,7 @@ public class SquareCanvas : BuildCanvas {
 		for (int i = 0; i < page.childCount; i++) {
 			page.GetChild (i).GetComponent<Rune> ().manipulateEnergy ();
 		}
-		//Debug.Log (page.GetChild (0).GetChild (0).GetComponent<Animator> ().runtimeAnimatorController.animationClips[0].length);
+
 	}
 
 }

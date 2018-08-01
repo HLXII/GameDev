@@ -27,8 +27,8 @@ public class BuildSignalText : MonoBehaviour, BuildSignalManager, IPointerEnterH
 	}
 
 	public void reset() {
-		numLines = 0;
-		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = "";
+		numLines = 1;
+		transform.GetChild (0).GetChild (0).GetComponent<Text> ().text = "Starting Simulation";
 	}
 
 	public void OnPointerEnter(PointerEventData eventData) {

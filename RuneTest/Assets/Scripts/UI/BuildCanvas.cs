@@ -125,7 +125,7 @@ public class BuildCanvas : MonoBehaviour {
 
 		// Updating size of TableContent and TableBack
 		RectTransform content = (RectTransform)table.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 1) / 2) * 100 * table.localScale.x);
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * 100 * table.localScale.x);
 
 
 	}

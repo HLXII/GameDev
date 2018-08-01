@@ -54,7 +54,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 100, y: 100}
+  m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
 --- !u!95 &95724125207345290
 Animator:
@@ -111,7 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7b3dcebeabf47c681d17ee4b64da77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infoPanel: {fileID: 1517539359021196, guid: 4eec041ab699742a799cfd616f96bc90, type: 2}
 --- !u!222 &222523446057341080
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -134,5 +133,5 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}

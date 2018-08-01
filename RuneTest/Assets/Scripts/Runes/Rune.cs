@@ -172,6 +172,10 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 				canvas.GetComponent<BuildCanvas> ().addToTable (runeData);
 
+				if (selected) {
+					canvas.GetComponent<BuildCanvas> ().runeSelect.GetComponent<RuneSelect> ().clearSelect ();
+				}
+
 				Destroy (gameObject);
 
 			}
@@ -460,7 +464,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (eventData.button != PointerEventData.InputButton.Right) {
 			return;
 		}
-			
+
 		canvas.GetComponent<BuildCanvas> ().runeSelect.GetComponent<RuneSelect> ().Rune = gameObject;
 
 		// Change somethign about the image to indicate seelection ***

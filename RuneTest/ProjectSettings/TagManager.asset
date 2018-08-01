@@ -16,7 +16,7 @@ TagManager:
   - Table Runes
   - Page Runes
   - Generic Runes
-  - 
+  - Selection
   - 
   - 
   - 
@@ -46,7 +46,4 @@ TagManager:
     locked: 0
   - name: Runes
     uniqueID: 220239973
-    locked: 0
-  - name: Energy
-    uniqueID: 3048254321
     locked: 0

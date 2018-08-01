@@ -27,11 +27,9 @@ public class RuneSelect : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
 		if (Input.GetKeyDown (KeyCode.Escape)) {
-			rune.GetComponent<Rune> ().Selected = false;
-			rune = null;
-			runeImage.GetComponent<Image> ().sprite = null;
-			runeText.GetComponent<Text> ().text = "";
+			clearSelect ();
 		}
 
 		if (rune != null) {
@@ -40,6 +38,15 @@ public class RuneSelect : MonoBehaviour {
 
 			runeText.GetComponent<Text> ().text = rune.GetComponent<Rune> ().getInfo ();
 
+		}
+	}
+
+	public void clearSelect() {
+		if (rune != null) {
+			rune.GetComponent<Rune> ().Selected = false;
+			rune = null;
+			runeImage.GetComponent<Image> ().sprite = null;
+			runeText.GetComponent<Text> ().text = "";
 		}
 	}
 
