@@ -13,8 +13,9 @@ public class PageScrollRect : ScrollRect {
 	public new void Start() {
 		base.Start();
 
-		minScale = Screen.width / 3200f;
-		maxScale = minScale * 4;
+		minScale = .5f;
+		maxScale = 2f;
+	
 	}
 
 	public override void OnScroll(PointerEventData data)

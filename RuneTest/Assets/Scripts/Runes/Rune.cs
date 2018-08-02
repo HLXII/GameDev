@@ -16,9 +16,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected int sides;
 
 	// If rune is active/enabled
-	protected bool active;
+	private bool active;
 	// If rune is selected
-	protected bool selected;
+	private bool selected;
 
 	// If rune is movable/swappable
 	protected bool movable;
@@ -32,16 +32,19 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected Energy[] energyIn;
 	protected Energy[] energyOut;
 
-	protected bool drag;
-	protected Vector3 drag_start_position;
-	protected Vector3 mouse_offset;
+	// Dragging variables
+	private bool drag;
+	private Vector3 drag_start_position;
+	private Vector3 mouse_offset;
 
 	// References to external objects
 	protected DataManager dataManager;
-	protected Transform canvas;
-	protected Transform table;
-	protected Transform page;
 	protected BuildSignalManager signalReciever;
+	private Transform canvas;
+	private Transform table;
+	private Transform page;
+
+	private Bounds pageBounds;
 
 	private GameObject previous_parent;
 	private int previous_index;
@@ -52,6 +55,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		canvas = GameObject.Find ("Canvas").transform;
 		table = GameObject.Find ("TableContent").transform;
 		page = GameObject.Find ("PageContent").transform;
+
+		RectTransform pageView = (RectTransform)GameObject.Find ("Page").transform;
+		pageBounds = new Bounds (pageView.localPosition, pageView.rect.size);
 
 		movable = true;
 		swappable = true;
@@ -105,6 +111,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public bool Selected { get { return selected; } 
 		set { selected = value;
 			if (value) {
+				if (canvas == null) {
+					canvas = GameObject.Find ("Canvas").transform;
+				}
 				Instantiate (canvas.GetComponent<BuildCanvas> ().runeSelectOutline, transform);
 			} else {
 				if (transform.childCount > 0) {
@@ -127,6 +136,11 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		//Debug.Log ("Dropped Rune from " + previous_parent.name);
 
+		//Finding drop location
+		Vector3 mouse = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		mouse = new Vector3 (mouse.x, mouse.y, 0);
+		string dropLocation = (pageBounds.Contains (mouse)) ? "Page" : "Table";
+
 		// Dropping a page rune
 		if (previous_parent.name == "PageContent") {
 
@@ -136,7 +150,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
 
 			// Dropped onto a rune in page
-			if (hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
+			if (dropLocation == "Page" && hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
 
 				GameObject swap_rune = hit.collider.gameObject;
 
@@ -172,10 +186,6 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 				canvas.GetComponent<BuildCanvas> ().addToTable (runeData);
 
-				if (selected) {
-					canvas.GetComponent<BuildCanvas> ().runeSelect.GetComponent<RuneSelect> ().clearSelect ();
-				}
-
 				Destroy (gameObject);
 
 			}
@@ -188,7 +198,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
 
 			// Dropped onto a rune in page
-			if (hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
+			if (dropLocation == "Page" && hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
 				
 				GameObject swap_rune = hit.collider.gameObject;
 
@@ -209,6 +219,8 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					gameObject.layer = LayerMask.NameToLayer ("Page Runes");
 
 					Destroy (page.GetChild (transform.GetSiblingIndex () + 1).gameObject);
+
+					canvas.GetComponent<BuildCanvas> ().updateTable ();
 
 					// Not swappable, return to table
 				} else {

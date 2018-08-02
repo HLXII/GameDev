@@ -14,7 +14,19 @@ public class ItemData {
 }
 
 [System.Serializable]
+public class EmptyItemData : ItemData {
+
+	public EmptyItemData() {
+		id = "Empty Item";
+		description = "Emptier than the other side of your bed.";
+	}
+
+}
+
+[System.Serializable]
 public class ConsumableData : ItemData {
+
+	public virtual void use() {}
 
 }
 
@@ -25,6 +37,11 @@ public class WeaponData : ItemData {
 
 [System.Serializable]
 public class ArmorData : ItemData {
+
+}
+
+[System.Serializable]
+public class KeyData : ItemData {
 
 }
 

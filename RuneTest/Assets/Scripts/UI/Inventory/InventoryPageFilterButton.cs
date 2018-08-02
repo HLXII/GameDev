@@ -7,11 +7,15 @@ public class InventoryPageFilterButton : MonoBehaviour {
 
 	private bool state;
 
+	private InventoryCanvas inventoryCanvas;
 	public GameObject inventoryFilter;
 
 	// Use this for initialization
 	void Start () {
+		inventoryCanvas = GameObject.Find ("Canvas").GetComponent<InventoryCanvas> ();
+
 		this.State = (gameObject.name == "Consumable");
+
 		gameObject.GetComponent<Button> ().onClick.AddListener (this.onClick);
 	}
 

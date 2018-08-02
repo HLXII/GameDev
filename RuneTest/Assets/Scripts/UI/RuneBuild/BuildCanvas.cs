@@ -64,7 +64,6 @@ public class BuildCanvas : MonoBehaviour {
 
 	public void removeFromTable(RuneData rune) {
 		tableRunes.removeFromTable (rune);
-		updateTable ();
 	}
 
 	public void removeRune(int rune_idx, Vector3 pos) {
@@ -106,11 +105,12 @@ public class BuildCanvas : MonoBehaviour {
 		foreach (Transform child in table) {
 			GameObject.Destroy(child.gameObject);
 		}
+		table.DetachChildren ();
 		// Removing rune backs
 		foreach (Transform child in tableBack) {
 			GameObject.Destroy (child.gameObject);
 		}
-
+		tableBack.DetachChildren ();
 		// Getting runes based on filter
 		List<RuneData> filteredRunes = tableRunes.getTable (classFilter);
 
@@ -125,8 +125,58 @@ public class BuildCanvas : MonoBehaviour {
 
 		// Updating size of TableContent and TableBack
 		RectTransform content = (RectTransform)table.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * 100 * table.localScale.x);
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * 40 * table.localScale.x);
 
+		bool found = false;
+
+		// Finding if selected rune still exists
+
+		Debug.Log ("Searching for selected rune");
+
+		RuneData selectedRuneData = runeSelect.GetComponent<RuneSelect>().RuneData;
+
+		// If no rune selected, ignore
+		if (selectedRuneData != null) {
+
+			// Searching through table
+			foreach (Transform child in table) {
+
+				// If the selected rune exists in the table, set it as selected and end
+				if (child.gameObject.GetComponent<Rune>().RuneData == selectedRuneData) {
+					//Debug.Log ("Found");
+
+					runeSelect.GetComponent<RuneSelect> ().Rune = child.gameObject;
+					child.gameObject.GetComponent<Rune> ().Selected = true;
+					found = true;
+					break;
+				}
+			}
+
+			// If rune hasn't been found, it may be in the page
+			if (!found) {
+
+				Debug.Log ("Searching for selected rune in page");
+
+				// Searching in page for selected rune
+				foreach (Transform child in page) {
+
+					Debug.Log (child);
+
+					if (child.gameObject.GetComponent<Rune> ().RuneData == selectedRuneData) {
+
+						Debug.Log ("Found");
+						found = true;
+						break;
+					}
+				}
+			}
+
+			// If rune wasn't found in the table or page, it was filtered out, thus unselect
+			if (!found) {
+				//Debug.Log ("Not Found, clearing Selection");
+				runeSelect.GetComponent<RuneSelect> ().clearSelect ();
+			}
+		}
 
 	}
 
