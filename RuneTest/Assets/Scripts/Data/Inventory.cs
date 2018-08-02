@@ -24,9 +24,12 @@ public class Inventory {
 		runes = new List<RuneData> ();
 		items = new List<ItemData> ();
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			items.Add (new ChiliItemData ());
 		}
+
+		items.Add (new NatureRingData ());
+		items.Add (new NatureRingData ());
 
 		equipLeft = new ItemData[3];
 		equipRight = new ItemData[3];

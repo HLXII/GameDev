@@ -11,6 +11,7 @@ public class InventoryCanvas : MonoBehaviour {
 	public GameObject itemEmpty;
 
 	public GameObject Chili;
+	public GameObject NatureRing;
 
 	// Dictionary to store item prefab ids
 	private Dictionary<string, GameObject> itemDict;
@@ -53,7 +54,7 @@ public class InventoryCanvas : MonoBehaviour {
 		// Initializing item dictionary
 		initItemDict ();
 
-		initItems ();
+		updateInventory ("Consumable");
 
 
 
@@ -68,22 +69,44 @@ public class InventoryCanvas : MonoBehaviour {
 		itemDict = new Dictionary<string, GameObject> () {
 			{"Empty Item",itemEmpty},
 
+			{"Nature Ring",NatureRing},
+
 			{"Chili",Chili}
 		};
-	}
-
-	private void initItems() {
-
-		updateEquips ();
-
-		updateInventory ("Consumable");
 	}
 		
 	public void exitInventory() {
 		SceneManager.LoadScene("Overworld");
 	}
 
-	public void updateEquips() {
+	public void updateInventory() {
+
+		/// Inventory Section
+
+		// Removing old items
+		foreach (Transform child in inventory) {
+			GameObject.Destroy(child.gameObject);
+		}
+		// Removing rune backs
+		foreach (Transform child in inventoryBack) {
+			GameObject.Destroy (child.gameObject);
+		}
+
+		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
+
+		// Instantiating all filtered items
+		foreach (ItemData item in filteredItems) {
+			GameObject instance = Instantiate (itemDict [item.Id],new Vector3 (0,0,1), Quaternion.identity,inventory);
+			instance.GetComponent<Item> ().ItemData = item;
+			instance.layer = LayerMask.NameToLayer("Items");
+			Instantiate (itemBack, new Vector3 (0, 0, 1), Quaternion.identity, inventoryBack);
+		}
+
+		// Updating size of InventoryContent and InventoryBack
+		RectTransform content = (RectTransform)inventory.parent.transform;
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((filteredItems.Count+6) / 7) * 40 * inventory.localScale.x);
+
+		/// Equip Section
 
 		// Removing old items
 		foreach (Transform child in equipLeft) {
@@ -115,31 +138,10 @@ public class InventoryCanvas : MonoBehaviour {
 			instance.GetComponent<Item> ().ItemData = toolBarData[i];
 			instance.layer = LayerMask.NameToLayer("Items");
 		}
-	}
 
-	public void updateInventory() {
-		// Removing old items
-		foreach (Transform child in inventory) {
-			GameObject.Destroy(child.gameObject);
-		}
-		// Removing rune backs
-		foreach (Transform child in inventoryBack) {
-			GameObject.Destroy (child.gameObject);
-		}
+		/// Selection Section
 
-		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
-
-		// Instantiating all filtered items
-		foreach (ItemData item in filteredItems) {
-			GameObject instance = Instantiate (itemDict [item.Id],new Vector3 (0,0,1), Quaternion.identity,inventory);
-			instance.GetComponent<Item> ().ItemData = item;
-			instance.layer = LayerMask.NameToLayer("Items");
-			Instantiate (itemBack, new Vector3 (0, 0, 1), Quaternion.identity, inventoryBack);
-		}
-
-		// Updating size of InventoryContent and InventoryBack
-		RectTransform content = (RectTransform)inventory.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((filteredItems.Count+6) / 7) * 40 * inventory.localScale.x);
+		
 
 	}
 

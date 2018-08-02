@@ -102,7 +102,6 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 						// Moving old item to inventory if exists
 						if (!(old_item.GetComponent<Item> ().ItemData is EmptyItemData)) {
 							dataManager.Inventory.addItem (old_item.GetComponent<Item>().ItemData);
-							canvas.GetComponent<InventoryCanvas> ().updateInventory ();
 						}
 						// Move item to new parent
 						dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
@@ -112,6 +111,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 						transform.SetSiblingIndex (new_index);
 						gameObject.layer = LayerMask.NameToLayer ("Items");
 
+						Debug.Log ("DESTORY");
 						Destroy (new_parent.transform.GetChild (transform.GetSiblingIndex () + 1).gameObject);
 
 					} else {
@@ -151,6 +151,8 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "InventoryContent":
 					// Sending item to inventory
 					dataManager.Inventory.addItem (itemData);
+					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+
 					canvas.GetComponent<InventoryCanvas> ().updateInventory ();
 
 					Destroy (gameObject);
@@ -164,6 +166,18 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					// If the item types are the same
 					if (previous_index == new_index) {
 						// Swap two equips
+
+						//data stuff here
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item>().ItemData, previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (gameObject.GetComponent<Item>().ItemData, new_parent.name, new_index);
+
+						Destroy (previous_parent.transform.GetChild (previous_index).gameObject);
+
+						old_item.transform.SetParent (previous_parent.transform);
+						old_item.transform.SetSiblingIndex (previous_index);
+
+						transform.SetParent (new_parent.transform);
+						transform.SetSiblingIndex (new_index);
 
 					} else {
 						// Item types different, send to inventory
