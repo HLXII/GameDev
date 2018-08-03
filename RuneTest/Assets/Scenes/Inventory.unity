@@ -1984,6 +1984,11 @@ MonoBehaviour:
   itemEmpty: {fileID: 1251979897918108, guid: a9abb7a4b48cf4821a22ca2b4f28990d, type: 2}
   Chili: {fileID: 1421490763302464, guid: 45f99eaea3de0400b8a7611a50b9e727, type: 2}
   NatureRing: {fileID: 1673181429666006, guid: b9caf2a8e91b3457582c1d701699d4e2, type: 2}
+  TopHat: {fileID: 1956282954719092, guid: 598d14989de5d4307964e2f7712f393f, type: 2}
+  PinkBra: {fileID: 1160793923420530, guid: 01654ddfc52cf4977890f20152fa94df, type: 2}
+  TrashCan: {fileID: 1402695337899936, guid: 674559b889a744c56a0bdcd09a68c82e, type: 2}
+  SnakeBoot: {fileID: 1841907724071212, guid: edfc2dc82c010423a8efa4a25ac20056, type: 2}
+  Hoverboard: {fileID: 1979400900334254, guid: 414993c2c24f1455eb635c731852011e, type: 2}
   dataManager: {fileID: 0}
   itemSelect: {fileID: 0}
 --- !u!1 &1161181340

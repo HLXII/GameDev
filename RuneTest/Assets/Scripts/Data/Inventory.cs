@@ -30,6 +30,11 @@ public class Inventory {
 
 		items.Add (new NatureRingData ());
 		items.Add (new NatureRingData ());
+		items.Add (new PinkBraData ());
+		items.Add (new SnakeBootData ());
+		items.Add (new TrashCanData());
+		items.Add (new HoverboardData ());
+		items.Add (new TopHatData ());
 
 		equipLeft = new ItemData[3];
 		equipRight = new ItemData[3];
@@ -62,7 +67,9 @@ public class Inventory {
 	}
 
 	public void addItem(ItemData item) {
-		items.Add (item);
+		if (!(item is EmptyItemData)) {
+			items.Add (item);
+		}
 	}
 
 	public void removeItem(ItemData item) {

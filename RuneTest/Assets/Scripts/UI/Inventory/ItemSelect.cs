@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class ItemSelect : MonoBehaviour {
 
 	private GameObject item;
+	private ItemData itemData;
+
 	public GameObject Item { get { return item; }
 		set {
 			if (item != null) {
@@ -13,14 +15,19 @@ public class ItemSelect : MonoBehaviour {
 			}
 			item = value; 
 			item.GetComponent<Item> ().Selected = true;
+			itemData = item.GetComponent<Item> ().ItemData;
 		} 
 	}
+	public ItemData ItemData { get { return itemData; } }
 
 	private GameObject itemImage;
 	private GameObject itemText;
 
 	// Use this for initialization
 	void Start () {
+		item = null;
+		itemData = null;
+
 		itemImage = transform.GetChild (0).gameObject;
 		itemText = transform.GetChild (1).gameObject;
 	}
@@ -48,6 +55,7 @@ public class ItemSelect : MonoBehaviour {
 			item = null;
 			itemImage.GetComponent<Image> ().sprite = null;
 			itemText.GetComponent<Text> ().text = "";
+			itemData = null;
 		}
 	}
 }

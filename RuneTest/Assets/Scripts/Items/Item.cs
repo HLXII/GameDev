@@ -15,18 +15,12 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	private RectTransform equipLeft;
 	private RectTransform equipRight;
 	private RectTransform toolBar;
-	private Transform inventory;
+	private RectTransform inventory;
+
+	private InventoryCanvas inventoryCanvas;
 
 	// Bounds of item slots
-	//private Bounds equipLeftBounds;
-	//private Bounds equipRightBounds;
-	//private Bounds toolBarBounds;
-	//private Bounds trash;			// Idk if will be used here
-
-	// Dragging variables
-	private bool drag;
-	private Vector3 drag_start_position;
-	private Vector3 mouse_offset;
+	private Bounds inventoryBounds;
 
 	private GameObject previous_parent;
 	private int previous_index;
@@ -36,6 +30,9 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public bool Selected { get { return selected; } 
 		set { selected = value;
 			if (value) {
+				if (canvas == null) {
+					canvas = GameObject.Find ("Canvas").transform;
+				}
 				Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
 			} else {
 				if (transform.childCount > 0) {
@@ -55,11 +52,11 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		equipLeft = (RectTransform)GameObject.Find ("EquipLeft").transform;
 		equipRight = (RectTransform)GameObject.Find ("EquipRight").transform;
 		toolBar = (RectTransform)GameObject.Find ("ToolBar").transform;
-		inventory = GameObject.Find ("Inventory").transform;
+		inventory = (RectTransform)GameObject.Find ("Inventory").transform;
 
-		//equipLeftBounds = new Bounds (equipLeft.localPosition, equipLeft.rect.size);
-		//equipRightBounds = new Bounds (equipRight.localPosition, equipRight.rect.size);
-		//toolBarBounds = new Bounds (toolBar.localPosition, toolBar.rect.size);
+		inventoryCanvas = canvas.GetComponent<InventoryCanvas> ();
+
+		inventoryBounds = new Bounds (inventory.localPosition, inventory.rect.size);
 
 	}
 	
@@ -81,6 +78,8 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			GameObject new_parent = hit.collider.gameObject.transform.parent.gameObject;
 			int new_index = hit.collider.gameObject.transform.GetSiblingIndex ();
 
+			Debug.Log ("Came from " + previous_parent + " at index " + previous_index);
+
 			Debug.Log ("Dropped onto " + new_parent + " at index " + new_index);
 
 			// Determining original location
@@ -100,19 +99,15 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					if (droppable (itemData, new_index)) {
 
 						// Moving old item to inventory if exists
-						if (!(old_item.GetComponent<Item> ().ItemData is EmptyItemData)) {
-							dataManager.Inventory.addItem (old_item.GetComponent<Item>().ItemData);
-						}
+						dataManager.Inventory.addItem (old_item.GetComponent<Item>().ItemData);
+
 						// Move item to new parent
 						dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
 						dataManager.Inventory.removeItem (itemData);
 
-						transform.SetParent (new_parent.transform);
-						transform.SetSiblingIndex (new_index);
-						gameObject.layer = LayerMask.NameToLayer ("Items");
+						Destroy (gameObject);
 
-						Debug.Log ("DESTORY");
-						Destroy (new_parent.transform.GetChild (transform.GetSiblingIndex () + 1).gameObject);
+						inventoryCanvas.updateInventory ();
 
 					} else {
 						returnToOriginalPosition ();
@@ -122,22 +117,15 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "ToolBar":
 
 					// Moving old item to inventory if exists
-					if (!(old_item.GetComponent<Item> ().ItemData is EmptyItemData)) {
-						dataManager.Inventory.addItem (old_item.GetComponent<Item>().ItemData);
-						canvas.GetComponent<InventoryCanvas> ().updateInventory ();
-					}
+					dataManager.Inventory.addItem (old_item.GetComponent<Item> ().ItemData);
 
 					// Move item to new parent
 					dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
 					dataManager.Inventory.removeItem (itemData);
 
-					transform.SetParent (new_parent.transform);
-					transform.SetSiblingIndex (new_index);
-					gameObject.layer = LayerMask.NameToLayer ("Items");
+					Destroy (gameObject);
 
-					Destroy (new_parent.transform.GetChild (transform.GetSiblingIndex () + 1).gameObject);
-
-					Destroy (previous_parent.transform.GetChild (previous_index).gameObject);
+					inventoryCanvas.updateInventory ();	
 
 					break;
 				}
@@ -153,9 +141,10 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					dataManager.Inventory.addItem (itemData);
 					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
 
-					canvas.GetComponent<InventoryCanvas> ().updateInventory ();
-
 					Destroy (gameObject);
+
+					inventoryCanvas.updateInventory ();
+
 					break;
 				// Dropped back onto EquipLeft, return to original position
 				case "EquipLeft":
@@ -165,36 +154,48 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "EquipRight":
 					// If the item types are the same
 					if (previous_index == new_index) {
-						// Swap two equips
 
-						//data stuff here
+						// Swapping equips
 						dataManager.Inventory.equipItem (old_item.GetComponent<Item>().ItemData, previous_parent.name, previous_index);
 						dataManager.Inventory.equipItem (gameObject.GetComponent<Item>().ItemData, new_parent.name, new_index);
 
-						Destroy (previous_parent.transform.GetChild (previous_index).gameObject);
+						Destroy (gameObject);
 
-						old_item.transform.SetParent (previous_parent.transform);
-						old_item.transform.SetSiblingIndex (previous_index);
-
-						transform.SetParent (new_parent.transform);
-						transform.SetSiblingIndex (new_index);
+						inventoryCanvas.updateInventory ();
 
 					} else {
 						// Item types different, send to inventory
+
+						// Sending item to inventory
 						dataManager.Inventory.addItem (itemData);
-						canvas.GetComponent<InventoryCanvas> ().updateInventory ();
+						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
 
 						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+
 					}
-					//*** Check if equip is move to valid position
-					//if valid, swap two equips
-					//if not, send to inventory
 					break;
 				// Dropped onto ToolBar, move to toolbar, and check if item can be swapped
 				case "ToolBar":
-					//*** Check if old item can be moved to old equip position
-					//if yes, swap positions
-					//if no, send old item to inventory
+
+					// Sending item to toolBar
+					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
+
+					// If swapped item can be equipped
+					if (droppable (old_item.GetComponent<Item> ().itemData, previous_index)) {
+						// Send to old position
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item> ().ItemData, previous_parent.name, previous_index);
+					} else {
+						// Send to inventory
+						dataManager.Inventory.addItem (old_item.GetComponent<Item> ().ItemData);
+					}
+
+					Destroy (gameObject);
+
+					inventoryCanvas.updateInventory ();
+
 					break;
 				}
 
@@ -207,15 +208,37 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "InventoryContent":
 					//Sending item to inventory
 					dataManager.Inventory.addItem (itemData);
-					canvas.GetComponent<InventoryCanvas> ().updateInventory ();
+					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
 
 					Destroy (gameObject);
+
+					inventoryCanvas.updateInventory ();
 					break;
 					// Dropped onto EquipLeft, check if valid move
 				case "EquipLeft":
-					//*** check if equip is move to valid position
-					//if valid swap two equips
-					//if not, send ot iventory
+					// If the item types are the same
+					if (previous_index == new_index) {
+
+						// Swapping equips
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item>().ItemData, previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (gameObject.GetComponent<Item>().ItemData, new_parent.name, new_index);
+
+						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+
+					} else {
+						// Item types different, send to inventory
+
+						// Sending item to inventory
+						dataManager.Inventory.addItem (itemData);
+						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+
+						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+
+					}
 					break;
 					// Dropped back onto EquipRight, return to original position
 				case "EquipRight":
@@ -223,9 +246,24 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 					break;
 					// Dropped onto ToolBar, move to toolbar, and check if item can be swapped
 				case "ToolBar":
-					//*** Check if old item can be moved to old equip position
-					//if yes, swap positions
-					//if no, send old item to inventory
+
+					// Sending item to toolBar
+					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
+
+					// If swapped item can be equipped
+					if (droppable (old_item.GetComponent<Item> ().itemData, previous_index)) {
+						// Send to old position
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item> ().ItemData, previous_parent.name, previous_index);
+					} else {
+						// Send to inventory
+						dataManager.Inventory.addItem (old_item.GetComponent<Item> ().ItemData);
+					}
+
+					Destroy (gameObject);
+
+					inventoryCanvas.updateInventory ();
+
 					break;
 				}
 
@@ -236,25 +274,59 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				switch (new_parent.name) {
 				// Dropped into Inventory
 				case "InventoryContent":
-					//*** Send ot inventory
+					// Send to inventory
+					dataManager.Inventory.addItem (itemData);
+					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+
+					Destroy (gameObject);
+
+					inventoryCanvas.updateInventory ();
 					break;
-				// Dropped onto EquipLeft
+				// Dropped onto EquipLeft or EquipRight
 				case "EquipLeft":
-					//*** Check if can move to equip slot
-					//if yes, swap items
-					//if no, send ot inventory
-					break;
-					// Dropped onto EquipRight
 				case "EquipRight":
-					//*** Check if can move to equip slot
-					//if yes, swap items
-					//if no, send ot inventory
+
+					// Item can be placed in equip slot
+					if (droppable (itemData, new_index)) {
+
+						// Swap items
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item>().ItemData, previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (gameObject.GetComponent<Item>().ItemData, new_parent.name, new_index);
+
+						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+					} else {
+
+						// Send to inventory
+						dataManager.Inventory.addItem (itemData);
+						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+
+						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+					}
 					break;
 				// Dropped back onto ToolBar
-				case "Toolbar":
-					//*** check same location
-					//if yes, return to old position
-					//if no, swap items
+				case "ToolBar":
+					
+					// Item is placed in original location
+					if (previous_index == new_index) {
+
+						// Return to original position
+						returnToOriginalPosition ();
+
+					} else {
+
+						// Swap items
+						dataManager.Inventory.equipItem (old_item.GetComponent<Item>().ItemData, previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (gameObject.GetComponent<Item>().ItemData, new_parent.name, new_index);
+
+						Destroy (gameObject);
+
+						inventoryCanvas.updateInventory ();
+
+					}
 					break;
 				}
 
@@ -262,8 +334,26 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			}
 
 		} else {
-			// Dropped off of item slot, return to original position
-			returnToOriginalPosition ();
+			// Dropped off of item slot, return to inventory
+
+			switch (previous_parent.name) {
+			case "Inventory":
+				// Return to original position
+				returnToOriginalPosition ();
+				break;
+			default:
+				// Send to inventory
+				dataManager.Inventory.addItem (itemData);
+				dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+
+				Destroy (gameObject);
+
+				inventoryCanvas.updateInventory ();
+				break;
+
+
+			}
+
 		}
 
 
@@ -281,13 +371,13 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		switch (index) {
 		case 0:
-			return true;
+			return (item is HighArmorData);
 		case 1:
-			return true;
+			return (item is MidArmorData);
 		case 2:
-			return true;
+			return (item is LowArmorData);
 		default:
-			return true;
+			return false;
 		}
 
 
@@ -309,12 +399,6 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		empty.transform.SetSiblingIndex (transform.GetSiblingIndex ());
 		empty.layer = LayerMask.NameToLayer ("Items");
 
-		// Initializing dragging
-		drag_start_position = transform.position;
-		mouse_offset = transform.position - new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0);
-		mouse_offset = Vector3.zero;
-		this.drag = true;
-
 		// Setting parent and layer data
 		transform.SetParent (canvas);
 		gameObject.layer = LayerMask.NameToLayer ("Held Items");
@@ -329,7 +413,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		transform.position = new Vector3(mousePos.x, mousePos.y, 0) + mouse_offset;
+		transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 	}
 
 	public void OnEndDrag(PointerEventData eventData) {
@@ -338,11 +422,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (eventData.button != PointerEventData.InputButton.Left) {
 			return;
 		}
-
-		transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0) + mouse_offset;
-	
-		mouse_offset = Vector3.zero;
-		this.drag = false;
+			
 		gameObject.GetComponent<Item> ().drop ();
 
 		transform.localScale = new Vector3 (1, 1, 1);
