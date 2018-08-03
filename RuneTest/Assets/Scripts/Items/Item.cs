@@ -18,10 +18,10 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	private Transform inventory;
 
 	// Bounds of item slots
-	private Bounds equipLeftBounds;
-	private Bounds equipRightBounds;
-	private Bounds toolBarBounds;
-	private Bounds trash;			// Idk if will be used here
+	//private Bounds equipLeftBounds;
+	//private Bounds equipRightBounds;
+	//private Bounds toolBarBounds;
+	//private Bounds trash;			// Idk if will be used here
 
 	// Dragging variables
 	private bool drag;
@@ -57,9 +57,9 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		toolBar = (RectTransform)GameObject.Find ("ToolBar").transform;
 		inventory = GameObject.Find ("Inventory").transform;
 
-		equipLeftBounds = new Bounds (equipLeft.localPosition, equipLeft.rect.size);
-		equipRightBounds = new Bounds (equipRight.localPosition, equipRight.rect.size);
-		toolBarBounds = new Bounds (toolBar.localPosition, toolBar.rect.size);
+		//equipLeftBounds = new Bounds (equipLeft.localPosition, equipLeft.rect.size);
+		//equipRightBounds = new Bounds (equipRight.localPosition, equipRight.rect.size);
+		//toolBarBounds = new Bounds (toolBar.localPosition, toolBar.rect.size);
 
 	}
 	

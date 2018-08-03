@@ -40,7 +40,7 @@ public class RuneSelect : MonoBehaviour {
 
 			runeImage.GetComponent<Image> ().sprite = rune.GetComponent<Image>().sprite;
 
-			Debug.Log (runeImage.GetComponent<Image> ().sprite);
+			//Debug.Log (runeImage.GetComponent<Image> ().sprite);
 
 			runeText.GetComponent<Text> ().text = rune.GetComponent<Rune> ().getInfo ();
 

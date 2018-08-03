@@ -34,12 +34,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	// Dragging variables
 	private bool drag;
-	private Vector3 drag_start_position;
-	private Vector3 mouse_offset;
 
 	// References to external objects
 	protected DataManager dataManager;
 	protected BuildSignalManager signalReciever;
+	protected BuildCanvas buildCanvas;
+
 	private Transform canvas;
 	private Transform table;
 	private Transform page;
@@ -52,9 +52,12 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	protected void Start() {
 
 		dataManager = GameObject.Find ("DataManager").GetComponent<DataManager> ();
+	
 		canvas = GameObject.Find ("Canvas").transform;
 		table = GameObject.Find ("TableContent").transform;
 		page = GameObject.Find ("PageContent").transform;
+
+		buildCanvas = canvas.GetComponent<BuildCanvas> ();
 
 		RectTransform pageView = (RectTransform)GameObject.Find ("Page").transform;
 		pageBounds = new Bounds (pageView.localPosition, pageView.rect.size);
@@ -113,8 +116,9 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			if (value) {
 				if (canvas == null) {
 					canvas = GameObject.Find ("Canvas").transform;
+					buildCanvas = canvas.GetComponent<BuildCanvas> ();
 				}
-				Instantiate (canvas.GetComponent<BuildCanvas> ().runeSelectOutline, transform);
+				Instantiate (buildCanvas.runeSelectOutline, transform);
 			} else {
 				if (transform.childCount > 0) {
 					for (int i = transform.childCount-1; i >= 0; i--) {
@@ -141,109 +145,141 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		mouse = new Vector3 (mouse.x, mouse.y, 0);
 		string dropLocation = (pageBounds.Contains (mouse)) ? "Page" : "Table";
 
-		// Dropping a page rune
+		// Raycasting to find where rune was dropped
+		RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer ("Page Runes"));
+
+
 		if (previous_parent.name == "PageContent") {
+			// Dropping a page rune
 
 			//Debug.Log ("Dropping Page Rune");
 
-			// Raycasting to find where rune was dropped
-			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
+			if (dropLocation == "Page") {
+				// Dropped onto page
 
-			// Dropped onto a rune in page
-			if (dropLocation == "Page" && hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
+				if (hit.collider != null) {
+					// Dropped onto rune
 
-				GameObject swap_rune = hit.collider.gameObject;
-
-				//Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
-
-				// Checking if the rune to be swapped is swappable, as well as if it is a different rune
-				if (swap_rune.GetComponent<Rune> ().swappable && swap_rune.transform.GetSiblingIndex () != previous_index) {
-
+					GameObject swap_rune = hit.collider.gameObject;
 					int new_index = swap_rune.transform.GetSiblingIndex ();
 
-					transform.SetParent (page);
-					transform.SetSiblingIndex (new_index);
-					gameObject.layer = LayerMask.NameToLayer ("Page Runes");
+					if (swap_rune.GetComponent<Rune> ().swappable && new_index != previous_index) {
+						// Dropped onto swappable rune that is not the original position
 
-					swap_rune.transform.SetSiblingIndex (previous_index);
+						// Swapping runes
+						buildCanvas.addToPage (swap_rune.GetComponent<Rune> ().RuneData, previous_index, swap_rune.GetComponent<Rune> ().Rotation); 
+						buildCanvas.addToPage (runeData, new_index, rotation);
 
-					Destroy (page.GetChild (previous_index + 1).gameObject);
+						Destroy (gameObject);
 
-					// Rune can't be swapped, return to original position
+						buildCanvas.updateRunes ();
+
+					} else {
+						// Dropped onto non-swappable rune
+
+						// Returning to original position (With additional things because of rotations
+						buildCanvas.addToPage (runeData, new_index, rotation);
+
+						Destroy (gameObject);
+
+						buildCanvas.updateRunes ();
+
+					}
+
 				} else {
+					// Dropped onto empty space
 
-					Destroy (page.GetChild (previous_index).gameObject);
+					// Send to table
+					buildCanvas.addToTable (runeData);
 
-					transform.SetParent (page);
-					transform.SetSiblingIndex (previous_index);
-					gameObject.layer = LayerMask.NameToLayer ("Page Runes");
+					buildCanvas.removeFromPage (previous_index);
+
+					Destroy (gameObject);
+
+					buildCanvas.updateRunes ();
 
 				}
-				// Not dropped onto a rune in page, thus sent to table
+
 			} else {
+				// Dropped onto table
 
-				//Debug.Log ("Dropped off of page");
+				// Send to table 
+				buildCanvas.addToTable (runeData);
 
-				canvas.GetComponent<BuildCanvas> ().addToTable (runeData);
+				buildCanvas.removeFromPage (previous_index);
 
 				Destroy (gameObject);
 
+				buildCanvas.updateRunes ();
 			}
-			// Dropping a table rune
+
 		} else {
+			// Dropping a table rune
 
-			//Debug.Log ("Dropping Table Rune");
+			//Debug.Log("Dropping Table Rune");
 
-			// Raycasting to find where rune was dropped
-			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Page Runes"));
+			if (dropLocation == "Page") {
+				// Dropped onto page
 
-			// Dropped onto a rune in page
-			if (dropLocation == "Page" && hit.collider != null && hit.collider.gameObject.transform.parent.name == "PageContent") {
-				
-				GameObject swap_rune = hit.collider.gameObject;
+				if (hit.collider != null) {
+					// Dropped onto rune
 
-				//Debug.Log ("Dropped onto " + hit.collider.gameObject.name);
+					GameObject swap_rune = hit.collider.gameObject;
+					int new_index = swap_rune.transform.GetSiblingIndex ();
 
-				// Checking if the rune to be swapped is swappable, as well as if it is a different rune
-				if (swap_rune.GetComponent<Rune> ().swappable) {
+					if (swap_rune.GetComponent<Rune> ().swappable) {
+						// Dropped onto swappable rune
 
-					canvas.GetComponent<BuildCanvas> ().removeFromTable (runeData);
+						// Checking if swap_rune is not empty
+						if (!(swap_rune.GetComponent<Rune> ().RuneData is EmptyData)) {
+							buildCanvas.addToTable (swap_rune.GetComponent<Rune> ().RuneData);
+						}
 
-					// If the swapped rune isn't empty, add it back to the table
-					if (!swap_rune.GetComponent<Rune> ().Id.Contains ("Empty")) {
-						canvas.GetComponent<BuildCanvas> ().addToTable (swap_rune.GetComponent<Rune> ().runeData);
+						// Swapping runes
+						buildCanvas.addToPage (runeData, new_index, rotation);
+
+						buildCanvas.removeFromTable (runeData);
+
+						Destroy (gameObject);
+
+						buildCanvas.updateRunes ();
+
+					} else {
+						// Dropped onto non-swappable rune
+
+						// Returning to original position
+						returnToOriginalPosition();
+
 					}
 
-					transform.SetParent (page);
-					transform.SetSiblingIndex (swap_rune.transform.GetSiblingIndex ());
-					gameObject.layer = LayerMask.NameToLayer ("Page Runes");
-
-					Destroy (page.GetChild (transform.GetSiblingIndex () + 1).gameObject);
-
-					canvas.GetComponent<BuildCanvas> ().updateTable ();
-
-					// Not swappable, return to table
 				} else {
-					Destroy (table.GetChild (previous_index).gameObject);
+					// Dropped onto empty space
 
-					transform.SetParent (table);
-					transform.SetSiblingIndex (previous_index);
-					gameObject.layer = LayerMask.NameToLayer ("Table Runes");
+					// Return to original position
+					returnToOriginalPosition();
 
-					Rotation = 0;
-					transform.rotation = Quaternion.identity;
 				}
-				// Not dropped onto page, send back to table
+
 			} else {
-				Destroy (table.GetChild (previous_index).gameObject);
+				// Dropped onto table
 
-				transform.SetParent (table);
-				transform.SetSiblingIndex (previous_index);
-				gameObject.layer = LayerMask.NameToLayer ("Table Runes");
+				// Return to original position
+				returnToOriginalPosition();
 
-				Rotation = 0;
-				transform.rotation = Quaternion.identity;
 			}
+		}
+			
+	}
+
+	private void returnToOriginalPosition() {
+		Destroy (previous_parent.transform.GetChild (previous_index).gameObject);
+
+		transform.SetParent (previous_parent.transform);
+		transform.SetSiblingIndex (previous_index);
+		if (previous_parent.name == "PageContent") {
+			gameObject.layer = LayerMask.NameToLayer ("Page Runes");
+		} else {
+			gameObject.layer = LayerMask.NameToLayer ("Table Runes");
 		}
 	}
 
@@ -357,25 +393,22 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		if (movable) {
 
+			drag = true;
+
 			// Storing previous location data
 			previous_parent = transform.parent.gameObject;
 			previous_index = transform.GetSiblingIndex ();
 
 			// Creating empty rune to hold position
-			GameObject empty = Instantiate (canvas.GetComponent<BuildCanvas> ().runeEmpty, transform.parent);
+			GameObject empty = Instantiate (buildCanvas.runeEmpty, previous_parent.transform);
 			empty.GetComponent<Rune> ().RuneData = new EmptyData ();
-			empty.transform.SetSiblingIndex (transform.GetSiblingIndex ());
+			empty.transform.SetSiblingIndex (previous_index);
+
 			if (previous_parent.name == "TableContent") {
 				empty.layer = LayerMask.NameToLayer ("Table Runes");
 			} else if (previous_parent.name == "PageContent") {
 				empty.layer = LayerMask.NameToLayer ("Page Runes");
 			}
-
-			// Initializing dragging
-			drag_start_position = transform.position;
-			mouse_offset = transform.position - new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 0);
-			mouse_offset = Vector3.zero;
-			this.drag = true;
 
 			// Start size transition animation
 			if (previous_parent.name == "TableContent") {
@@ -398,7 +431,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		if (movable) {
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			transform.position = new Vector3(mousePos.x, mousePos.y, 0) + mouse_offset;
+			transform.position = new Vector3(mousePos.x, mousePos.y, 0);
 		}
 	}
 
@@ -409,13 +442,14 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		if (eventData.button != PointerEventData.InputButton.Left) {
 			return;
 		}
-
+		
+	/*
 		if (movable) {
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0) + mouse_offset;
-		}
+		}*/
 
-		mouse_offset = Vector3.zero;
-		this.drag = false;
+		drag = false;
+
 		gameObject.GetComponent<Rune> ().drop ();
 		StopAllCoroutines ();
 		transform.localScale = new Vector3 (1, 1, 1);

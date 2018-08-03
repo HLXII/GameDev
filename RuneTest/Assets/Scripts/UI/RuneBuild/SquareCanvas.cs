@@ -25,7 +25,7 @@ public class SquareCanvas : BuildCanvas {
 	// Use this for initialization
 	void Start () {
 
-		signalReceiver = GameObject.Find ("BuildSignals").GetComponent<BuildSignalText> ();
+		sides = 4;
 
 		initRunes ();
 		initBuild ();
@@ -75,57 +75,36 @@ public class SquareCanvas : BuildCanvas {
 
 		// Getting data from buildData
 		tableRunes = dataManager.TableData;
-		RuneData[,] pageData = dataManager.PageData.Page;
-		int[,] pageRotationData = dataManager.PageData.PageRotations;
+		pageRunes = dataManager.PageData;
 
 		// Creating the Table object to hold all the runes in the table
 		table = (RectTransform) GameObject.Find("TableContent").transform;
 		tableBack = (RectTransform)GameObject.Find ("TableBack").transform;
 
-		// Setting scale of TableContent to fit table window
-		Rect tableRect = ((RectTransform)table.parent.parent.parent.transform).rect;
-		//table.localScale = new Vector3 (tableRect.size.x / 400f, tableRect.size.x / 400f, 1);
-		//tableBack.localScale = table.localScale;
-
-		// Calculating the table parameters and updating the table
-		//rankFilter = "";
-		classFilter = "";
-		updateTable ();
-
 		// Creating the Page object to hold all the runes in the page
 		page = (RectTransform) GameObject.Find("PageContent").transform;
 		pageBack = (RectTransform)GameObject.Find ("PageBack").transform;
 
+		// Initializing table parameters
+		classFilter = "";
+
+		// Initializing page
+		RuneData[,] pageData = pageRunes.Page;
+		int[,] pageRotationData = pageRunes.PageRotations;
+
 		int page_h = pageData.GetLength (0);
 		int page_w = pageData.GetLength (1);
+
 		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w * 40, page_h * 40);
 		page.sizeDelta = new Vector2 (page_w * 40, page_h * 40);
 		pageBack.sizeDelta = page.sizeDelta;
-		//page.localScale = new Vector3 (Screen.width / 1600f, Screen.width / 1600f, 1);
-		//pageBack.localScale = page.localScale;
 
 		pageBack.GetComponent<GridLayoutGroup> ().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
 		pageBack.GetComponent<GridLayoutGroup> ().constraintCount = page_w;
 
-		// Instantiating all the runes in the page from the pageData
-		for (int i = 0; i < page_h; i++) {
-			for (int j = 0; j < page_w; j++) {
-				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
-				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
-				instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
-				instance.GetComponent<Rune> ().Rotation = pageRotationData [i, j];
-				// sides for the Rune object haven't been initialized, thus have to hard code it
-				// Be careful for other build canvases to change this
-				instance.transform.Rotate (Vector3.forward * pageRotationData [i, j] * 90);
-				instance.layer = 9;
+		// Instantiating runes
+		updateRunes();
 
-				if (pageData[i,j].Id == "Void") {
-					Instantiate (runeVoid, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
-				} else {
-					Instantiate (runeBack, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
-				}
-			}
-		}
 	}
 
 //	public override bool pageCheck() {

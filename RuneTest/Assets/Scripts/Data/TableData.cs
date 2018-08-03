@@ -37,6 +37,8 @@ public class TableData {
 	// Array of available runes in the table
 	private List<RuneData> table;
 
+	public List<RuneData> Table { get { return table; } }
+
 	// Constructing from file (Usually for initializing puzzles)
 	public TableData(string filename) {
 		BinaryFormatter bf = new BinaryFormatter ();
@@ -103,14 +105,6 @@ public class TableData {
 	private static bool FindOutput(RuneData rune)
 	{
 		return (rune is OutputData);
-	}
-
-	public void addToTable(RuneData runeData) {
-		table.Add (runeData);
-	}
-
-	public void removeFromTable(RuneData runeData) {
-		table.Remove (runeData);
 	}
 
 }
