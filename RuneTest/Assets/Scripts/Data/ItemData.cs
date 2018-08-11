@@ -38,6 +38,10 @@ public class WeaponData : ItemData {
 [System.Serializable]
 public class ArmorData : ItemData {
 
+	protected string type;
+
+	public string Type { get {return type; } }
+
 }
 
 [System.Serializable]

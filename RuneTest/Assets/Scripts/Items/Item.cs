@@ -369,13 +369,18 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	private bool droppable(ItemData item, int index) {
 
+		if (!(item is ArmorData)) {
+			return false;
+		}
+		ArmorData armor = (ArmorData)item;
+
 		switch (index) {
 		case 0:
-			return (item is HighArmorData);
+			return (armor.Type == "High");
 		case 1:
-			return (item is MidArmorData);
+			return (armor.Type == "Mid");
 		case 2:
-			return (item is LowArmorData);
+			return (armor.Type == "Low");
 		default:
 			return false;
 		}
