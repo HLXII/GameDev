@@ -99,12 +99,10 @@ public class InventoryCanvas : MonoBehaviour {
 		foreach (Transform child in inventory) {
 			GameObject.Destroy(child.gameObject);
 		}
-		inventory.DetachChildren ();
 		// Removing rune backs
 		foreach (Transform child in inventoryBack) {
 			GameObject.Destroy (child.gameObject);
 		}
-		inventoryBack.DetachChildren ();
 
 		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
 
@@ -126,15 +124,12 @@ public class InventoryCanvas : MonoBehaviour {
 		foreach (Transform child in equipLeft) {
 			GameObject.Destroy(child.gameObject);
 		}
-		equipLeft.DetachChildren ();
 		foreach (Transform child in equipRight) {
 			GameObject.Destroy(child.gameObject);
 		}
-		equipRight.DetachChildren ();
 		foreach (Transform child in toolBar) {
 			GameObject.Destroy(child.gameObject);
 		}
-		toolBar.DetachChildren ();
 
 		ItemData[] equipLeftData = dataManager.Inventory.EquipLeft;
 		ItemData[] equipRightData = dataManager.Inventory.EquipRight;

@@ -24,7 +24,7 @@ public class Inventory {
 		runes = new List<RuneData> ();
 		items = new List<ItemData> ();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 200; i++) {
 			items.Add (new ChiliItemData ());
 		}
 

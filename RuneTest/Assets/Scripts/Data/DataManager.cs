@@ -48,14 +48,16 @@ public class DataManager : MonoBehaviour {
 
 		// read save ID, search for files, load inventory, prefs, etc
 
+		save ("save1.sav");
+
 	}
 
 	public void load(string fileName) {
 
-		Debug.Log ("Loading Data at " + Application.persistentDataPath + "/" + fileName);
+		Debug.Log ("Loading Data at " + Application.persistentDataPath + "/saves/" + fileName);
 
 		BinaryFormatter bf = new BinaryFormatter ();
-		TextAsset dataFile = Resources.Load<TextAsset> (Application.persistentDataPath + "/" + fileName);
+		TextAsset dataFile = Resources.Load<TextAsset> (Application.persistentDataPath + "/saves/" + fileName);
 		Stream s = new MemoryStream (dataFile.bytes);
 		SaveData save = (SaveData)bf.Deserialize (s);
 
@@ -69,10 +71,10 @@ public class DataManager : MonoBehaviour {
 
 		SaveData save = new SaveData (fileName, inventory, settings, player);
 
-		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/" + fileName);
+		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/saves/" + fileName);
 
 		BinaryFormatter bf = new BinaryFormatter();
-		FileStream file = File.Create (Application.persistentDataPath + "/" + fileName);
+		FileStream file = File.Create (Application.persistentDataPath + "/saves/" + fileName);
 		bf.Serialize(file, save);
 		file.Close();
 
