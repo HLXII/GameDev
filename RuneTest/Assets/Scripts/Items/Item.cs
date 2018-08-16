@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler {
+public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, Selectable {
 
 	protected ItemData itemData;
 
@@ -27,22 +27,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public ItemData ItemData { get { return itemData; } set { itemData = value; } }
 
-	public bool Selected { get { return selected; } 
-		set { selected = value;
-			if (value) {
-				if (canvas == null) {
-					canvas = GameObject.Find ("Canvas").transform;
-				}
-				Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
-			} else {
-				if (transform.childCount > 0) {
-					for (int i = transform.childCount-1; i >= 0; i--) {
-						Destroy (transform.GetChild (i).gameObject);
-					}
-				}
-			} 
-		} 
-	}
+	public bool Selected { get { return selected; } set { selected = value; } }
 
 	// Use this for initialization
 	void Start () {
@@ -442,7 +427,26 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			return;
 		}
 
-		canvas.GetComponent<InventoryCanvas> ().itemSelect.Item = gameObject;
+		onSelect ();
 
+	}
+
+	public void onSelect() {
+		selected = true;
+		if (canvas == null) {
+			canvas = GameObject.Find ("Canvas").transform;
+		}
+		Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
+	
+		canvas.GetComponent<InventoryCanvas> ().itemSelect.Item = gameObject;
+	}
+
+	public void deSelect() {
+		selected = false;
+		if (transform.childCount > 0) {
+			for (int i = transform.childCount-1; i >= 0; i--) {
+				Destroy (transform.GetChild (i).gameObject);
+			}
+		}
 	}
 }

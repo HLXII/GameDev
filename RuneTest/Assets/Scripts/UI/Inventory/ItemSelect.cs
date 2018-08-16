@@ -11,10 +11,9 @@ public class ItemSelect : MonoBehaviour {
 	public GameObject Item { get { return item; }
 		set {
 			if (item != null) {
-				item.GetComponent<Item> ().Selected = false;
+				item.GetComponent<Item> ().deSelect ();
 			}
 			item = value; 
-			item.GetComponent<Item> ().Selected = true;
 			itemData = item.GetComponent<Item> ().ItemData;
 		} 
 	}
@@ -50,11 +49,11 @@ public class ItemSelect : MonoBehaviour {
 	}
 
 	public void clearSelect() {
+		itemImage.GetComponent<Image> ().sprite = null;
+		itemText.GetComponent<Text> ().text = "";
 		if (item != null) {
-			item.GetComponent<Item> ().Selected = false;
+			item.GetComponent<Item> ().deSelect ();
 			item = null;
-			itemImage.GetComponent<Image> ().sprite = null;
-			itemText.GetComponent<Text> ().text = "";
 			itemData = null;
 		}
 	}

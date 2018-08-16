@@ -9,7 +9,6 @@ public class DataManager : MonoBehaviour {
 
 	// Main Data objects
 	private Inventory inventory;
-	private Settings settings;
 	private PlayerData player;
 
 	// For data between scenes
@@ -17,7 +16,6 @@ public class DataManager : MonoBehaviour {
 	private PageData pageData;
 
 	public Inventory Inventory { get { return inventory; } }
-	public Settings Settings { get { return settings; } }
 	public PlayerData Player { get { return player; } }
 
 	public TableData TableData { get { return tableData; } }
@@ -38,17 +36,15 @@ public class DataManager : MonoBehaviour {
 		
 	}
 
-	public void loadSave(int saveID) {
+	public void createNewSave() {
 
-		// Temporary
+		// Initializing data
 		inventory = new Inventory();
+		player = new PlayerData ();
+
+		// Initializing scene transition data just in case of bugs
 		tableData = new TableData();
 		pageData = new PageData ();
-
-
-		// read save ID, search for files, load inventory, prefs, etc
-
-		save ("save1.sav");
 
 	}
 
@@ -62,14 +58,13 @@ public class DataManager : MonoBehaviour {
 		SaveData save = (SaveData)bf.Deserialize (s);
 
 		inventory = save.Inventory;
-		settings = save.Settings;
 		player = save.Player;
 
 	}
 
 	public void save(string fileName) {
 
-		SaveData save = new SaveData (fileName, inventory, settings, player);
+		SaveData save = new SaveData (fileName, inventory, player);
 
 		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/saves/" + fileName);
 

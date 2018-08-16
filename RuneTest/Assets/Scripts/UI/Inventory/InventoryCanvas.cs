@@ -93,17 +93,18 @@ public class InventoryCanvas : MonoBehaviour {
 
 	public void updateInventory() {
 
-		/// Inventory Section
+		#region Inventory Section
 
 		// Removing old items
 		foreach (Transform child in inventory) {
 			GameObject.Destroy(child.gameObject);
 		}
+		inventory.DetachChildren();
 		// Removing rune backs
 		foreach (Transform child in inventoryBack) {
 			GameObject.Destroy (child.gameObject);
 		}
-
+		inventoryBack.DetachChildren();
 		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
 
 		// Instantiating all filtered items
@@ -118,19 +119,23 @@ public class InventoryCanvas : MonoBehaviour {
 		RectTransform content = (RectTransform)inventory.parent.transform;
 		content.sizeDelta = new Vector2 (content.rect.size.x, ((filteredItems.Count+6) / 7) * 40 * inventory.localScale.x);
 
-		/// Equip Section
+		#endregion
+
+		#region Equip Section
 
 		// Removing old items
 		foreach (Transform child in equipLeft) {
 			GameObject.Destroy(child.gameObject);
 		}
+		equipLeft.DetachChildren();
 		foreach (Transform child in equipRight) {
 			GameObject.Destroy(child.gameObject);
 		}
+		equipRight.DetachChildren();
 		foreach (Transform child in toolBar) {
 			GameObject.Destroy(child.gameObject);
 		}
-
+		toolBar.DetachChildren();
 		ItemData[] equipLeftData = dataManager.Inventory.EquipLeft;
 		ItemData[] equipRightData = dataManager.Inventory.EquipRight;
 		ItemData[] toolBarData = dataManager.Inventory.ToolBar;
@@ -151,7 +156,9 @@ public class InventoryCanvas : MonoBehaviour {
 			instance.layer = LayerMask.NameToLayer("Items");
 		}
 
-		/// Selection Section
+		#endregion
+
+		#region Selection Section
 
 		ItemData selectedItemData = itemSelect.GetComponent<ItemSelect>().ItemData;
 
@@ -165,11 +172,12 @@ public class InventoryCanvas : MonoBehaviour {
 			foreach (Transform itemSlot in itemSlots) {
 
 				foreach (Transform child in itemSlot) {
+					Debug.Log(child.gameObject);
+
 					// If the selected rune exists in the inventory, set it as selected and end
 					if (child.gameObject.GetComponent<Item> ().ItemData == selectedItemData) {
-
+						child.gameObject.GetComponent<Item> ().onSelect ();
 						itemSelect.GetComponent<ItemSelect> ().Item = child.gameObject;
-						child.gameObject.GetComponent<Item> ().Selected = true;
 						found = true;
 						break;
 
@@ -184,10 +192,12 @@ public class InventoryCanvas : MonoBehaviour {
 
 			// Rune wasn't found, clear selection
 			if (!found) {
-				//Debug.Log ("Not Found, clearing Selection");
+				Debug.Log ("Not Found, clearing Selection");
 				itemSelect.GetComponent<ItemSelect> ().clearSelect ();
 			}
 		}
+
+		#endregion
 	}
 
 	public void updateInventory(string pageFilter) {

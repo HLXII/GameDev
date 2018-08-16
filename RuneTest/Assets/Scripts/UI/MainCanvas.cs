@@ -9,7 +9,9 @@ public class MainCanvas : MonoBehaviour {
 	void Start () {
 		DataManager dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
 
-		dm.loadSave (0);
+		dm.createNewSave ();
+
+		dm.save ("save1.sav");
 
 	}
 	
