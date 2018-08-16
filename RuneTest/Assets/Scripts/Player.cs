@@ -9,9 +9,13 @@ public class Player : MonoBehaviour {
 	void Start () {
 
 	}
-	
+
+	void Update() {
+		Camera.main.transform.localPosition = new Vector3 (transform.localPosition.x, transform.localPosition.y, -10);
+	}
+
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		Vector2 force = new Vector2 (0, 0);
 		if (Input.GetKey (KeyCode.W)) {
 			force += new Vector2 (0, 1);
@@ -27,6 +31,6 @@ public class Player : MonoBehaviour {
 		}
 		force = force.normalized * 1000;
 		gameObject.GetComponent<Rigidbody2D> ().velocity = force;
-		Camera.main.transform.localPosition = new Vector3 (transform.localPosition.x, transform.localPosition.y, -10);
+
 	}
 }

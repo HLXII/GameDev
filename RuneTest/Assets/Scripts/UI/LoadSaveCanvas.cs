@@ -5,10 +5,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class TitleCanvas : MonoBehaviour {
+public class LoadSaveCanvas : MonoBehaviour {
+
+	public GameObject savePanel;
+
+	public GameObject saveContent;
+
+	private DataManager dm;
 
 	// Use this for initialization
 	void Start () {
+		dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
+
+		loadSaves ();
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
+	private void loadSaves() {
 
 		Debug.Log ("Checking " + Application.persistentDataPath);
 
@@ -30,15 +48,23 @@ public class TitleCanvas : MonoBehaviour {
 
 		if (saves == null || saves.Length == 0) {
 			Debug.Log ("No saves");
+		} else {
+			foreach (string save in saves) {
+				Debug.Log (save);
 
-			GameObject.Find ("Continue").GetComponent<Button> ().enabled = false;
+				GameObject instance = Instantiate (savePanel, saveContent.transform);
+
+				instance.transform.GetChild (1).GetComponent<Text> ().text = save;
+
+				instance.GetComponent<Button> ().onClick.AddListener (delegate {
+					dm.load (save);
+					SceneManager.LoadScene("OverWorld");
+				});
+
+			}
 		}
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
 	}
 
 	public void loadScene(string scene) {

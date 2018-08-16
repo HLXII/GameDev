@@ -48,14 +48,14 @@ public class DataManager : MonoBehaviour {
 
 	}
 
-	public void load(string fileName) {
+	public void load(string filePath) {
 
-		Debug.Log ("Loading Data at " + Application.persistentDataPath + "/saves/" + fileName);
+		Debug.Log ("Loading Data at " + filePath);
 
 		BinaryFormatter bf = new BinaryFormatter ();
-		TextAsset dataFile = Resources.Load<TextAsset> (Application.persistentDataPath + "/saves/" + fileName);
-		Stream s = new MemoryStream (dataFile.bytes);
-		SaveData save = (SaveData)bf.Deserialize (s);
+		FileStream dataFile = File.Open(filePath, FileMode.Open);
+		SaveData save = (SaveData)bf.Deserialize (dataFile);
+		dataFile.Close();
 
 		inventory = save.Inventory;
 		player = save.Player;
