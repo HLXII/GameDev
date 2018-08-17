@@ -333,7 +333,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			// Dropped off of item slot, return to inventory
 
 			switch (previous_parent.name) {
-			case "Inventory":
+			case "InventoryContent":
 				// Return to original position
 				returnToOriginalPosition ();
 				break;
