@@ -8,7 +8,6 @@ public class InventoryCanvas : MonoBehaviour {
 	// Item prefabs
 	public GameObject itemBack;
 	public GameObject itemSelectOutline;
-	public GameObject itemEmpty;
 
 	public GameObject item;
 
@@ -141,12 +140,11 @@ public class InventoryCanvas : MonoBehaviour {
 			foreach (Transform itemSlot in itemSlots) {
 
 				foreach (Transform child in itemSlot) {
-					Debug.Log(child.gameObject);
 
 					// If the selected rune exists in the inventory, set it as selected and end
 					if (child.gameObject.GetComponent<Item> ().ItemData == selectedItemData) {
+						//Debug.Log("Found " + child.gameObject);
 						child.gameObject.GetComponent<Item> ().onSelect ();
-						itemSelect.GetComponent<ItemSelect> ().Item = child.gameObject;
 						found = true;
 						break;
 
@@ -161,7 +159,7 @@ public class InventoryCanvas : MonoBehaviour {
 
 			// Rune wasn't found, clear selection
 			if (!found) {
-				Debug.Log ("Not Found, clearing Selection");
+				//Debug.Log ("Not Found, clearing Selection");
 				itemSelect.GetComponent<ItemSelect> ().clearSelect ();
 			}
 		}

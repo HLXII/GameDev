@@ -74,9 +74,9 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			GameObject new_parent = hit.collider.gameObject.transform.parent.gameObject;
 			int new_index = hit.collider.gameObject.transform.GetSiblingIndex ();
 
-			Debug.Log ("Came from " + previous_parent + " at index " + previous_index);
+			//Debug.Log ("Came from " + previous_parent + " at index " + previous_index);
 
-			Debug.Log ("Dropped onto " + new_parent + " at index " + new_index);
+			//Debug.Log ("Dropped onto " + new_parent + " at index " + new_index);
 
 			// Determining original location
 			switch (previous_parent.name) {
@@ -385,9 +385,8 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		previous_index = transform.GetSiblingIndex ();
 
 		// Creating empty item to hold position
-		GameObject empty = Instantiate (canvas.GetComponent<InventoryCanvas> ().itemEmpty, transform.parent);
+		GameObject empty = Instantiate (canvas.GetComponent<InventoryCanvas> ().item, transform.parent);
 		empty.transform.SetSiblingIndex (transform.GetSiblingIndex ());
-		empty.layer = LayerMask.NameToLayer ("Items");
 
 		// Setting parent and layer data
 		transform.SetParent (canvas);
@@ -432,13 +431,16 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	public void onSelect() {
-		selected = true;
+		//Debug.Log ("Selected " + gameObject);
+
 		if (canvas == null) {
 			canvas = GameObject.Find ("Canvas").transform;
 		}
-		Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
-	
+
 		canvas.GetComponent<InventoryCanvas> ().itemSelect.Item = gameObject;
+
+		selected = true;
+		Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
 	}
 
 	public void deSelect() {
@@ -448,5 +450,6 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				Destroy (transform.GetChild (i).gameObject);
 			}
 		}
+		//Debug.Log ("Deselected" +gameObject);
 	}
 }

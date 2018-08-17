@@ -15,6 +15,11 @@ public class ItemSelect : MonoBehaviour {
 			}
 			item = value; 
 			itemData = item.GetComponent<Item> ().ItemData;
+			ItemTemplate itemTemplate = DataManager.item [itemData.ItemTemplate];
+
+			itemImage.GetComponent<Image> ().sprite = itemTemplate.icon;
+			itemText.GetComponent<Text> ().text = itemTemplate.description;
+
 		} 
 	}
 	public ItemData ItemData { get { return itemData; } }
@@ -38,17 +43,11 @@ public class ItemSelect : MonoBehaviour {
 			clearSelect ();
 		}
 
-		if (item != null) {
-
-			itemImage.GetComponent<Image> ().sprite = item.GetComponent<Image>().sprite;
-
-			//itemText.GetComponent<Text> ().text = item.GetComponent<Item> ().ItemData.Description;
-
-		}
-
 	}
 
 	public void clearSelect() {
+		//Debug.Log ("Clear Selection");
+
 		itemImage.GetComponent<Image> ().sprite = null;
 		itemText.GetComponent<Text> ().text = "";
 		if (item != null) {
