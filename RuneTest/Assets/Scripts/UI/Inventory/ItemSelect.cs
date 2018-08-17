@@ -42,7 +42,7 @@ public class ItemSelect : MonoBehaviour {
 
 			itemImage.GetComponent<Image> ().sprite = item.GetComponent<Image>().sprite;
 
-			itemText.GetComponent<Text> ().text = item.GetComponent<Item> ().ItemData.Description;
+			//itemText.GetComponent<Text> ().text = item.GetComponent<Item> ().ItemData.Description;
 
 		}
 

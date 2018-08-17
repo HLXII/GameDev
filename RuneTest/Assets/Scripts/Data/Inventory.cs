@@ -7,6 +7,7 @@ public class Inventory {
 
 	private List<RuneData> runes;
 
+	[SerializeField]
 	private List<ItemData> items;
 
 	private ItemData[] equipLeft;
@@ -21,20 +22,16 @@ public class Inventory {
 
 	// Temporary for tests
 	public Inventory() {
+
 		runes = new List<RuneData> ();
 		items = new List<ItemData> ();
 
 		for (int i = 0; i < 200; i++) {
-			items.Add (new ChiliItemData ());
+			items.Add (new ItemData ("Chili"));
 		}
 
-		items.Add (new NatureRingData ());
-		items.Add (new NatureRingData ());
-		items.Add (new PinkBraData ());
-		items.Add (new SnakeBootData ());
-		items.Add (new TrashCanData());
-		items.Add (new HoverboardData ());
-		items.Add (new TopHatData ());
+		items.Add (new ItemData ("Nature Ring"));
+		items.Add (new ItemData ("Hoverboard"));
 
 		equipLeft = new ItemData[3];
 		equipRight = new ItemData[3];
@@ -42,12 +39,12 @@ public class Inventory {
 
 
 		for (int i = 0; i < 3; i++) {
-			equipLeft[i] = new EmptyItemData ();
-			equipRight[i] = new EmptyItemData ();
+			equipLeft [i] = new ItemData ("Empty Item");
+			equipRight [i] = new ItemData ("Empty Item");
 		}
 
 		for (int i = 0; i < 6; i++) {
-			toolBar[i] = new EmptyItemData ();
+			toolBar[i] = new ItemData ("Empty Item");
 		}
 
 	}
@@ -67,7 +64,7 @@ public class Inventory {
 	}
 
 	public void addItem(ItemData item) {
-		if (!(item is EmptyItemData)) {
+		if (!(DataManager.item[item.ItemTemplate].id == "Empty Item")) {
 			items.Add (item);
 		}
 	}
@@ -93,19 +90,19 @@ public class Inventory {
 
 	private static bool FindConsumable(ItemData item)
 	{
-		return (item is ConsumableData);
+		return DataManager.item[item.ItemTemplate].isConsumable;
 	}
 	private static bool FindWeapon(ItemData item)
 	{
-		return (item is WeaponData);
+		return DataManager.item[item.ItemTemplate].isWeapon;
 	}
 	private static bool FindArmor(ItemData item)
 	{
-		return (item is ArmorData);
+		return DataManager.item[item.ItemTemplate].isArmor;
 	}
 	private static bool FindKey(ItemData item)
 	{
-		return (item is KeyData);
+		return DataManager.item[item.ItemTemplate].isKey;
 	}
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, Selectable {
 
@@ -25,7 +26,17 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	private GameObject previous_parent;
 	private int previous_index;
 
-	public ItemData ItemData { get { return itemData; } set { itemData = value; } }
+	public ItemData ItemData { 
+		get { return itemData; } 
+		set { 
+			itemData = value; 
+			ItemTemplate itemTemplate = DataManager.item [itemData.ItemTemplate];
+			transform.GetComponent<Image> ().sprite = itemTemplate.icon;
+			if (itemTemplate.id != "Empty Item") {
+				transform.GetComponent<Image> ().color = new Color (255, 255, 255, 255);
+			}
+		} 
+	}
 
 	public bool Selected { get { return selected; } set { selected = value; } }
 
@@ -124,7 +135,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "InventoryContent":
 					// Sending item to inventory
 					dataManager.Inventory.addItem (itemData);
-					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 					Destroy (gameObject);
 
@@ -153,7 +164,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 						// Sending item to inventory
 						dataManager.Inventory.addItem (itemData);
-						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 						Destroy (gameObject);
 
@@ -165,7 +176,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "ToolBar":
 
 					// Sending item to toolBar
-					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 					dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
 
 					// If swapped item can be equipped
@@ -193,7 +204,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "InventoryContent":
 					//Sending item to inventory
 					dataManager.Inventory.addItem (itemData);
-					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 					Destroy (gameObject);
 
@@ -217,7 +228,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 						// Sending item to inventory
 						dataManager.Inventory.addItem (itemData);
-						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 						Destroy (gameObject);
 
@@ -233,7 +244,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "ToolBar":
 
 					// Sending item to toolBar
-					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 					dataManager.Inventory.equipItem (itemData, new_parent.name, new_index);
 
 					// If swapped item can be equipped
@@ -261,7 +272,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 				case "InventoryContent":
 					// Send to inventory
 					dataManager.Inventory.addItem (itemData);
-					dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+					dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 					Destroy (gameObject);
 
@@ -285,7 +296,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 						// Send to inventory
 						dataManager.Inventory.addItem (itemData);
-						dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+						dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 						Destroy (gameObject);
 
@@ -329,7 +340,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			default:
 				// Send to inventory
 				dataManager.Inventory.addItem (itemData);
-				dataManager.Inventory.equipItem (new EmptyItemData (), previous_parent.name, previous_index);
+				dataManager.Inventory.equipItem (new ItemData("Empty Item"), previous_parent.name, previous_index);
 
 				Destroy (gameObject);
 
@@ -353,23 +364,12 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	private bool droppable(ItemData item, int index) {
-
-		if (!(item is ArmorData)) {
-			return false;
-		}
-		ArmorData armor = (ArmorData)item;
-
-		switch (index) {
-		case 0:
-			return (armor.Type == "High");
-		case 1:
-			return (armor.Type == "Mid");
-		case 2:
-			return (armor.Type == "Low");
-		default:
+		
+		if (!(DataManager.item[item.ItemTemplate].isArmor)) {
 			return false;
 		}
 
+		return index == (int)DataManager.item [item.ItemTemplate].armorSlot;
 
 	}
 

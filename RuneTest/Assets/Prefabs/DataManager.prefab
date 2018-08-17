@@ -51,3 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d852ff2d9b536420584b94deba67738e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemTemplates:
+  - {fileID: 11400000, guid: 85533285686f9472991ced197fc587a6, type: 2}
+  - {fileID: 11400000, guid: 43fc2e78ba09a4803a5b3020aff5e6d7, type: 2}
+  - {fileID: 11400000, guid: c509c215fd228413cba3e9f729bc89ab, type: 2}
+  - {fileID: 11400000, guid: b449e4e4ffd6d4adbb126ec0e3df15be, type: 2}
+  - {fileID: 11400000, guid: 140316b8e974c4bc9bc5a1fdafaf1054, type: 2}
+  - {fileID: 11400000, guid: fb62d3f49cd3f40aca784af057acf717, type: 2}
+  - {fileID: 11400000, guid: b590f0dedd88d445389f55e63d799e3a, type: 2}
+  - {fileID: 11400000, guid: e673651ff7d564427aa212c147a3e607, type: 2}

@@ -24,7 +24,13 @@ public class Energy {
 /// Rune data to be stored in files and used to initialize the rune GameObjects
 /// </summary>
 [System.Serializable]
-public class RuneData : ItemData {
+public class RuneData {
+
+	protected string id;
+	protected string description;
+
+	public string Id { get { return id; } set { id = value; } }
+	public string Description { get { return description; } set { description = value; } }
 
 	public RuneData() {
 	}

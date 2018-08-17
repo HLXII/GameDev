@@ -7,7 +7,12 @@ using System.IO;
 
 public class DataManager : MonoBehaviour {
 
+	// Static Data Management
+	public List<ItemTemplate> itemTemplates;
+	public static Dictionary<string, ItemTemplate> item;
+
 	// Main Data objects
+	[SerializeField]
 	private Inventory inventory;
 	private PlayerData player;
 
@@ -29,6 +34,12 @@ public class DataManager : MonoBehaviour {
 		{
 			Destroy(gameObject);
 		}
+
+		item = new Dictionary<string, ItemTemplate> ();
+		foreach (ItemTemplate itemTemplate in itemTemplates) {
+			item.Add (itemTemplate.id, itemTemplate);
+		}
+
 	}
 	
 	// Update is called once per frame

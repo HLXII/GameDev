@@ -10,13 +10,7 @@ public class InventoryCanvas : MonoBehaviour {
 	public GameObject itemSelectOutline;
 	public GameObject itemEmpty;
 
-	public GameObject Chili;
-	public GameObject NatureRing;
-	public GameObject TopHat;
-	public GameObject PinkBra;
-	public GameObject TrashCan;
-	public GameObject SnakeBoot;
-	public GameObject Hoverboard;
+	public GameObject item;
 
 	// Dictionary to store item prefab ids
 	private Dictionary<string, GameObject> itemDict;
@@ -56,35 +50,13 @@ public class InventoryCanvas : MonoBehaviour {
 		equipRight = GameObject.Find ("EquipRight").transform;
 		toolBar = GameObject.Find ("ToolBar").transform;
 
-		// Initializing item dictionary
-		initItemDict ();
-
 		updateInventory ("Consumable");
-
-
-
+	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-	}
-
-	private void initItemDict() {
-		itemDict = new Dictionary<string, GameObject> () {
-			{"Empty Item",itemEmpty},
-
-			{"Nature Ring",NatureRing},
-			{"Top Hat",TopHat},
-
-			{"Pink Bra",PinkBra},
-			{"Trash Can",TrashCan},
-
-			{"Snake Boot",SnakeBoot},
-			{"Hoverboard",Hoverboard},
-
-			{"Chili",Chili}
-		};
 	}
 		
 	public void exitInventory() {
@@ -92,7 +64,7 @@ public class InventoryCanvas : MonoBehaviour {
 	}
 
 	public void updateInventory() {
-
+		
 		#region Inventory Section
 
 		// Removing old items
@@ -105,13 +77,13 @@ public class InventoryCanvas : MonoBehaviour {
 			GameObject.Destroy (child.gameObject);
 		}
 		inventoryBack.DetachChildren();
+
 		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
 
 		// Instantiating all filtered items
-		foreach (ItemData item in filteredItems) {
-			GameObject instance = Instantiate (itemDict [item.Id],new Vector3 (0,0,1), Quaternion.identity,inventory);
-			instance.GetComponent<Item> ().ItemData = item;
-			instance.layer = LayerMask.NameToLayer("Items");
+		foreach (ItemData itemData in filteredItems) {
+			GameObject instance = Instantiate (item, new Vector3 (0,0,1), Quaternion.identity,inventory);
+			instance.GetComponent<Item> ().ItemData = itemData;
 			Instantiate (itemBack, new Vector3 (0, 0, 1), Quaternion.identity, inventoryBack);
 		}
 
@@ -141,19 +113,16 @@ public class InventoryCanvas : MonoBehaviour {
 		ItemData[] toolBarData = dataManager.Inventory.ToolBar;
 
 		for (int i = 0; i < 3; i++) {
-			GameObject instance = Instantiate (itemDict [equipLeftData[i].Id],new Vector3 (0,0,1), Quaternion.identity,equipLeft);
+			GameObject instance = Instantiate (item, new Vector3 (0,0,1), Quaternion.identity,equipLeft);
 			instance.GetComponent<Item> ().ItemData = equipLeftData[i];
-			instance.layer = LayerMask.NameToLayer("Items");
 
-			instance = Instantiate (itemDict [equipRightData[i].Id],new Vector3 (0,0,1), Quaternion.identity,equipRight);
+			instance = Instantiate (item, new Vector3 (0,0,1), Quaternion.identity,equipRight);
 			instance.GetComponent<Item> ().ItemData = equipRightData[i];
-			instance.layer = LayerMask.NameToLayer("Items");
 		}
 
 		for (int i = 0; i < 6; i++) {
-			GameObject instance = Instantiate (itemDict [toolBarData[i].Id],new Vector3 (0,0,1), Quaternion.identity,toolBar);
+			GameObject instance = Instantiate (item, new Vector3 (0,0,1), Quaternion.identity,toolBar);
 			instance.GetComponent<Item> ().ItemData = toolBarData[i];
-			instance.layer = LayerMask.NameToLayer("Items");
 		}
 
 		#endregion

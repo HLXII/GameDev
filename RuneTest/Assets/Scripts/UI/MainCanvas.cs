@@ -7,11 +7,7 @@ public class MainCanvas : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		DataManager dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
-
-		dm.createNewSave ();
-
-		dm.save ("save1.sav");
+		//DataManager dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
 
 	}
 	
