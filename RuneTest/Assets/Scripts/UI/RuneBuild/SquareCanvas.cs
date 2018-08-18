@@ -95,8 +95,8 @@ public class SquareCanvas : BuildCanvas {
 		int page_h = pageData.GetLength (0);
 		int page_w = pageData.GetLength (1);
 
-		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w * 40, page_h * 40);
-		page.sizeDelta = new Vector2 (page_w * 40, page_h * 40);
+		((RectTransform)page.parent.transform).sizeDelta = new Vector2 (page_w, page_h);
+		page.sizeDelta = new Vector2 (page_w, page_h);
 		pageBack.sizeDelta = page.sizeDelta;
 
 		pageBack.GetComponent<GridLayoutGroup> ().constraint = GridLayoutGroup.Constraint.FixedColumnCount;

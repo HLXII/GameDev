@@ -85,12 +85,12 @@ public class InventoryCanvas : MonoBehaviour {
 
 		// Removing old items
 		foreach (Transform child in inventory) {
-			GameObject.Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		inventory.DetachChildren();
 		// Removing rune backs
 		foreach (Transform child in inventoryBack) {
-			GameObject.Destroy (child.gameObject);
+			Destroy (child.gameObject);
 		}
 		inventoryBack.DetachChildren();
 
@@ -105,7 +105,7 @@ public class InventoryCanvas : MonoBehaviour {
 
 		// Updating size of InventoryContent and InventoryBack
 		RectTransform content = (RectTransform)inventory.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((filteredItems.Count+6) / 7) * 40 * inventory.localScale.x);
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((filteredItems.Count+6) / 7) * inventory.localScale.x);
 
 		#endregion
 
@@ -113,15 +113,15 @@ public class InventoryCanvas : MonoBehaviour {
 
 		// Removing old items
 		foreach (Transform child in equipLeft) {
-			GameObject.Destroy(child.gameObject);
+            Destroy(child.gameObject);
 		}
 		equipLeft.DetachChildren();
 		foreach (Transform child in equipRight) {
-			GameObject.Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		equipRight.DetachChildren();
 		foreach (Transform child in toolBar) {
-			GameObject.Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		toolBar.DetachChildren();
 		ItemData[] equipLeftData = dataManager.Inventory.EquipLeft;

@@ -107,21 +107,21 @@ public class BuildCanvas : MonoBehaviour {
 
 		// Removing old table runes
 		foreach (Transform child in table) {
-			GameObject.Destroy(child.gameObject);
+			Destroy(child.gameObject);
 		}
 		table.DetachChildren ();
 		// Removing table rune backs
 		foreach (Transform child in tableBack) {
-			GameObject.Destroy (child.gameObject);
+			Destroy (child.gameObject);
 		}
 		tableBack.DetachChildren ();
 		// Removing old page runes
 		foreach (Transform child in page) {
-			GameObject.Destroy (child.gameObject);
+			Destroy (child.gameObject);
 		}
 		page.DetachChildren ();
 		foreach (Transform child in pageBack) {
-			GameObject.Destroy (child.gameObject);
+			Destroy (child.gameObject);
 		}
 		pageBack.DetachChildren ();
 
@@ -139,7 +139,7 @@ public class BuildCanvas : MonoBehaviour {
 
 		// Updating size of TableContent and TableBack
 		RectTransform content = (RectTransform)table.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * 40 * table.localScale.x);
+		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * table.localScale.x);
 
 		int page_h = pageRunes.Page.GetLength (0);
 		int page_w = pageRunes.Page.GetLength (1);

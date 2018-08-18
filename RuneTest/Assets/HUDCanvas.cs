@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class WorldCanvas : MonoBehaviour {
+public class HUDCanvas : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -12,6 +11,11 @@ public class WorldCanvas : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			SceneManager.LoadScene ("Menu");
+		}
+		if (Input.GetKeyDown (KeyCode.I)) {
+			SceneManager.LoadScene ("Inventory");
+		}
 	}
 }
