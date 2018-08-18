@@ -15,10 +15,8 @@ public class ItemSelect : MonoBehaviour {
 			}
 			item = value; 
 			itemData = item.GetComponent<Item> ().ItemData;
-			ItemTemplate itemTemplate = DataManager.item [itemData.ItemTemplate];
 
-			itemImage.GetComponent<Image> ().sprite = itemTemplate.icon;
-			itemText.GetComponent<Text> ().text = itemTemplate.description;
+			updateSelect ();
 
 		} 
 	}
@@ -26,6 +24,8 @@ public class ItemSelect : MonoBehaviour {
 
 	private GameObject itemImage;
 	private GameObject itemText;
+	private GameObject useButton;
+	private GameObject runeButton;
 
 	// Use this for initialization
 	void Start () {
@@ -34,6 +34,9 @@ public class ItemSelect : MonoBehaviour {
 
 		itemImage = transform.GetChild (0).gameObject;
 		itemText = transform.GetChild (1).gameObject;
+
+		useButton = transform.GetChild (2).GetChild (0).gameObject;
+		runeButton = transform.GetChild (2).GetChild (1).gameObject;
 	}
 	
 	// Update is called once per frame
@@ -43,6 +46,16 @@ public class ItemSelect : MonoBehaviour {
 			clearSelect ();
 		}
 
+	}
+
+	public void updateSelect() {
+		ItemTemplate itemTemplate = DataManager.item [itemData.ItemTemplate];
+
+		itemImage.GetComponent<Image> ().sprite = itemTemplate.icon;
+		itemText.GetComponent<Text> ().text = itemTemplate.description;
+
+		useButton.GetComponent<Button> ().enabled = itemTemplate.isConsumable;
+		runeButton.GetComponent<Button> ().enabled = itemTemplate.isRuneable;
 	}
 
 	public void clearSelect() {
@@ -55,5 +68,11 @@ public class ItemSelect : MonoBehaviour {
 			item = null;
 			itemData = null;
 		}
+
+
+		useButton.GetComponent<Button> ().enabled = false;
+		runeButton.GetComponent<Button> ().enabled = false;
+
+
 	}
 }

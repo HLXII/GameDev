@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BuildCanvas : MonoBehaviour {
 
@@ -221,5 +222,9 @@ public class BuildCanvas : MonoBehaviour {
 	public virtual void simulate () {}
 	public virtual void endSimulate () {}
 	public virtual void cleanSimulation () {}
+
+	public void exitScene() {
+		SceneManager.LoadScene (dataManager.LastScene);
+	}
 
 }

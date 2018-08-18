@@ -12,13 +12,16 @@ using System.IO;
 [System.Serializable]
 public class PageData {
 
+	// Type of rune page
+	private int sides;
+	public int Sides { get { return sides; } }
+
 	// 2D Array of runes in the page
 	private RuneData[,] page;
+	public RuneData[,] Page { get { return page; } }
 
 	// Current rotation of the runes
 	private int[,] pageRotations;
-
-	public RuneData[,] Page { get { return page; } }
 	public int[,] PageRotations { get { return pageRotations; } }
 
 	// Constructing from file (usually initializing puzzles)
@@ -33,6 +36,8 @@ public class PageData {
 
 	// Initializing for test
 	public PageData() {
+
+		sides = 4;
 
 		System.Random random = new System.Random ();
 

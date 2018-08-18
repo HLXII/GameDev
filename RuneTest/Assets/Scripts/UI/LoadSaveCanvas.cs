@@ -17,8 +17,8 @@ public class LoadSaveCanvas : MonoBehaviour {
 	void Start () {
 		dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
 
-		//dm.createNewSave ();
-		//dm.save ("save1.sav");
+		dm.createNewSave ();
+		dm.save ("save1.sav");
 
 		loadSaves ();
 

@@ -62,6 +62,23 @@ public class InventoryCanvas : MonoBehaviour {
 		SceneManager.LoadScene("Overworld");
 	}
 
+	public void openRunePage() {
+		dataManager.PageData = itemSelect.ItemData.Page;
+		dataManager.TableData = new TableData (dataManager.Inventory.Runes);
+		dataManager.LastScene = SceneManager.GetActiveScene ().name;
+		switch (itemSelect.ItemData.Page.Sides) {
+		case 4:
+			SceneManager.LoadScene ("SquareDesign");
+			break;
+		case 6:
+			SceneManager.LoadScene ("HexagonDesign");
+			break;
+		case 3:
+			SceneManager.LoadScene ("TriangleDesign");
+			break;
+		}
+	}
+
 	public void updateInventory() {
 		
 		#region Inventory Section

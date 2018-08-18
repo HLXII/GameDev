@@ -14,17 +14,24 @@ public class DataManager : MonoBehaviour {
 	// Main Data objects
 	[SerializeField]
 	private Inventory inventory;
-	private PlayerData player;
-
-	// For data between scenes
-	private TableData tableData;
-	private PageData pageData;
-
 	public Inventory Inventory { get { return inventory; } }
+	private PlayerData player;
 	public PlayerData Player { get { return player; } }
 
-	public TableData TableData { get { return tableData; } }
-	public PageData PageData { get { return pageData; } }
+	// For data between scenes
+	private string lastScene;
+	public string LastScene { get { return lastScene; } set { lastScene = value; } }
+
+	private TableData tableData;
+	public TableData TableData { get { return tableData; } set { tableData = value; } }
+	private PageData pageData;
+	public PageData PageData { get { return pageData; } set { pageData = value; } }
+
+
+
+
+
+
 
 	// Use this for initialization
 	void Start () {

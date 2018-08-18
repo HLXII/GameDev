@@ -6,6 +6,7 @@ using UnityEngine;
 public class Inventory {
 
 	private List<RuneData> runes;
+	public List<RuneData> Runes { get { return runes; } }
 
 	[SerializeField]
 	private List<ItemData> items;
@@ -24,14 +25,25 @@ public class Inventory {
 	public Inventory() {
 
 		runes = new List<RuneData> ();
+
+		runes.Add (new SquareSingleWireData(0,20));
+		runes.Add (new SquareSingleWireData (5,30));
+		runes.Add (new SquareCrossData (3, 20));
+		runes.Add (new SquareSourceData (20));
+		runes.Add (new SquareSourceData (10));
+		runes.Add (new SquareCornerData (10, 20));
+		runes.Add (new SquareSinkData (10, 100, 5));
+		runes.Add (new SquareSinkData (20, 100, 10));
+
 		items = new List<ItemData> ();
 
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 20; i++) {
 			items.Add (new ItemData ("Chili"));
 		}
 
 		items.Add (new ItemData ("Nature Ring"));
 		items.Add (new ItemData ("Hoverboard"));
+		items.Add (new ItemData ("Stick", new PageData()));
 
 		equipLeft = new ItemData[3];
 		equipRight = new ItemData[3];
