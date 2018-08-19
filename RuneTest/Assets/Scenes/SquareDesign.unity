@@ -1115,13 +1115,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AssetsPPU: 20
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
-  m_UpscaleRT: 0
+  m_AssetsPPU: 40
+  m_RefResolutionX: 640
+  m_RefResolutionY: 360
+  m_UpscaleRT: 1
   m_PixelSnapping: 1
-  m_CropFrameX: 0
-  m_CropFrameY: 0
+  m_CropFrameX: 1
+  m_CropFrameY: 1
   m_StretchFill: 0
 --- !u!1 &668843839
 GameObject:
@@ -3241,16 +3241,8 @@ MonoBehaviour:
   runeBack: {fileID: 1557490250078800, guid: 92b07406a2cf040dea8df606b26a0634, type: 2}
   runeSelectOutline: {fileID: 1369811831156586, guid: ae06e56a5d06745d380241d7511b85b5,
     type: 2}
-  runeEmpty: {fileID: 1540341093206776, guid: 209cf4c1e80394cc780bd184be5bb708, type: 2}
-  runeVoid: {fileID: 1782679325685680, guid: a58af2998330742ff9ad4c9dbe92955e, type: 2}
-  runeBlock: {fileID: 1540341093206776, guid: 7f80133272f8947a58f4aa14ed4c6342, type: 2}
+  rune: {fileID: 1291376333754510, guid: fdfa120d1e43b4f1c843da6259bf3f22, type: 2}
   dataManager: {fileID: 0}
-  runeSingleWire: {fileID: 1565397284687774, guid: 7669959c2a9e149c8a1495ae60c0961b,
-    type: 2}
-  runeCorner: {fileID: 1215245269773508, guid: d2b76321193bc4222858bf777ebf2e02, type: 2}
-  runeCross: {fileID: 1940552440802952, guid: 741faa1275f05418eb03fab2968a5e9c, type: 2}
-  runeSource: {fileID: 1616236095315278, guid: 69def4c78be914023895b230e9c3ed45, type: 2}
-  runeSink: {fileID: 1295503599513702, guid: 3a8737616f9614c03b8f63198ec49195, type: 2}
 --- !u!1 &2111074746
 GameObject:
   m_ObjectHideFlags: 0

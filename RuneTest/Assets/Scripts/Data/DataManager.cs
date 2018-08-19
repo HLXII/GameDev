@@ -11,8 +11,10 @@ public class DataManager : MonoBehaviour {
 	public List<ItemTemplate> itemTemplates;
 	public static Dictionary<string, ItemTemplate> item;
 
+    public List<RuneTemplate> runeTemplates;
+    public static Dictionary<string, RuneTemplate> rune;
+
 	// Main Data objects
-	[SerializeField]
 	private Inventory inventory;
 	public Inventory Inventory { get { return inventory; } }
 	private PlayerData player;
@@ -27,12 +29,6 @@ public class DataManager : MonoBehaviour {
 	private PageData pageData;
 	public PageData PageData { get { return pageData; } set { pageData = value; } }
 
-
-
-
-
-
-
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad (this);
@@ -42,10 +38,15 @@ public class DataManager : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
-		item = new Dictionary<string, ItemTemplate> ();
+        item = new Dictionary<string, ItemTemplate>();
 		foreach (ItemTemplate itemTemplate in itemTemplates) {
-			item.Add (itemTemplate.id, itemTemplate);
+			item.Add(itemTemplate.id, itemTemplate);
 		}
+
+        rune = new Dictionary<string, RuneTemplate>();
+        foreach (RuneTemplate runeTemplate in runeTemplates) {
+            rune.Add(runeTemplate.id, runeTemplate);
+        }
 
 	}
 	
@@ -54,10 +55,12 @@ public class DataManager : MonoBehaviour {
 		
 	}
 
-	public void createNewSave() {
+	public void CreateNewSave() {
+
+        Debug.Log("Creating new save");
 
 		// Initializing data
-		inventory = new Inventory();
+		inventory = new Inventory(1);
 		player = new PlayerData ();
 
 		// Initializing scene transition data just in case of bugs
@@ -66,29 +69,29 @@ public class DataManager : MonoBehaviour {
 
 	}
 
-	public void load(string filePath) {
+	public void Load(string filePath) {
 
 		Debug.Log ("Loading Data at " + filePath);
 
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream dataFile = File.Open(filePath, FileMode.Open);
-		SaveData save = (SaveData)bf.Deserialize (dataFile);
+		SaveData loadedSave = (SaveData)bf.Deserialize (dataFile);
 		dataFile.Close();
 
-		inventory = save.Inventory;
-		player = save.Player;
+		inventory = loadedSave.Inventory;
+		player = loadedSave.Player;
 
 	}
 
-	public void save(string fileName) {
+	public void Save(string fileName) {
 
-		SaveData save = new SaveData (fileName, inventory, player);
+		SaveData currentSave = new SaveData (fileName, inventory, player);
 
 		Debug.Log ("Saving Data at " + Application.persistentDataPath + "/saves/" + fileName);
 
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create (Application.persistentDataPath + "/saves/" + fileName);
-		bf.Serialize(file, save);
+        bf.Serialize(file, currentSave);
 		file.Close();
 
 	}

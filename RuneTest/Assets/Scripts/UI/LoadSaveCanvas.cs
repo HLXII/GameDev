@@ -17,10 +17,10 @@ public class LoadSaveCanvas : MonoBehaviour {
 	void Start () {
 		dm = GameObject.Find ("DataManager").GetComponent<DataManager> ();
 
-		dm.createNewSave ();
-		dm.save ("save1.sav");
+		dm.CreateNewSave ();
+		dm.Save ("save1.sav");
 
-		loadSaves ();
+		LoadSaves ();
 
 	}
 	
@@ -29,7 +29,7 @@ public class LoadSaveCanvas : MonoBehaviour {
 		
 	}
 
-	private void loadSaves() {
+	private void LoadSaves() {
 
 		Debug.Log ("Checking " + Application.persistentDataPath);
 
@@ -60,7 +60,7 @@ public class LoadSaveCanvas : MonoBehaviour {
 				instance.transform.GetChild (1).GetComponent<Text> ().text = save;
 
 				instance.GetComponent<Button> ().onClick.AddListener (delegate {
-					dm.load (save);
+					dm.Load (save);
 					SceneManager.LoadScene("OverWorld");
 				});
 
@@ -70,7 +70,7 @@ public class LoadSaveCanvas : MonoBehaviour {
 
 	}
 
-	public void loadScene(string scene) {
+	public void LoadScene(string scene) {
 		SceneManager.LoadScene (scene);
 	}
 }

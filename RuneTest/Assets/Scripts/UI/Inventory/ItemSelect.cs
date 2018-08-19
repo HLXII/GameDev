@@ -11,7 +11,7 @@ public class ItemSelect : MonoBehaviour {
 	public GameObject Item { get { return item; }
 		set {
 			if (item != null) {
-				item.GetComponent<Item> ().deSelect ();
+				item.GetComponent<Item> ().DeSelect ();
 			}
 			item = value; 
 			itemData = item.GetComponent<Item> ().ItemData;
@@ -64,7 +64,7 @@ public class ItemSelect : MonoBehaviour {
 		itemImage.GetComponent<Image> ().sprite = null;
 		itemText.GetComponent<Text> ().text = "";
 		if (item != null) {
-			item.GetComponent<Item> ().deSelect ();
+			item.GetComponent<Item> ().DeSelect ();
 			item = null;
 			itemData = null;
 		}

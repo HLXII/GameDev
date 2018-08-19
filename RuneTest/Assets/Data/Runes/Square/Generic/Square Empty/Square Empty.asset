@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ca1a491b1a464c189b66122635421c7, type: 3}
+  m_Name: Square Empty
+  m_EditorClassIdentifier: 
+  runeType: 4
+  id: Square Empty
+  description: Emptier than the other side of your bed.
+  isInteractable: 0
+  isMovable: 1
+  connections: 
+  animatorController: {fileID: 9100000, guid: 95d146f75051341a1bd51993ce7e4766, type: 2}

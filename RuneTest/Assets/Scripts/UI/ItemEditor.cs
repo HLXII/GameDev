@@ -42,6 +42,7 @@ public class ItemEditor : Editor {
 
 	public override void OnInspectorGUI ()
 	{
+        
 		serializedObject.Update ();
 
 		EditorStyles.textField.wordWrap = true;
@@ -78,5 +79,6 @@ public class ItemEditor : Editor {
 		EditorGUILayout.PropertyField (isRuneable);
 
 		serializedObject.ApplyModifiedProperties ();
+
 	}
 }

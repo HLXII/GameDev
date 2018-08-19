@@ -21,11 +21,23 @@ public class Inventory {
 	public ItemData[] EquipRight { get { return equipRight; } }
 	public ItemData[] ToolBar { get { return toolBar; } }
 
+    public Inventory() {
+        Debug.Log("Loading Empty Inventory");
+    }
+
 	// Temporary for tests
-	public Inventory() {
+	public Inventory(int test) {
+        
+        Debug.Log("Loading Test Inventory");
 
-		runes = new List<RuneData> ();
-
+        runes = new List<RuneData>
+        {
+            new RuneData("Square Single Wire"),
+            new RuneData("Square Single Wire"),
+            new RuneData("Square Single Wire"),
+            new RuneData("Square Single Wire", 2, 3, 0)
+        };
+        /*
 		runes.Add (new SquareSingleWireData(0,20));
 		runes.Add (new SquareSingleWireData (5,30));
 		runes.Add (new SquareCrossData (3, 20));
@@ -34,8 +46,8 @@ public class Inventory {
 		runes.Add (new SquareCornerData (10, 20));
 		runes.Add (new SquareSinkData (10, 100, 5));
 		runes.Add (new SquareSinkData (20, 100, 10));
-
-		items = new List<ItemData> ();
+        */
+        items = new List<ItemData> ();
 
 		for (int i = 0; i < 20; i++) {
 			items.Add (new ItemData ("Chili"));
@@ -43,7 +55,7 @@ public class Inventory {
 
 		items.Add (new ItemData ("Nature Ring"));
 		items.Add (new ItemData ("Hoverboard"));
-		items.Add (new ItemData ("Stick", new PageData()));
+		items.Add (new ItemData ("Stick", new PageData(1)));
 
 		equipLeft = new ItemData[3];
 		equipRight = new ItemData[3];

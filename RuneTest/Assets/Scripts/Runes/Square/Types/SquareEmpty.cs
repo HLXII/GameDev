@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class SquareEmpty : SquareRune {
+//public class SquareEmpty : SquareRune {
 
-	protected new void Start() {
-		base.Start ();
-		movable = false;
-		runeData = new EmptyData ();
-	}
+//	protected new void Start() {
+//		base.Start ();
+//		movable = false;
+//		runeData = new EmptyData ();
+//	}
 
-}
+//}

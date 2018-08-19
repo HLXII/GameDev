@@ -34,8 +34,12 @@ public class PageData {
 		pageRotations = pageData.PageRotations;
 	}
 
+    public PageData() {
+        
+    }
+
 	// Initializing for test
-	public PageData() {
+	public PageData(int test) {
 
 		sides = 4;
 
@@ -58,9 +62,9 @@ public class PageData {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				if (generation [i, j] == 0) {
-					page [i, j] = new VoidData ();
+                    page[i, j] = new RuneData("Square Void");
 				} else {
-					page [i, j] = new EmptyData ();
+                    page[i, j] = new RuneData("Square Empty");
 				}
 				pageRotations [i, j] = 0;
 			}

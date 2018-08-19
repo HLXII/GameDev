@@ -2,7 +2,7 @@
 
 public interface Selectable {
 
-	void onSelect();
-	void deSelect();
+	void OnSelect();
+	void DeSelect();
 
 }

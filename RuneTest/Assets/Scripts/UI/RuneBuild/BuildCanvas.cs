@@ -24,16 +24,15 @@ public class BuildCanvas : MonoBehaviour {
 
 	// Rune Back
 	public GameObject runeBack;
-	// Rune Select Outline
-	public GameObject runeSelectOutline;
+    // Rune Select Outline
+    public GameObject runeSelectOutline;
+    // Rune
+    public GameObject rune;
 
-	// Generic runes required by all rune pages
-	public GameObject runeEmpty;
-	public GameObject runeVoid;
-	public GameObject runeBlock;
-
-	// Dictionary to instantiate the correct runes from the pageData
-	protected Dictionary<string,GameObject> runes;
+    // Shared runeIds
+    public string emptyId;
+    public string voidId;
+    public string blockId;
 
 	// DataManager
 	public DataManager dataManager;
@@ -90,7 +89,18 @@ public class BuildCanvas : MonoBehaviour {
 		int w = index % page_w;
 		int h = (index - w) / page_w;
 
-		pageRunes.Page [h, w] = new EmptyData();
+        switch(sides) {
+            case 3:
+                pageRunes.Page[h, w] = new RuneData("Triangle Empty");
+                break;
+            case 4:
+                pageRunes.Page[h, w] = new RuneData("Square Empty");
+                break;
+            case 6:
+                pageRunes.Page[h, w] = new RuneData("Hexagon Empty");
+                break;
+        }
+
 		pageRunes.PageRotations [h, w] = 0;
 
 	}
@@ -99,70 +109,96 @@ public class BuildCanvas : MonoBehaviour {
 
 		classFilter = filterName;
 
-		updateRunes ();
+        updateTable();
 
 	}
 
-	public void updateRunes() {
+    public void updatePage()
+    {
+        Debug.Log("Updating Page");
 
-		// Removing old table runes
-		foreach (Transform child in table) {
-			Destroy(child.gameObject);
-		}
-		table.DetachChildren ();
-		// Removing table rune backs
-		foreach (Transform child in tableBack) {
-			Destroy (child.gameObject);
-		}
-		tableBack.DetachChildren ();
-		// Removing old page runes
-		foreach (Transform child in page) {
-			Destroy (child.gameObject);
-		}
-		page.DetachChildren ();
-		foreach (Transform child in pageBack) {
-			Destroy (child.gameObject);
-		}
-		pageBack.DetachChildren ();
+        // Removing old page runes
+        foreach (Transform child in page)
+        {
+            Destroy(child.gameObject);
+        }
+        page.DetachChildren();
+        foreach (Transform child in pageBack)
+        {
+            Destroy(child.gameObject);
+        }
+        pageBack.DetachChildren();
 
-		// Getting runes based on filter
-		List<RuneData> filteredRunes = tableRunes.getTable (classFilter);
+        int page_h = pageRunes.Page.GetLength(0);
+        int page_w = pageRunes.Page.GetLength(1);
+        RuneData[,] pageData = pageRunes.Page;
+        int[,] pageRotationData = pageRunes.PageRotations;
 
-		// Instantiating all filtered runes
-		foreach (RuneData rune in filteredRunes) {
-			GameObject instance = Instantiate (runes [rune.Id],new Vector3 (0,0,1), Quaternion.identity,table);
-			instance.GetComponent<Rune> ().RuneData = rune;
-			instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
-			instance.layer = LayerMask.NameToLayer ("Table Runes");
-			Instantiate (runeBack, new Vector3 (0, 0, 1), Quaternion.identity, tableBack);
-		}
+        // Instantiating all page runes
+        for (int i = 0; i < page_h; i++)
+        {
+            for (int j = 0; j < page_w; j++)
+            {
+                GameObject instance = Instantiate(rune, new Vector3(i, j, 0F), Quaternion.identity, page) as GameObject;
+                instance.GetComponent<Rune>().RuneData = pageData[i, j];
+                instance.GetComponent<Rune>().SignalReceiver = signalReceiver;
+                instance.GetComponent<Rune>().Rotation = pageRotationData[i, j];
+                instance.transform.Rotate(Vector3.forward * pageRotationData[i, j] * 360 / sides);
+                instance.layer = LayerMask.NameToLayer("Page Runes");
 
-		// Updating size of TableContent and TableBack
-		RectTransform content = (RectTransform)table.parent.transform;
-		content.sizeDelta = new Vector2 (content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * table.localScale.x);
+                if (pageData[i, j].RuneTemplate.id.Contains("Void"))
+                {
+                    instance = Instantiate(rune, new Vector3(i, j, 0F), Quaternion.identity, pageBack);
+                    instance.GetComponent<Rune>().RuneData = pageData[i, j];
+                }
+                else
+                {
+                    Instantiate(runeBack, new Vector3(i, j, 0F), Quaternion.identity, pageBack);
+                }
+            }
+        }
 
-		int page_h = pageRunes.Page.GetLength (0);
-		int page_w = pageRunes.Page.GetLength (1);
-		RuneData[,] pageData = pageRunes.Page;
-		int[,] pageRotationData = pageRunes.PageRotations;
+        updateSelection();
+    }
 
-		// Instantiating all page runes
-		for (int i = 0; i < page_h; i++) {
-			for (int j = 0; j < page_w; j++) {
-				GameObject instance = Instantiate (runes[pageData[i,j].Id], new Vector3 (i, j, 0F), Quaternion.identity, page) as GameObject;
-				instance.GetComponent<Rune> ().RuneData = pageData [i, j];
-				instance.GetComponent<Rune> ().SignalReceiver = signalReceiver;
-				instance.GetComponent<Rune> ().Rotation = pageRotationData [i, j];
-				instance.transform.Rotate (Vector3.forward * pageRotationData [i, j] * 360 / sides);
-				instance.layer = LayerMask.NameToLayer ("Page Runes");
+    public void updateTable()
+    {
+        Debug.Log("Updating Table");
 
-				if (pageData[i,j].Id == "Void") {
-					Instantiate (runeVoid, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
-				} else {
-					Instantiate (runeBack, new Vector3 (i, j, 0F), Quaternion.identity, pageBack);
-				}
-			}
-		}
+        // Removing old table runes
+        foreach (Transform child in table)
+        {
+            Destroy(child.gameObject);
+        }
+        table.DetachChildren();
+        // Removing table rune backs
+        foreach (Transform child in tableBack)
+        {
+            Destroy(child.gameObject);
+        }
+        tableBack.DetachChildren();
+
+        // Getting runes based on filter
+        List<RuneData> filteredRunes = tableRunes.getTable(classFilter);
+
+        // Instantiating all filtered runes
+        foreach (RuneData runeData in filteredRunes)
+        {
+            GameObject instance = Instantiate(rune, new Vector3(0, 0, 1), Quaternion.identity, table);
+            instance.GetComponent<Rune>().RuneData = runeData;
+            instance.GetComponent<Rune>().SignalReceiver = signalReceiver;
+            instance.layer = LayerMask.NameToLayer("Table Runes");
+            Instantiate(runeBack, new Vector3(0, 0, 1), Quaternion.identity, tableBack);
+        }
+
+        // Updating size of TableContent and TableBack
+        RectTransform content = (RectTransform)table.parent.transform;
+        content.sizeDelta = new Vector2(content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * table.localScale.x);
+
+        updateSelection();
+    }
+
+	public void updateSelection() {
 
 		bool found = false;
 

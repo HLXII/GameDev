@@ -5,15 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SquareCanvas : BuildCanvas {
-
-	// All possible runes to be placed
-	public GameObject runeSingleWire;
-	public GameObject runeCorner;
-	public GameObject runeCross;
-	public GameObject runeSource;
-	public GameObject runeSink;
-
-
+    
 	// List to store filtered and available runes
 	//private SortedList<string,int> tableRunes;
 	//private string classFilter;
@@ -48,18 +40,7 @@ public class SquareCanvas : BuildCanvas {
 
 	// Initializing the rune dictionary
 	protected override void initRunes() {
-		this.runes = new Dictionary<string,GameObject> () {
-			{ "Empty",runeEmpty },
-			{ "Void",runeVoid },
-			{ "Block",runeBlock },
 
-			{ "SingleWire",runeSingleWire },
-			{ "Corner",runeCorner },
-			{ "Cross",runeCross },
-
-			{ "Source", runeSource },
-			{ "Sink", runeSink }
-		};
 	}
 
 	// Initializing the UI elements
@@ -102,8 +83,9 @@ public class SquareCanvas : BuildCanvas {
 		pageBack.GetComponent<GridLayoutGroup> ().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
 		pageBack.GetComponent<GridLayoutGroup> ().constraintCount = page_w;
 
-		// Instantiating runes
-		updateRunes();
+        // Instantiating runes
+        updatePage();
+        updateTable();
 
 	}
 
@@ -146,27 +128,27 @@ public class SquareCanvas : BuildCanvas {
 	}
 
 	public override void cleanSimulation() {
-		Debug.Log ("Resetting Runes");
-		for (int i = 0; i < page.childCount; i++) {
-			page.GetChild (i).GetComponent<Rune> ().reset ();
-		}
+		//Debug.Log ("Resetting Runes");
+		//for (int i = 0; i < page.childCount; i++) {
+		//	page.GetChild (i).GetComponent<Rune> ().reset ();
+		//}
 
-		Debug.Log ("Finding Neighbors");
-		for (int i = 0; i < page.childCount; i++) {
-			page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
-		}
+		//Debug.Log ("Finding Neighbors");
+		//for (int i = 0; i < page.childCount; i++) {
+		//	page.GetChild (i).GetComponent<Rune> ().findNeighbors ();
+		//}
 			
 	}
 
 	public void simulationStep() {
 
-		//Debug.Log ("Simulation Step");
-		for (int i = 0; i < page.childCount; i++) {
-			page.GetChild (i).GetComponent<Rune> ().sendEnergy ();
-		}
-		for (int i = 0; i < page.childCount; i++) {
-			page.GetChild (i).GetComponent<Rune> ().manipulateEnergy ();
-		}
+		////Debug.Log ("Simulation Step");
+		//for (int i = 0; i < page.childCount; i++) {
+		//	page.GetChild (i).GetComponent<Rune> ().sendEnergy ();
+		//}
+		//for (int i = 0; i < page.childCount; i++) {
+		//	page.GetChild (i).GetComponent<Rune> ().manipulateEnergy ();
+		//}
 
 	}
 

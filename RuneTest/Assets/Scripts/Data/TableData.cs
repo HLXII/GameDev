@@ -12,6 +12,7 @@ using System.IO;
 public class GenericRuneComparer : IComparer<RuneData> {
 
 	int IComparer<RuneData>.Compare(RuneData rune1, RuneData rune2) {
+        /*
 		if (rune1.GetType() == rune2.GetType()) {
 			switch (rune1.GetType().Name) {
 			case "WireData":
@@ -25,7 +26,8 @@ public class GenericRuneComparer : IComparer<RuneData> {
 			}
 		} else {
 			return string.Compare (rune1.Id, rune2.Id);
-		}
+		}*/
+        return 1;
 	}
 
 }
@@ -57,7 +59,7 @@ public class TableData {
 	public TableData() {
 
 		table = new List<RuneData> ();
-
+        /*
 		table.Add (new SquareSingleWireData(0,20));
 		table.Add (new SquareSingleWireData (5,30));
 		table.Add (new SquareCrossData (3, 20));
@@ -66,7 +68,7 @@ public class TableData {
 		table.Add (new SquareCornerData (10, 20));
 		table.Add (new SquareSinkData (10, 100, 5));
 		table.Add (new SquareSinkData (20, 100, 10));
-
+        */
 	}
 
 	public List<RuneData> getTable() {
@@ -96,15 +98,15 @@ public class TableData {
 
 	private static bool FindWire(RuneData rune)
 	{
-		return (rune is WireData);
+        return true;//(rune is WireData);
 	}
 	private static bool FindInput(RuneData rune)
 	{
-		return (rune is InputData);
+        return true;//(rune is InputData);
 	}
 	private static bool FindOutput(RuneData rune)
 	{
-		return (rune is OutputData);
+        return true;//(rune is OutputData);
 	}
 
 }

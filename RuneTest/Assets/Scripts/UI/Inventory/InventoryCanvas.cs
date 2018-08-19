@@ -161,7 +161,7 @@ public class InventoryCanvas : MonoBehaviour {
 					// If the selected rune exists in the inventory, set it as selected and end
 					if (child.gameObject.GetComponent<Item> ().ItemData == selectedItemData) {
 						//Debug.Log("Found " + child.gameObject);
-						child.gameObject.GetComponent<Item> ().onSelect ();
+						child.gameObject.GetComponent<Item> ().OnSelect ();
 						found = true;
 						break;
 

@@ -426,11 +426,11 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			return;
 		}
 
-		onSelect ();
+		OnSelect ();
 
 	}
 
-	public void onSelect() {
+	public void OnSelect() {
 		//Debug.Log ("Selected " + gameObject);
 
 		if (canvas == null) {
@@ -443,7 +443,7 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		Instantiate (canvas.GetComponent<InventoryCanvas> ().itemSelectOutline, transform);
 	}
 
-	public void deSelect() {
+	public void DeSelect() {
 		selected = false;
 		if (transform.childCount > 0) {
 			for (int i = transform.childCount-1; i >= 0; i--) {
