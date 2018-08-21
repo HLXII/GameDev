@@ -6,11 +6,13 @@ using UnityEngine;
 public class WireRuneTemplate : TransferRuneTemplate
 {
 
-    public override void ManipulateEnergy(RuneData runeData)
+    public override void ManipulateEnergy(RuneSlot runeSlot, BuildSignalManager buildSignalManager)
     {
 
-        Energy[] energyIn = runeData.EnergyIn;
-        Energy[] energyOut = runeData.EnergyOut;
+        RuneData runeData = runeSlot.RuneData;
+
+        Energy[] energyIn = runeSlot.EnergyIn;
+        Energy[] energyOut = runeSlot.EnergyOut;
 
         int loss = lossScale[runeData.Rank1];
         int capacity = capacityScale[runeData.Rank2];
@@ -18,7 +20,7 @@ public class WireRuneTemplate : TransferRuneTemplate
         if (energyIn[0] != null && energyIn[1] != null)
         {
             Debug.Log("Wire receiving energy from both ports");
-            //signalReciever.receiveSignal ("Wire receiving energy from both ports");
+            buildSignalManager.receiveSignal ("Wire receiving energy from both ports");
             //gameObject.GetComponent<Animator> ().SetTrigger ("error");
         }
         else
@@ -28,7 +30,7 @@ public class WireRuneTemplate : TransferRuneTemplate
                 if (energyIn[0].Power > capacity)
                 {
                     Debug.Log("Wire over max capacity");
-                    //signalReciever.receiveSignal ("Wire over max capacity");
+                    buildSignalManager.receiveSignal ("Wire over max capacity");
                     //gameObject.GetComponent<Animator> ().SetTrigger ("error");
                 }
                 else
@@ -50,7 +52,7 @@ public class WireRuneTemplate : TransferRuneTemplate
                 if (energyIn[1].Power > capacity)
                 {
                     Debug.Log("Wire over max capacity");
-                    //signalReciever.receiveSignal ("Wire over max capacity");
+                    buildSignalManager.receiveSignal ("Wire over max capacity");
                     //gameObject.GetComponent<Animator> ().SetTrigger ("error");
                 }
                 else

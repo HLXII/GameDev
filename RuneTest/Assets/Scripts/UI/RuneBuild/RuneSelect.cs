@@ -6,19 +6,18 @@ using UnityEngine.UI;
 public class RuneSelect : MonoBehaviour {
 
 	private GameObject rune;
-	private RuneData runeData;
+	private RuneSlot runeSlot;
 
 	public GameObject Rune { get { return rune; }
 		set {
 			if (rune != null) {
-				rune.GetComponent<Rune> ().Selected = false;
+                rune.GetComponent<Rune>().DeSelect();
 			}
 			rune = value; 
-			rune.GetComponent<Rune> ().Selected = true;
-			runeData = rune.GetComponent<Rune> ().RuneData;
+            runeSlot = rune.GetComponent<Rune> ().RuneSlot;
 		} 
 	}
-	public RuneData RuneData { get { return runeData; } }
+    public RuneData RuneData { get { return (runeSlot == null) ? null : runeSlot.RuneData; } }
 
 	private GameObject runeImage;
 	private GameObject runeText;
@@ -40,9 +39,9 @@ public class RuneSelect : MonoBehaviour {
 
 			runeImage.GetComponent<Image> ().sprite = rune.GetComponent<Image>().sprite;
 
-			//Debug.Log (runeImage.GetComponent<Image> ().sprite);
+            //Debug.Log (runeImage.GetComponent<Image> ().sprite);
 
-			runeText.GetComponent<Text> ().text = rune.GetComponent<Rune> ().getInfo ();
+            runeText.GetComponent<Text>().text = runeSlot.GetInfo();
 
 		}
 	}
@@ -52,11 +51,11 @@ public class RuneSelect : MonoBehaviour {
 		Debug.Log ("Clearing Selection");
 
 		if (rune != null) {
-			rune.GetComponent<Rune> ().Selected = false;
+            rune.GetComponent<Rune>().DeSelect();
 			rune = null;
 			runeImage.GetComponent<Image> ().sprite = null;
 			runeText.GetComponent<Text> ().text = "";
-			runeData = null;
+			runeSlot = null;
 		}
 	}
 

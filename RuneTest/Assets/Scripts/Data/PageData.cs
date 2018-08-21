@@ -7,32 +7,49 @@ using System;
 
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Runtime.Serialization;
 
 // Class for storing rune pages
 [System.Serializable]
 public class PageData {
 
 	// Type of rune page
-	private int sides;
+	private readonly int sides;
 	public int Sides { get { return sides; } }
 
-	// 2D Array of runes in the page
-	private RuneData[,] page;
-	public RuneData[,] Page { get { return page; } }
+    // 2D Array of RuneSlots
+    private readonly RuneSlot[,] page;
+    public RuneSlot[,] Page { get { return page; } }
 
-	// Current rotation of the runes
-	private int[,] pageRotations;
-	public int[,] PageRotations { get { return pageRotations; } }
+    private bool active;
+    public bool Active
+    {
+        get { return active; }
+        set
+        {
+            active = value;
+            for (int h = 0; h < page.GetLength(0); h++) {
+                for (int w = 0; w < page.GetLength(1);w++) {
+                    page[h, w].Active = value;
+                }
+            }
+        }
+    }
 
-	// Constructing from file (usually initializing puzzles)
-	public PageData(string filename) {
-		BinaryFormatter bf = new BinaryFormatter ();
-		TextAsset dataFile = Resources.Load<TextAsset> (filename);
-		Stream s = new MemoryStream (dataFile.bytes);
-		PageData pageData = (PageData)bf.Deserialize (s);
-		page = pageData.Page;
-		pageRotations = pageData.PageRotations;
-	}
+    [IgnoreDataMember]
+    [System.NonSerialized]
+    BuildSignalManager buildSignalManager;
+    public BuildSignalManager BuildSignalManager { get { return buildSignalManager; } set { buildSignalManager = value; } }
+
+    //// Constructing from file (usually initializing puzzles)
+    //public PageData(string filename) {
+    //	BinaryFormatter bf = new BinaryFormatter ();
+    //	TextAsset dataFile = Resources.Load<TextAsset> (filename);
+    //	Stream s = new MemoryStream (dataFile.bytes);
+    //	PageData pageData = (PageData)bf.Deserialize (s);
+    //	page = pageData.Page;
+    //	pageRotations = pageData.PageRotations;
+    //}
 
     public PageData() {
         
@@ -43,13 +60,14 @@ public class PageData {
 
 		sides = 4;
 
+        active = false;
+
 		System.Random random = new System.Random ();
 
 		int height = 5;
 		int width = 7;
 
-		page = new RuneData[height, width];
-		pageRotations = new int[height, width];
+		page = new RuneSlot[height, width];
 
 		int[,] generation = new int[height, width];
 
@@ -62,13 +80,60 @@ public class PageData {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				if (generation [i, j] == 0) {
-                    page[i, j] = new RuneData("Square Void");
+                    page[i, j] = new RuneSlot(new RuneData("Square Void"));
 				} else {
-                    page[i, j] = new RuneData("Square Empty");
+                    page[i, j] = new RuneSlot(new RuneData("Square Empty"));
 				}
-				pageRotations [i, j] = 0;
 			}
 		}
 	}
+
+    public void FindNeighbors() {
+        for (int h = 0; h < page.GetLength(0);h++) {
+            for (int w = 0; w < page.GetLength(1);w++) {
+                page[h, w].FindNeighbors(page);
+            }
+        }
+    }
+
+
+    public void SendEnergy()
+    {
+        for (int h = 0; h < page.GetLength(0); h++)
+        {
+            for (int w = 0; w < page.GetLength(1); w++)
+            {
+                page[h, w].SendEnergy(buildSignalManager);
+            }
+        }
+
+    }
+
+    public void ManipulateEnergy() {
+        for (int h = 0; h < page.GetLength(0);h++)
+        {
+            for (int w = 0; w < page.GetLength(1);w++) 
+            {
+                page[h, w].RuneData.RuneTemplate.ManipulateEnergy(page[h, w], buildSignalManager);
+            }
+        }
+    }
+
+    public void Reset()
+    {
+        for (int h = 0; h < page.GetLength(0); h++)
+        {
+            for (int w = 0; w < page.GetLength(1); w++)
+            {
+                page[h, w].Reset();
+            }
+        }
+    }
+
+    public void SimulationStep()
+    {
+        SendEnergy();
+        ManipulateEnergy();
+    }
 
 }

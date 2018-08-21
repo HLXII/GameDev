@@ -445,11 +445,6 @@ public class Item : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void DeSelect() {
 		selected = false;
-		if (transform.childCount > 0) {
-			for (int i = transform.childCount-1; i >= 0; i--) {
-				Destroy (transform.GetChild (i).gameObject);
-			}
-		}
-		//Debug.Log ("Deselected" +gameObject);
+        Destroy(transform.GetChild(0).gameObject);
 	}
 }

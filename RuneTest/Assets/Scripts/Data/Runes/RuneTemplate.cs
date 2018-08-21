@@ -8,9 +8,8 @@ using UnityEngine;
 public abstract class RuneTemplate : ScriptableObject
 {
 
-    // Type of rune (aka. how many sides)
-    public enum RuneType { Triangle = 3, Square = 4, Hexagon = 6 };
-    public RuneType runeType;
+    // Type of rune
+    public int sides;
 
     // Id and Description
     public string id;
@@ -23,37 +22,22 @@ public abstract class RuneTemplate : ScriptableObject
 
     public int[] connections;
 
+    // SpriteSheet for different rotations
+    public Sprite[] runeCovers;
+
     // Animator for the rune object
     public RuntimeAnimatorController animatorController;
 
-    public abstract void ManipulateEnergy(RuneData runeData);
+    public abstract void ManipulateEnergy(RuneSlot runeSlot, BuildSignalManager buildSignalManager);
 
-}
-
-public class InputRuneTemplate : RuneTemplate
-{
-    public int inputRate;
-
-    public override void ManipulateEnergy(RuneData runeData)
+    public string GetInfo()
     {
-        throw new System.NotImplementedException();
+        return id + '\n' + description;
     }
 
+    public abstract string GetInfo(RuneSlot runeSlot);
 }
 
-public abstract class OutputRuneTemplate : RuneTemplate 
-{
-    public int maxRate;
-    public int capacity;
-    public int outputRate;
 
-    public override void ManipulateEnergy(RuneData runeData)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public abstract void Release();
-
-}
 
 

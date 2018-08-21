@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
 		if (Input.GetKey (KeyCode.D)) {
 			force += new Vector2 (1, 0);
 		}
-		force = force.normalized * 1000;
+        force = force.normalized * 5;
 		gameObject.GetComponent<Rigidbody2D> ().velocity = force;
 
 	}

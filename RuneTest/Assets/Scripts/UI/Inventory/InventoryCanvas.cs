@@ -22,7 +22,6 @@ public class InventoryCanvas : MonoBehaviour {
 	private Transform inventoryFilter;
 
 	private Transform inventory;
-	private Transform inventoryBack;
 
 	private Transform equipLeft;
 	private Transform equipRight;
@@ -43,7 +42,6 @@ public class InventoryCanvas : MonoBehaviour {
 		inventoryFilter = GameObject.Find ("InventoryFilter").transform;
 
 		inventory = GameObject.Find ("InventoryContent").transform;
-		inventoryBack = GameObject.Find ("InventoryBack").transform;
 
 		equipLeft = GameObject.Find ("EquipLeft").transform;
 		equipRight = GameObject.Find ("EquipRight").transform;
@@ -88,11 +86,6 @@ public class InventoryCanvas : MonoBehaviour {
 			Destroy(child.gameObject);
 		}
 		inventory.DetachChildren();
-		// Removing rune backs
-		foreach (Transform child in inventoryBack) {
-			Destroy (child.gameObject);
-		}
-		inventoryBack.DetachChildren();
 
 		List<ItemData> filteredItems = dataManager.Inventory.getItems(pageFilter);
 
@@ -100,7 +93,6 @@ public class InventoryCanvas : MonoBehaviour {
 		foreach (ItemData itemData in filteredItems) {
 			GameObject instance = Instantiate (item, new Vector3 (0,0,1), Quaternion.identity,inventory);
 			instance.GetComponent<Item> ().ItemData = itemData;
-			Instantiate (itemBack, new Vector3 (0, 0, 1), Quaternion.identity, inventoryBack);
 		}
 
 		// Updating size of InventoryContent and InventoryBack

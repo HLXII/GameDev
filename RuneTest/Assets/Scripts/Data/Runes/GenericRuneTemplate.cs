@@ -6,9 +6,14 @@ using UnityEngine;
 public class GenericRuneTemplate : RuneTemplate
 {
 
-    public override void ManipulateEnergy(RuneData runeData)
+    public override string GetInfo(RuneSlot runeSlot)
     {
-        throw new System.NotImplementedException();
+        return id + '\n' + description;
+    }
+
+    public override void ManipulateEnergy(RuneSlot runeSlot, BuildSignalManager buildSignalManager)
+    {
+        return;
     }
 
 }

@@ -9,9 +9,23 @@ public class TransferRuneTemplate : RuneTemplate
     public int[] lossScale;
     public int[] capacityScale;
 
-    public override void ManipulateEnergy(RuneData runeData)
+    public override string GetInfo(RuneSlot runeSlot)
     {
-        throw new System.NotImplementedException();
+        int maxFlow = 0;
+        foreach(Energy energyOut in runeSlot.EnergyOut)
+        {
+            if (energyOut != null && energyOut.Power > maxFlow)
+                maxFlow = energyOut.Power;
+        }
+
+        return id + '\n' +
+            "Loss: " + lossScale[runeSlot.RuneData.Rank1] + '\n' +
+            "Capacity: " + maxFlow + "/" + capacityScale[runeSlot.RuneData.Rank2];
+    }
+
+    public override void ManipulateEnergy(RuneSlot runeSlot, BuildSignalManager buildSignalManager)
+    {
+        return;
     }
 
 }

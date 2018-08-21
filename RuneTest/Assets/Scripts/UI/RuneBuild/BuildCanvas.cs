@@ -12,9 +12,6 @@ public class BuildCanvas : MonoBehaviour {
 	// References to the page and table transforms
 	protected RectTransform page;
 	protected RectTransform table;
-	// References to the backs of the table and page
-	protected RectTransform pageBack;
-	protected RectTransform tableBack;
 
 	// Reference to the Rune Select
 	public GameObject runeSelect;
@@ -22,8 +19,8 @@ public class BuildCanvas : MonoBehaviour {
 	// Reference to BuildSignalManager
 	protected BuildSignalText signalReceiver;
 
-	// Rune Back
-	public GameObject runeBack;
+	// Rune Base sprites by rank
+	public Sprite[] runeBases;
     // Rune Select Outline
     public GameObject runeSelectOutline;
     // Rune
@@ -32,88 +29,81 @@ public class BuildCanvas : MonoBehaviour {
     // Shared runeIds
     public string emptyId;
     public string voidId;
-    public string blockId;
 
 	// DataManager
 	public DataManager dataManager;
 
 	// Data Variables
-	protected TableData tableRunes;
+	protected TableData tableData;
 	protected string classFilter;
+	protected PageData pageData;
 
-	protected PageData pageRunes;
+    // Simulation
+    protected bool simulating;
 
 	// Use this for initialization
 	void Start () {
 		
-		initRunes ();
-		initBuild ();
+		InitRunes ();
+		InitBuild ();
 
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+        if (simulating)
+        {
+
+        }
+
 	}
 
 	// Initializing the rune dictionary
-	protected virtual void initRunes() {}
+	protected virtual void InitRunes() {}
 
 	// Initializing the UI elements
-	protected virtual void initBuild() {}
+	protected virtual void InitBuild() {}
 
-	public void addToTable(RuneData rune) {
-		tableRunes.Table.Add (rune);
+	public void AddToTable(RuneSlot runeSlot) {
+        tableData.Table.Add (runeSlot.RuneData);
 	}
 
-	public void removeFromTable(RuneData rune) {
-		tableRunes.Table.Remove (rune);
+	public void RemoveFromTable(RuneSlot runeSlot) {
+        tableData.Table.Remove (runeSlot.RuneData);
 	}
 
-	public void addToPage(RuneData rune, int index, int rotation) {
+	public void AddToPage(RuneSlot runeSlot, int index) {
 
-		int page_w = pageRunes.Page.GetLength (1);
+		int page_w = pageData.Page.GetLength (1);
 
 		int w = index % page_w;
 		int h = (index - w) / page_w;
 
-		pageRunes.Page [h, w] = rune;
-		pageRunes.PageRotations [h, w] = rotation;
+        pageData.Page[h, w] = runeSlot;
 
 	}
 
-	public void removeFromPage(int index) {
+	public void RemoveFromPage(int index) {
 
-		int page_w = pageRunes.Page.GetLength (1);
+		int page_w = pageData.Page.GetLength (1);
 
 		int w = index % page_w;
 		int h = (index - w) / page_w;
 
-        switch(sides) {
-            case 3:
-                pageRunes.Page[h, w] = new RuneData("Triangle Empty");
-                break;
-            case 4:
-                pageRunes.Page[h, w] = new RuneData("Square Empty");
-                break;
-            case 6:
-                pageRunes.Page[h, w] = new RuneData("Hexagon Empty");
-                break;
-        }
-
-		pageRunes.PageRotations [h, w] = 0;
+        pageData.Page[h, w] = new RuneSlot(new RuneData(emptyId));
 
 	}
 
-	public void changeTable(string filterName) {
+	public void ChangeTable(string filterName) {
 
 		classFilter = filterName;
 
-        updateTable();
+        UpdateTable();
 
 	}
 
-    public void updatePage()
+    public void UpdatePage()
     {
         Debug.Log("Updating Page");
 
@@ -123,16 +113,10 @@ public class BuildCanvas : MonoBehaviour {
             Destroy(child.gameObject);
         }
         page.DetachChildren();
-        foreach (Transform child in pageBack)
-        {
-            Destroy(child.gameObject);
-        }
-        pageBack.DetachChildren();
 
-        int page_h = pageRunes.Page.GetLength(0);
-        int page_w = pageRunes.Page.GetLength(1);
-        RuneData[,] pageData = pageRunes.Page;
-        int[,] pageRotationData = pageRunes.PageRotations;
+        int page_h = pageData.Page.GetLength(0);
+        int page_w = pageData.Page.GetLength(1);
+        RuneSlot[,] runeSlots = pageData.Page;
 
         // Instantiating all page runes
         for (int i = 0; i < page_h; i++)
@@ -140,28 +124,15 @@ public class BuildCanvas : MonoBehaviour {
             for (int j = 0; j < page_w; j++)
             {
                 GameObject instance = Instantiate(rune, new Vector3(i, j, 0F), Quaternion.identity, page) as GameObject;
-                instance.GetComponent<Rune>().RuneData = pageData[i, j];
+                instance.GetComponent<Rune>().RuneSlot = runeSlots[i, j];
                 instance.GetComponent<Rune>().SignalReceiver = signalReceiver;
-                instance.GetComponent<Rune>().Rotation = pageRotationData[i, j];
-                instance.transform.Rotate(Vector3.forward * pageRotationData[i, j] * 360 / sides);
                 instance.layer = LayerMask.NameToLayer("Page Runes");
-
-                if (pageData[i, j].RuneTemplate.id.Contains("Void"))
-                {
-                    instance = Instantiate(rune, new Vector3(i, j, 0F), Quaternion.identity, pageBack);
-                    instance.GetComponent<Rune>().RuneData = pageData[i, j];
-                }
-                else
-                {
-                    Instantiate(runeBack, new Vector3(i, j, 0F), Quaternion.identity, pageBack);
-                }
             }
         }
 
-        updateSelection();
     }
 
-    public void updateTable()
+    public void UpdateTable()
     {
         Debug.Log("Updating Table");
 
@@ -171,34 +142,26 @@ public class BuildCanvas : MonoBehaviour {
             Destroy(child.gameObject);
         }
         table.DetachChildren();
-        // Removing table rune backs
-        foreach (Transform child in tableBack)
-        {
-            Destroy(child.gameObject);
-        }
-        tableBack.DetachChildren();
 
         // Getting runes based on filter
-        List<RuneData> filteredRunes = tableRunes.getTable(classFilter);
+        List<RuneData> filteredRunes = tableData.getTable(classFilter);
 
         // Instantiating all filtered runes
         foreach (RuneData runeData in filteredRunes)
         {
             GameObject instance = Instantiate(rune, new Vector3(0, 0, 1), Quaternion.identity, table);
-            instance.GetComponent<Rune>().RuneData = runeData;
+            instance.GetComponent<Rune>().RuneSlot = new RuneSlot(runeData);
             instance.GetComponent<Rune>().SignalReceiver = signalReceiver;
             instance.layer = LayerMask.NameToLayer("Table Runes");
-            Instantiate(runeBack, new Vector3(0, 0, 1), Quaternion.identity, tableBack);
         }
 
         // Updating size of TableContent and TableBack
         RectTransform content = (RectTransform)table.parent.transform;
-        content.sizeDelta = new Vector2(content.rect.size.x, ((tableRunes.getTable().Count + 3) / 4) * table.localScale.x);
+        content.sizeDelta = new Vector2(content.rect.size.x, ((tableData.getTable().Count + 3) / 4) * table.localScale.x);
 
-        updateSelection();
     }
 
-	public void updateSelection() {
+	public void UpdateSelection() {
 
 		bool found = false;
 
@@ -215,11 +178,9 @@ public class BuildCanvas : MonoBehaviour {
 			foreach (Transform child in table) {
 
 				// If the selected rune exists in the table, set it as selected and end
-				if (child.gameObject.GetComponent<Rune>().RuneData == selectedRuneData) {
+				if (child.gameObject.GetComponent<Rune>().RuneSlot.RuneData == selectedRuneData) {
 					//Debug.Log ("Found");
-
-					runeSelect.GetComponent<RuneSelect> ().Rune = child.gameObject;
-					child.gameObject.GetComponent<Rune> ().Selected = true;
+                    child.gameObject.GetComponent<Rune>().OnSelect();
 					found = true;
 					break;
 				}
@@ -233,13 +194,9 @@ public class BuildCanvas : MonoBehaviour {
 				// Searching in page for selected rune
 				foreach (Transform child in page) {
 
-					Debug.Log (child);
-
-					if (child.gameObject.GetComponent<Rune> ().RuneData == selectedRuneData) {
+					if (child.gameObject.GetComponent<Rune> ().RuneSlot.RuneData == selectedRuneData) {
 						//Debug.Log ("Found");
-
-						runeSelect.GetComponent<RuneSelect> ().Rune = child.gameObject;
-						child.gameObject.GetComponent<Rune> ().Selected = true;
+                        child.gameObject.GetComponent<Rune>().OnSelect();
 						found = true;
 						break;
 					}
@@ -255,11 +212,39 @@ public class BuildCanvas : MonoBehaviour {
 
 	}
 
-	public virtual void simulate () {}
-	public virtual void endSimulate () {}
-	public virtual void cleanSimulation () {}
+    public void EndSimulate()
+    {
+        simulating = false;
+        CancelInvoke();
+    }
 
-	public void exitScene() {
+    public void CleanSimulation()
+    {
+        pageData.Reset();
+    }
+
+    public void StartSimulation()
+    {
+        Debug.Log("Finding Neighbors");
+        pageData.FindNeighbors();
+
+        Debug.Log("Resetting SignalReceiver");
+        signalReceiver.reset();
+
+        pageData.Active = true;
+
+        Debug.Log("Starting Simulation");
+        InvokeRepeating("SimulationStep", 0f, .2f);
+        //CancelInvoke();
+    }
+
+    public void SimulationStep()
+    {
+        pageData.SimulationStep();
+    }
+
+
+    public void ExitScene() {
 		SceneManager.LoadScene (dataManager.LastScene);
 	}
 

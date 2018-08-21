@@ -11,10 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ca1a491b1a464c189b66122635421c7, type: 3}
   m_Name: Square Empty
   m_EditorClassIdentifier: 
-  runeType: 4
+  sides: 4
   id: Square Empty
   description: Emptier than the other side of your bed.
   isInteractable: 0
   isMovable: 1
   connections: 
+  runeCovers: []
   animatorController: {fileID: 9100000, guid: 95d146f75051341a1bd51993ce7e4766, type: 2}

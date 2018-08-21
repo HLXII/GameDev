@@ -13,7 +13,7 @@ public class SimulationButton : MonoBehaviour {
 
 		buildCanvas = GameObject.Find ("Canvas").GetComponent<BuildCanvas> ();
 
-		gameObject.GetComponent<Button> ().onClick.AddListener (simulate);
+		gameObject.GetComponent<Button> ().onClick.AddListener (Simulate);
 	}
 	
 	// Update is called once per frame
@@ -21,33 +21,33 @@ public class SimulationButton : MonoBehaviour {
 		
 	}
 
-	void simulate() {
+	void Simulate() {
 		Debug.Log ("Simulating");
 
-		buildCanvas.simulate ();
+        buildCanvas.StartSimulation ();
 
 		gameObject.GetComponent<Button> ().onClick.RemoveAllListeners ();
-		gameObject.GetComponent<Button> ().onClick.AddListener (endSimulate);
+		gameObject.GetComponent<Button> ().onClick.AddListener (EndSimulate);
 		transform.GetChild (0).GetComponent<Text> ().text = "End Simulation";
 	}
 
-	void endSimulate() {
+	void EndSimulate() {
 		Debug.Log ("Ending Simulation");
 
-		buildCanvas.endSimulate ();
+        buildCanvas.EndSimulate ();
 
 		gameObject.GetComponent<Button> ().onClick.RemoveAllListeners ();
-		gameObject.GetComponent<Button> ().onClick.AddListener (cleanSimulation);
+		gameObject.GetComponent<Button> ().onClick.AddListener (CleanSimulation);
 		transform.GetChild (0).GetComponent<Text> ().text = "Clean Simulation";
 	}
 
-	void cleanSimulation() {
+	void CleanSimulation() {
 		Debug.Log ("Cleaning Simulation");
 
-		buildCanvas.cleanSimulation ();
+		buildCanvas.CleanSimulation ();
 
 		gameObject.GetComponent<Button> ().onClick.RemoveAllListeners ();
-		gameObject.GetComponent<Button> ().onClick.AddListener (simulate);
+		gameObject.GetComponent<Button> ().onClick.AddListener (Simulate);
 		transform.GetChild (0).GetComponent<Text> ().text = "Simulation";
 	}
 }

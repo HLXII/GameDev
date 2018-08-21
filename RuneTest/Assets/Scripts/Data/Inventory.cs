@@ -22,20 +22,22 @@ public class Inventory {
 	public ItemData[] ToolBar { get { return toolBar; } }
 
     public Inventory() {
-        Debug.Log("Loading Empty Inventory");
+        //Debug.Log("Loading Empty Inventory");
     }
 
 	// Temporary for tests
 	public Inventory(int test) {
-        
-        Debug.Log("Loading Test Inventory");
+
+        //Debug.Log("Loading Test Inventory");
 
         runes = new List<RuneData>
         {
             new RuneData("Square Single Wire"),
             new RuneData("Square Single Wire"),
             new RuneData("Square Single Wire"),
-            new RuneData("Square Single Wire", 2, 3, 0)
+            new RuneData("Square Single Wire", 2, 3, 0),
+            new RuneData("Square Energy Node"),
+            new RuneData("Square Energy Sink",3,1,1)
         };
         /*
 		runes.Add (new SquareSingleWireData(0,20));
