@@ -105,7 +105,7 @@ public class BuildCanvas : MonoBehaviour {
 
     public void UpdatePage()
     {
-        Debug.Log("Updating Page");
+        //Debug.Log("Updating Page");
 
         // Removing old page runes
         foreach (Transform child in page)
@@ -134,7 +134,7 @@ public class BuildCanvas : MonoBehaviour {
 
     public void UpdateTable()
     {
-        Debug.Log("Updating Table");
+        //Debug.Log("Updating Table");
 
         // Removing old table runes
         foreach (Transform child in table)

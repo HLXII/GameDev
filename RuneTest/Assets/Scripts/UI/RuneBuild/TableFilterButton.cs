@@ -7,11 +7,14 @@ using UnityEngine;
 
 public class TableFilterButton : MonoBehaviour {
 
+    public Sprite pressed;
+    public Sprite unpressed;
+
 	private bool state;
 
 	// Use this for initialization
 	void Start () {
-		this.State = gameObject.name == "btnAll";
+		this.State = gameObject.name == "AllButton";
 		gameObject.GetComponent<Button> ().onClick.AddListener (this.onClick);
 	}
 		
@@ -24,10 +27,10 @@ public class TableFilterButton : MonoBehaviour {
 		set
 		{
 			if (value) {
-				gameObject.GetComponent<Image> ().color = new Color (0, 0, 0);
+                gameObject.GetComponent<Image>().sprite = pressed;
 			} else {
-				gameObject.GetComponent<Image> ().color = new Color (255, 255, 255);
-			}
+                gameObject.GetComponent<Image>().sprite = unpressed;
+            }
 			state = value;
 		}
 	}

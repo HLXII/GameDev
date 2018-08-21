@@ -35,7 +35,7 @@ public class WireRuneTemplate : TransferRuneTemplate
                 }
                 else
                 {
-                    energyIn[0].Power -= loss;
+                    energyIn[0].Power = (int) (energyIn[0].Power * ((100-loss) / 100.0F));
                     if (energyIn[0].Power <= 0)
                     {
                         energyOut[1] = null;
@@ -57,7 +57,7 @@ public class WireRuneTemplate : TransferRuneTemplate
                 }
                 else
                 {
-                    energyIn[1].Power -= loss;
+                    energyIn[1].Power = (int)(energyIn[1].Power * ((100 - loss) / 100.0F));
                     if (energyIn[1].Power <= 0)
                     {
                         energyOut[0] = null;

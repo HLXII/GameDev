@@ -141,7 +141,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             // Updating connection ports
             runeSlot.Rotation = (runeSlot.Rotation + 1 + (int)runeSlot.RuneData.RuneTemplate.sides) % (int)runeSlot.RuneData.RuneTemplate.sides;
-            Debug.Log("New Rotation : " + runeSlot.Rotation);
+            //Debug.Log("New Rotation : " + runeSlot.Rotation);
 
             this.RuneCover.sprite = runeSlot.RuneData.RuneTemplate.runeCovers[runeSlot.Rotation];
         }
@@ -149,7 +149,7 @@ public class Rune : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             // Updating connection ports
             runeSlot.Rotation = (runeSlot.Rotation - 1 + (int)runeSlot.RuneData.RuneTemplate.sides) % (int)runeSlot.RuneData.RuneTemplate.sides;
-            Debug.Log("New Rotation : " + runeSlot.Rotation);
+            //Debug.Log("New Rotation : " + runeSlot.Rotation);
 
             this.RuneCover.sprite = runeSlot.RuneData.RuneTemplate.runeCovers[runeSlot.Rotation];
         }

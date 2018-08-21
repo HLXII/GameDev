@@ -106,7 +106,7 @@ public class RuneSlot
 
     public void FindNeighbors(RuneSlot[,] runeSlots)
     {
-        Debug.Log("Finding Neighbors for " + runeData.RuneTemplateId);
+        //Debug.Log("Finding Neighbors for " + runeData.RuneTemplateId);
 
         if (neighbors == null)
         {
@@ -163,7 +163,6 @@ public class RuneSlot
                     }
                     else
                     {
-                        Debug.Log(n_y + " " + n_x);
                         RuneSlot neighbor = runeSlots[n_y, n_x];
 
                         int neighborConnectionPort = (i + 2) % 4;

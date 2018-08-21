@@ -33,11 +33,11 @@ public class Inventory {
         runes = new List<RuneData>
         {
             new RuneData("Square Single Wire"),
-            new RuneData("Square Single Wire"),
-            new RuneData("Square Single Wire"),
             new RuneData("Square Single Wire", 2, 3, 0),
             new RuneData("Square Energy Node"),
-            new RuneData("Square Energy Sink",3,1,1)
+            new RuneData("Square Energy Sink",3,1,1),
+            new RuneData("Square Single Wire", 5,0,0),
+            new RuneData("Square Single Wire", 0,5,0)
         };
         /*
 		runes.Add (new SquareSingleWireData(0,20));
