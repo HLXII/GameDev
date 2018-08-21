@@ -12,22 +12,23 @@ using System.IO;
 public class GenericRuneComparer : IComparer<RuneData> {
 
 	int IComparer<RuneData>.Compare(RuneData rune1, RuneData rune2) {
-        /*
-		if (rune1.GetType() == rune2.GetType()) {
-			switch (rune1.GetType().Name) {
-			case "WireData":
-				return ((WireData)rune1).Capacity - ((WireData)rune2).Capacity;
-			case "InputData":
-				return ((InputData)rune1).InputRate - ((InputData)rune2).InputRate;
-			case "OutputData":
-				return ((OutputData)rune1).MaxRate - ((OutputData)rune2).MaxRate;
-			default:
-				return string.Compare (rune1.Id, rune2.Id);
-			}
-		} else {
-			return string.Compare (rune1.Id, rune2.Id);
-		}*/
-        return 1;
+        if (rune1.RuneTemplate.GetType() == rune2.RuneTemplate.GetType())
+        {
+            if (rune1.Rank == rune2.Rank)
+            {
+                int weightedRank1 = rune1.Rank1 * 25 + rune1.Rank2 * 5 + rune1.Rank3;
+                int weightedRank2 = rune2.Rank1 * 25 + rune2.Rank2 * 5 + rune2.Rank3;
+                return weightedRank2 - weightedRank1;
+            }
+            else
+            {
+                return rune2.Rank - rune1.Rank;
+            }
+
+
+        } else {
+            return string.Compare(rune2.RuneTemplate.GetType().Name, rune1.RuneTemplate.GetType().Name);
+        }
 	}
 
 }
@@ -59,16 +60,7 @@ public class TableData {
 	public TableData() {
 
 		table = new List<RuneData> ();
-        /*
-		table.Add (new SquareSingleWireData(0,20));
-		table.Add (new SquareSingleWireData (5,30));
-		table.Add (new SquareCrossData (3, 20));
-		table.Add (new SquareSourceData (20));
-		table.Add (new SquareSourceData (10));
-		table.Add (new SquareCornerData (10, 20));
-		table.Add (new SquareSinkData (10, 100, 5));
-		table.Add (new SquareSinkData (20, 100, 10));
-        */
+
 	}
 
 	public List<RuneData> getTable() {
@@ -98,15 +90,15 @@ public class TableData {
 
 	private static bool FindWire(RuneData rune)
 	{
-        return true;//(rune is WireData);
+        return rune.RuneTemplate is WireRuneTemplate;
 	}
 	private static bool FindInput(RuneData rune)
 	{
-        return true;//(rune is InputData);
-	}
+        return rune.RuneTemplate is InputRuneTemplate;
+    }
 	private static bool FindOutput(RuneData rune)
 	{
-        return true;//(rune is OutputData);
-	}
+        return rune.RuneTemplate is OutputRuneTemplate;
+    }
 
 }
